@@ -1,0 +1,23 @@
+.grid {
+  display: grid;
+  grid-row-gap: 32px;
+  grid-column-gap: 24px;
+  grid-template-columns: repeat(2, 272px);
+}
+
+.gridItem {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.tabs {
+  display: flex;
+}
+
+.innerContainer {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  width: min-content;
+  height: 100%;
+}

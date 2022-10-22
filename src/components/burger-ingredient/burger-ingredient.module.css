@@ -1,0 +1,14 @@
+.ingredient {
+  position: relative;
+  padding: 0;
+  margin: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-primary-color);
+}
+
+.price {
+  display: flex;
+  justify-content: center;
+}
