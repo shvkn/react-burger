@@ -1,0 +1,25 @@
+.navMenu {
+  padding: 0;
+  margin: 0;
+  column-gap: calc(var(--offset-base-size) * 2);
+}
+
+.navMenuContainer {
+  display: flex;
+  padding: 0;
+  margin: 0;
+}
+
+.navMenuItem {
+  padding: 0;
+  margin: 0 0 0 calc(var(--offset-base-size) * 2);
+  list-style: none;
+}
+
+.navMenuItem:first-of-type {
+  margin-left: 0;
+}
+
+.right {
+  justify-self: right;
+}
