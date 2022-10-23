@@ -16,8 +16,12 @@
 }
 
 .innerContainer {
-  display: grid;
-  grid-template-rows: auto 1fr;
-  width: min-content;
+  display: flex;
+  flex-direction: column;
+  /*width: min-content;*/
   height: 100%;
+}
+
+.categories::-webkit-scrollbar-track {
+  margin-bottom: calc(var(--offset-base-size) * 13);
 }

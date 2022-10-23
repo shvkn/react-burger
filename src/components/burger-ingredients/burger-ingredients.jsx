@@ -30,7 +30,7 @@ function BurgerIngredients({ingredients, types, defaultTab}) {
           <Tab key={key} active={currentTab === key} value={key} onClick={setCurrentTab}>{name}</Tab>)}
       </div>
 
-      <div className='scroll mt-10'>
+      <div className={`${styles.categories} scroll mt-10`}>
         <ol className='list'>
           {types.map(({key, name}) =>
             <li className='listItem' key={key}>
