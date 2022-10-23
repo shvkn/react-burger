@@ -1,0 +1,38 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.innerContainer {
+  max-width: 1920px;
+  margin: 0 auto;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+}
+
+.listItem {
+  list-style: none;
+}
+
+.scroll {
+  overflow-y: scroll;
+}
+.scroll::-webkit-scrollbar {
+  width: calc(var(--offset-base-size) * 2);
+}
+
+.scroll::-webkit-scrollbar-track {
+  margin-bottom: calc(var(--offset-base-size) * 13);
+  background: var(--background);
+}
+
+.scroll::-webkit-scrollbar-thumb {
+  width: calc(var(--offset-base-size) * 2);
+  background: var(--text-inactive-color);
+  border: 0;
+  border-radius: 0;
+}
