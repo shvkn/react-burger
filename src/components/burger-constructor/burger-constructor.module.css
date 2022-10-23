@@ -1,0 +1,29 @@
+.burgerConstructor {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.element {
+  display: flex;
+  align-items: center;
+  list-style: none;
+}
+
+.drag {
+  cursor: move;
+}
+
+.panel {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+}
+
+.elements {
+  display: flex;
+  flex-direction: column;
+  min-height: 80px;
+  overflow: auto;
+  gap: calc(var(--offset-base-size) * 2);
+}

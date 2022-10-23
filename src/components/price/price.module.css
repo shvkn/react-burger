@@ -1,0 +1,17 @@
+.price {
+  display: flex;
+}
+
+.icon {
+
+}
+
+.iconSmall {
+  width: 24px;
+  height: 24px;
+}
+
+.iconMedium {
+  width: 36px;
+  height: 36px;
+}
