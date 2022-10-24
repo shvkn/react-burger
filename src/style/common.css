@@ -5,7 +5,7 @@
 }
 
 .innerContainer {
-  max-width: 1920px;
+  /*width: 1280px;*/
   margin: 0 auto;
 }
 
@@ -37,5 +37,5 @@
 }
 
 body {
-  overflow: hidden;
+  /*overflow: hidden;*/
 }

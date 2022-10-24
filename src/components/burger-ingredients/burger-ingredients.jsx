@@ -2,18 +2,18 @@ import React, {useState} from 'react';
 import {Tab} from '@ya.praktikum/react-developer-burger-ui-components';
 import {BurgerIngredient} from '../burger-ingredient/burger-ingredient';
 import styles from './burger-ingredients.module.css';
+import List from '../list/list';
 
 function renderCategory({name, items}) {
   return (
-    <section>
+    <>
       <h2 className={`text text_type_main-medium`}>{name}</h2>
-      <ul className={`${styles.grid} mt-6 pr-4 pl-4 mb-10`}>
-        {items.map((item) =>
-          <li className={styles.gridItem} key={item._id}>
-            <BurgerIngredient {...item} count={2}/>
-          </li>)}
-      </ul>
-    </section>
+      <div className={'mt-6 mb-10 ml-4 mr-2'}>
+        <List listExtraClass={`${styles.grid}`} itemExtraClass={styles.gridItem}>
+          {items.map((item) => <BurgerIngredient key={item._id} {...item} count={2}/>)}
+        </List>
+      </div>
+    </>
   )
 }
 
@@ -30,13 +30,17 @@ function BurgerIngredients({ingredients, types, defaultTab}) {
           <Tab key={key} active={currentTab === key} value={key} onClick={setCurrentTab}>{name}</Tab>)}
       </div>
 
-      <div className={`${styles.categories} scroll mt-10`}>
-        <ol className='list'>
+      <div className={`${styles.categories} mt-10 scroll`}>
+        <List itemExtraClass={''}>
+          {types.map(({key, name}) =>
+            renderCategory({name, items: ingredients.filter(({type}) => type === key)}))}
+        </List>
+        {/*        <ol className='list'>
           {types.map(({key, name}) =>
             <li className='listItem' key={key}>
               {renderCategory({name, items: ingredients.filter(({type}) => type === key)})}
             </li>)}
-        </ol>
+        </ol>*/}
       </div>
     </section>
   )

@@ -4,10 +4,23 @@
   height: 100%;
 }
 
+.components {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 656px;
+}
+
+/*
 .element {
   display: flex;
   align-items: center;
   list-style: none;
+}
+*/
+
+.edge {
+  flex: 0;
 }
 
 .drag {
@@ -25,5 +38,4 @@
   flex-direction: column;
   min-height: 80px;
   overflow: auto;
-  gap: calc(var(--offset-base-size) * 2);
 }

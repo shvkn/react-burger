@@ -8,41 +8,59 @@ function DraggableConstructorElement({_id, key, name, image, price}) {
   return (
     <>
       <DragIcon type={'primary'}/>
-      <ConstructorElement key={key} text={name} thumbnail={image} price={price} extraClass={'ml-2'}/>
+      <ConstructorElement key={key}
+                          text={name}
+                          thumbnail={image}
+                          price={price}
+                          extraClass={'ml-2'}/>
     </>
   )
 }
 
 function BurgerConstructor({state}) {
 
-  const bunState = {
-    text: `${state.bun.name} (верх)`,
-    thumbnail: state.bun.image,
-    price: state.bun.price,
-    type: 'top',
-    isLocked: true,
-    extraClass: 'ml-8'
-  }
+  const supplements =
+    <List itemExtraClass={'mt-4'}>
+      {state.supplements.map((x, index) => <DraggableConstructorElement {...x} key={index}/>)}
+    </List>
 
-  const supplements = state.supplements.map((x, index) => <DraggableConstructorElement {...x} key={index}/>)
+  const topBun = <ConstructorElement
+    text={`${state.bun.name} (верх)`}
+    thumbnail={state.bun.image}
+    price={state.bun.price}
+    type='top'
+    isLocked={true}
+  />
+
+  const bottomBun = <ConstructorElement
+    text={`${state.bun.name} (низ)`}
+    thumbnail={state.bun.image}
+    price={state.bun.price}
+    type='bottom'
+    isLocked={true}
+  />
 
   return (
     <div className={`${styles.burgerConstructor} ml-10 pt-25`}>
 
-      <div className={`ml-4`}>
-
-        <ConstructorElement {...bunState} />
-        <List>{supplements}</List>
-        <ConstructorElement {...bunState} text={`${state.bun.name} (низ)`} type='bottom' />
-
+      <div className={`${styles.components} ml-4`}>
+        <div className={`${styles.edge} ml-8`}>
+          {topBun}
+        </div>
+        <div className={`scroll pr-2`}>
+          {supplements}
+        </div>
+        <div className={`${styles.edge} ml-8 mt-4`}>
+          {bottomBun}
+        </div>
       </div>
-
 
       <div className={`${styles.panel} mt-10 pr-4`}>
-        <Price size={'medium'}>999</Price>
-        <Button type='primary' size='medium' extraClass='ml-10'>Оформить заказ</Button>
+        <Price size='medium'>999</Price>
+        <Button type='primary' size='large' extraClass='ml-10'>Оформить заказ</Button>
       </div>
-    </div>)
+    </div>
+  )
 }
 
 export default BurgerConstructor;

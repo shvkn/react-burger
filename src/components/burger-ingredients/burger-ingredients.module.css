@@ -6,9 +6,7 @@
 }
 
 .gridItem {
-  padding: 0;
-  margin: 0;
-  list-style: none;
+  min-height: 208px;
 }
 
 .tabs {
