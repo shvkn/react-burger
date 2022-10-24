@@ -8,7 +8,7 @@ function AppHeader() {
 
   return (
     <header className={`${styles.header} p-4`}>
-      <div className={`inner-container ${styles.innerContainer}`}>
+      <div className={`${styles.innerContainer}`}>
         <NavMenu>
           <NavButton
             icon={<BurgerIcon type="primary"/>}
