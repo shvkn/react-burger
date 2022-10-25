@@ -14,7 +14,7 @@ function List({children, listExtraClass, itemExtraClass}) {
 }
 
 List.propTypes = {
-  children: PropTypes.any,
+  children: PropTypes.node.isRequired,
   listExtraClass: PropTypes.string,
   itemExtraClass: PropTypes.string,
 };

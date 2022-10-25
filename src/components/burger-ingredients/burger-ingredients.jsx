@@ -12,7 +12,7 @@ function Category({name, items, state}) {
       <div className={`mt-6 mr-2 mb-10 ml-4`}>
         <List listExtraClass={`${styles.grid}`} itemExtraClass={styles.gridItem}>
           {items.map((item) => {
-            const count = (item.type === 'bun'&& item._id === state.bun)
+            const count = (item.type === 'bun' && item._id === state.bun)
               ? 1
               : state.supplements.filter(x => x === item._id).length;
 
@@ -57,7 +57,26 @@ function BurgerIngredients({ingredients, state, types, defaultTab}) {
     </section>
   )
 }
+export const ingredientsPropsShape = {
+    _id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    type: PropTypes.oneOf(['bun', 'sauce', 'main']).isRequired,
+    proteins: PropTypes.number.isRequired,
+    fat: PropTypes.number.isRequired,
+    carbohydrates: PropTypes.number.isRequired,
+    calories: PropTypes.number.isRequired,
+    price: PropTypes.number.isRequired,
+    image: PropTypes.string.isRequired,
+    image_mobile: PropTypes.string.isRequired,
+    image_large: PropTypes.string.isRequired,
+    __v: PropTypes.number.isRequired
+};
 
-BurgerIngredients.propTypes = {};
+BurgerIngredients.propTypes = {
+  ingredients: PropTypes.arrayOf(PropTypes.shape(ingredientsPropsShape)),
+  state: PropTypes.object,
+  types: PropTypes.array,
+  defaultTab: PropTypes.string,
+};
 
 export default BurgerIngredients;

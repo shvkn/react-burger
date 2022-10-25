@@ -3,6 +3,8 @@ import styles from './burger-constructor.module.css';
 import {Button, ConstructorElement, DragIcon} from '@ya.praktikum/react-developer-burger-ui-components';
 import Price from '../price/price';
 import List from '../list/list';
+import PropTypes from 'prop-types';
+import {ingredientsPropsShape} from '../burger-ingredients/burger-ingredients';
 
 function DraggableConstructorElement({name, image, price}) {
   return (
@@ -63,5 +65,9 @@ function BurgerConstructor({ingredients, state}) {
     </div>
   )
 }
+
+BurgerConstructor.propTypes = {
+  ingredients: PropTypes.arrayOf(PropTypes.shape(ingredientsPropsShape))
+};
 
 export default BurgerConstructor;
