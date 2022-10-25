@@ -1,17 +1,25 @@
 import React from 'react';
-import {CurrencyIcon, Counter} from '@ya.praktikum/react-developer-burger-ui-components';
+import {Counter} from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './burger-ingredient.module.css';
+import PropTypes from 'prop-types';
+import Price from '../price/price';
 
-export function BurgerIngredient({image, price, name, count}) {
+export function BurgerIngredient({name, image, price, count= 0}) {
   return (
-    <button className={styles.ingredient}>
-      {(count > 0) && <Counter count={count} size='default'/>}
-      <img className={`${styles.image} ml-4 mr-4`} src={image} alt={name}/>
-      <p className={`${styles.price} text text_type_digits-default mt-1`}>
-        {price}
-        <span className='ml-2'>{<CurrencyIcon type='primary'/>}</span>
-      </p>
-      <h3 className={`text text_type_main-default mt-1`}>{name}</h3>
-    </button>
+    <article className={styles.ingredient}>
+      {(typeof count === 'number' && count > 0) && <Counter count={count} size='default'/>}
+      <img className={`ml-4 mr-4 ${styles.image}`} src={image} alt={name}/>
+      <span className={`mt-2`}>
+        <Price value={price} />
+      </span>
+      <h3 className={`mt-1 text text_type_main-default`}>{name}</h3>
+    </article>
   )
+}
+
+BurgerIngredient.propTypes = {
+  image: PropTypes.string,
+  price: PropTypes.number,
+  name: PropTypes.string.isRequired,
+  count: PropTypes.number
 }

@@ -1,13 +1,7 @@
 .button {
   display: flex;
   align-items: center;
-  padding: calc(var(--offset-base-size) * 4) calc(var(--offset-base-size) * 5);
   background: none;
   border: none;
   cursor: pointer;
-  color: var(--text-inactive-color);
-}
-
-.active {
-  color: var(--text-primary-color);
 }

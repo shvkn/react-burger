@@ -7,18 +7,19 @@ import NavMenu from '../nav-menu/nav-menu';
 function AppHeader() {
 
   return (
-    <header className={`${styles.header} p-4`}>
-      <div className={`${styles.innerContainer}`}>
+    <header className={`p-4 ${styles.header}`}>
+      <div className={`${styles.inner}`}>
         <NavMenu>
           <NavButton
-            icon={<BurgerIcon type="primary"/>}
-            text="Конструктор"
-            isActive={true}
+            icon={<BurgerIcon type={`primary`}/>}
+            text={'Конструктор'}
+            active={true}
           />
           <NavButton
-            icon={<ListIcon type="secondary"/>}
-            text="Лента заказов"
-            isActive={false}
+            icon={<ListIcon type={`secondary`}/>}
+            text={'Лента заказов'}
+            active={false}
+            extraClass={'ml-2'}
           />
         </NavMenu>
 
@@ -26,9 +27,9 @@ function AppHeader() {
 
         <NavMenu rightContent={true}>
           <NavButton
-            icon={<ProfileIcon type="secondary"/>}
-            text="Личный кабинет"
-            isActive={false}
+            icon={<ProfileIcon type={`secondary`}/>}
+            text={'Личный кабинет'}
+            active={false}
           />
         </NavMenu>
       </div>

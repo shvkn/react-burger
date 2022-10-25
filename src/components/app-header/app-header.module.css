@@ -2,7 +2,7 @@
   background-color: var(--background);
 }
 
-.innerContainer {
+.inner {
   display: grid;
   align-items: center;
   grid-template-columns: 1fr auto 1fr;

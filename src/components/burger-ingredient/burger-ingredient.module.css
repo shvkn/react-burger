@@ -1,16 +1,16 @@
 .ingredient {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: 0;
   margin: 0;
   background: none;
   border: none;
   cursor: pointer;
   color: var(--text-primary-color);
-}
-
-.price {
-  display: flex;
-  justify-content: center;
+  text-align: center;
+  min-height: 208px;
 }
 
 .image {

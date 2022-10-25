@@ -1,23 +1,15 @@
 import React from 'react';
 import styles from './nav-menu.module.css';
 import PropTypes from 'prop-types';
-
-function NavMenuItem({children, itemKey}) {
-  return (
-    <li className={styles.navMenuItem} key={itemKey}>
-      {children}
-    </li>
-  );
-}
+import List from '../list/list';
 
 function NavMenu({children, rightContent}) {
 
   return (
-    <nav className={`${styles.navMenuContainer} ${rightContent && styles.right}`}>
-      <ul className={`${styles.navMenuContainer}`}>
-        {React.Children.toArray(children)
-          .map((child, idx) => <NavMenuItem key={idx}>{child}</NavMenuItem>)}
-      </ul>
+    <nav className={`${(rightContent === true)? styles.right : ''}`}>
+      <List listExtraClass={styles.items}>
+        {children}
+      </List>
     </nav>
   );
 }
