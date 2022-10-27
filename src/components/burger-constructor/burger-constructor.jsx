@@ -1,73 +1,68 @@
 import React from 'react';
-import styles from './burger-constructor.module.css';
-import {Button, ConstructorElement, DragIcon} from '@ya.praktikum/react-developer-burger-ui-components';
-import Price from '../price/price';
-import List from '../list/list';
+import {
+  Button,
+  ConstructorElement,
+  CurrencyIcon,
+  DragIcon,
+} from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypes from 'prop-types';
-import {ingredientsPropsShape} from '../burger-ingredients/burger-ingredients';
+import styles from './burger-constructor.module.css';
+import { ingredientPropTypes, burgerStatePropTypes } from '../../utils/prop-types';
 
-function DraggableConstructorElement({name, image, price}) {
-  return (
-    <>
-      <DragIcon type={'primary'}/>
-      <ConstructorElement text={name} thumbnail={image} price={price} extraClass={'ml-2'}/>
-    </>
-  )
-}
-
-function BurgerConstructor({ingredients, state}) {
-
-  const supplements =
-    <List itemExtraClass={'mt-4'}>
-      {state.supplements.map((id, index) => {
-        return <DraggableConstructorElement key={index} {...ingredients.find(i => i._id === id)} />;
-      })}
-    </List>
-
-  const bun = ingredients.find(i => i._id === state.bun)
-  const topBun = <ConstructorElement
-    text={`${bun.name} (верх)`}
-    thumbnail={bun.image}
-    price={bun.price}
-    type='top'
-    isLocked={true}
-  />
-
-  const bottomBun = <ConstructorElement
-    text={`${bun.name} (низ)`}
-    thumbnail={bun.image}
-    price={bun.price}
-    type='bottom'
-    isLocked={true}
-  />
-
+function BurgerConstructor({ ingredients, state }) {
+  const bun = ingredients.find(({ _id }) => _id === state.bun);
   return (
     <div className={`${styles.burgerConstructor}`}>
-
-      <div className={`ml-4 ${styles.components}`}>
-        <div className={`ml-8 ${styles.edge}`}>
-          {topBun}
+      <div className={`ml-4 ${styles.container}`}>
+        <div className={`ml-8 ${styles.bun}`}>
+          <ConstructorElement
+            text={`${bun.name} (верх)`}
+            thumbnail={bun.image}
+            price={bun.price}
+            type='top'
+            isLocked
+          />
         </div>
-        <div className={`pr-2 scroll`}>
-          {supplements}
-        </div>
-        <div className={`mt-4 ml-8 ${styles.edge}`}>
-          {bottomBun}
+        <ul className={`${styles.ingredients} mt-10 scroll`}>
+          {state.ingredients.map((_id, index, arr) => {
+            const { image, name, price } = ingredients.find(({ _id: id }) => id === _id);
+            const key = `${_id}/${arr.filter((i) => i === _id).length}`;
+            return (
+              <li key={key} className={`mt-4 mb-4 ${styles.ingredient}`}>
+                <span className={styles.draggable}>
+                  <DragIcon type='primary' />
+                </span>
+                <ConstructorElement text={name} thumbnail={image} price={price} />
+              </li>
+            );
+          })}
+        </ul>
+        <div className={`ml-8 ${styles.bun}`}>
+          <ConstructorElement
+            text={`${bun.name} (низ)`}
+            thumbnail={bun.image}
+            price={bun.price}
+            type='bottom'
+            isLocked
+          />
         </div>
       </div>
-
-      <div className={`mt-10 pr-4 ${styles.panel}`}>
-        <Price value={state.total} size='medium' />
-        <Button type='primary' size='large' extraClass='ml-10' htmlType='button'>
+      <div className={`pt-10 pb-10 pr-4 ${styles.panel}`}>
+        <div className={`mr-10 ${styles.price}`}>
+          <p className='mr-2 text text_type_digits-medium'>{state.total}</p>
+          <CurrencyIcon type='primary' />
+        </div>
+        <Button type='primary' size='large' htmlType='button'>
           Оформить заказ
         </Button>
       </div>
     </div>
-  )
+  );
 }
 
 BurgerConstructor.propTypes = {
-  ingredients: PropTypes.arrayOf(PropTypes.shape(ingredientsPropsShape))
+  ingredients: PropTypes.arrayOf(ingredientPropTypes).isRequired,
+  state: burgerStatePropTypes.isRequired,
 };
 
 export default BurgerConstructor;

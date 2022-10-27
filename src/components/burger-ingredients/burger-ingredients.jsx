@@ -1,82 +1,85 @@
-import React, {useState} from 'react';
-import {Tab} from '@ya.praktikum/react-developer-burger-ui-components';
-import {BurgerIngredient} from '../burger-ingredient/burger-ingredient';
-import styles from './burger-ingredients.module.css';
-import List from '../list/list';
+import React, { useState } from 'react';
+import { Counter, CurrencyIcon, Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypes from 'prop-types';
+import styles from './burger-ingredients.module.css';
+import { burgerStatePropTypes, ingredientPropTypes } from '../../utils/prop-types';
 
-function Category({name, items, state}) {
+function BurgerIngredient({ ingredient: { image, name, price }, count }) {
   return (
-    <>
-      <h2 className={`text text_type_main-medium`}>{name}</h2>
-      <div className={`mt-6 mr-2 mb-10 ml-4`}>
-        <List listExtraClass={`${styles.grid}`} itemExtraClass={styles.gridItem}>
-          {items.map((item) => {
-            const count = (item.type === 'bun' && item._id === state.bun)
-              ? 1
-              : state.supplements.filter(x => x === item._id).length;
-
-            return <BurgerIngredient key={item._id} {...item} count={count}/>;
-          })}
-        </List>
+    // TODO Временно отключено из-за якорной ссылки
+    // eslint-disable-next-line jsx-a11y/anchor-is-valid
+    <a href='#' className={styles.ingredient}>
+      {count > 0 && <Counter count={count} size='default' />}
+      <img className={`ml-4 mr-4 mb-2 ${styles.ingredientImage}`} src={image} alt={name} />
+      <div className={`${styles.ingredientPrice}`}>
+        <p className='mr-2 text text_type_digits-default'>{price}</p>
+        <CurrencyIcon type='primary' />
       </div>
-    </>
-  )
+      <h3 className='mt-2 text text_type_main-default'>{name}</h3>
+    </a>
+  );
 }
 
-Category.propTypes = {
-  name: PropTypes.string.isRequired,
-  items: PropTypes.arrayOf(
-    PropTypes.shape({
-      image: PropTypes.string,
-      price: PropTypes.number,
-      name: PropTypes.string,
-      count: PropTypes.number
-    })),
+BurgerIngredient.propTypes = {
+  ingredient: ingredientPropTypes.isRequired,
+  count: PropTypes.number.isRequired,
 };
 
-function BurgerIngredients({ingredients, state, types, defaultTab}) {
-
-  const [currentTab, setCurrentTab] = useState(defaultTab);
-
+function BurgerIngredients({ ingredients, state, categoryTypes }) {
+  const [currentTab, setCurrentTab] = useState(categoryTypes[0].key);
   return (
-    <section className={`${styles.inner}`}>
-      <h1 className='mt-10 heading text text_type_main-large'>Соберите бургер</h1>
-
-      <div className={`mt-5 ${styles.tabs}`}>
-        {types.map(({key, name}) =>
-          <Tab key={key} active={currentTab === key} value={key} onClick={setCurrentTab}>{name}</Tab>)}
+    <section className={styles.burgerIngredients}>
+      <h1 className='mt-10 mb-5 heading text text_type_main-large'>Соберите бургер</h1>
+      <div className='mb-10'>
+        <ul className={`${styles.tabs}`}>
+          {categoryTypes.map(({ key, name }) => (
+            <li key={key}>
+              <Tab active={currentTab === key} value={key} onClick={setCurrentTab}>
+                {name}
+              </Tab>
+            </li>
+          ))}
+        </ul>
       </div>
+      <ul className={`${styles.categories} scroll`}>
+        {categoryTypes.map(({ key, name }) => (
+          <li key={key}>
+            <h2 className='text text_type_main-medium'>{name}</h2>
+            <div className='mt-6 mr-2 mb-10 ml-4'>
+              <ul className={`${styles.ingredients}`}>
+                {ingredients
+                  .filter(({ type }) => type === key)
+                  .map((ingredient) => {
+                    const { type, _id: id } = ingredient;
+                    const count =
+                      type === 'bun' && id === state.bun
+                        ? 1
+                        : state.ingredients.filter((i) => i === id).length;
 
-      <div className={`mt-10 ${styles.categories} scroll`}>
-        <List>
-          {types.map(({key, name}) =>
-            <Category key={key} name={name} items={ingredients.filter(({type}) => type === key)} state={state}/>)}
-        </List>
-      </div>
+                    return (
+                      <li key={id}>
+                        <BurgerIngredient ingredient={ingredient} count={count} />
+                      </li>
+                    );
+                  })}
+              </ul>
+            </div>
+          </li>
+        ))}
+      </ul>
     </section>
-  )
+  );
 }
-export const ingredientsPropsShape = {
-    _id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['bun', 'sauce', 'main']).isRequired,
-    proteins: PropTypes.number.isRequired,
-    fat: PropTypes.number.isRequired,
-    carbohydrates: PropTypes.number.isRequired,
-    calories: PropTypes.number.isRequired,
-    price: PropTypes.number.isRequired,
-    image: PropTypes.string.isRequired,
-    image_mobile: PropTypes.string.isRequired,
-    image_large: PropTypes.string.isRequired,
-    __v: PropTypes.number.isRequired
-};
 
 BurgerIngredients.propTypes = {
-  ingredients: PropTypes.arrayOf(PropTypes.shape(ingredientsPropsShape)),
-  state: PropTypes.object,
-  types: PropTypes.array,
-  defaultTab: PropTypes.string,
+  ingredients: PropTypes.arrayOf(ingredientPropTypes).isRequired,
+  state: burgerStatePropTypes.isRequired,
+  categoryTypes: PropTypes.arrayOf(
+    PropTypes.shape({
+      key: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+    })
+  ).isRequired,
 };
 
 export default BurgerIngredients;

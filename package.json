@@ -11,11 +11,11 @@
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
     "@ya.praktikum/react-developer-burger-ui-components": "^1.13.5",
+    "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4",
-    "prop-types": "^15.8.1"
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -23,29 +23,38 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
+  "prettier": {
+    "singleQuote": true,
+    "jsxSingleQuote": true,
+    "printWidth": 100
+  },
   "eslintConfig": {
-    "parser": "@typescript-eslint/parser",
     "extends": [
-      "airbnb",
-      "plugin:prettier/recommended",
       "react-app",
       "react-app/jest",
       "plugin:react/recommended",
       "plugin:react-hooks/recommended",
-      "plugin:jsx-a11y/recommended"
+      "plugin:jsx-a11y/recommended",
+      "plugin:import/typescript",
+      "airbnb",
+      "airbnb-typescript",
+      "plugin:prettier/recommended"
     ],
     "plugins": [
-      "prettier",
       "react"
     ],
+    "parser": "@typescript-eslint/parser",
     "parserOptions": {
-      "ecmaFeatures": {
-        "jsx": true
-      }
+      "project": "./tsconfig.json"
     },
     "rules": {
       "prettier/prettier": [
-        "error"
+        "error",
+        {
+          "singleQuote": true,
+          "jsxSingleQuote": true,
+          "endOfLine": "auto"
+        }
       ],
       "react-hooks/exhaustive-deps": "warn",
       "react-hooks/rules-of-hooks": "error",
@@ -54,7 +63,9 @@
         {
           "extensions": [
             ".js",
-            ".jsx"
+            ".jsx",
+            ".ts",
+            ".tsx"
           ]
         }
       ],
@@ -78,13 +89,6 @@
       ]
     }
   },
-  "prettier": {
-    "printWidth": 100,
-    "semi": true,
-    "singleQuote": false,
-    "useTabs": false,
-    "trailingComma": "es5"
-  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -101,6 +105,7 @@
     "@typescript-eslint/parser": "^5.41.0",
     "eslint": "^8.26.0",
     "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-typescript": "^17.0.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jsx-a11y": "^6.6.1",

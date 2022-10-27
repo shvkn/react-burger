@@ -1,0 +1,14 @@
+@import-normalize;
+
+.app {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  height: 100vh;
+}
+
+.main {
+  display: flex;
+  overflow: hidden;
+  margin: 0 auto;
+  align-items: stretch;
+}

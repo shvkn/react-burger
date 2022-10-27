@@ -1,28 +1,49 @@
 .burgerConstructor {
   display: flex;
   flex-direction: column;
-  height: 100%;
   width: 600px;
+  height: 100%;
 }
 
-.components {
+.container {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  height: 656px;
 }
 
-.edge {
+.bun {
   flex: 0;
 }
 
-.drag {
+.ingredients {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ingredients::-webkit-scrollbar-track {
+  margin-bottom: calc(var(--offset-base-size) * 4);
+  margin-top: calc(var(--offset-base-size) * 4);
+}
+
+.ingredient {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 568px;
+}
+
+.draggable {
   cursor: move;
 }
 
 .panel {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   align-items: center;
 }
 
+.price {
+  display: flex;
+  align-items: center;
+}
