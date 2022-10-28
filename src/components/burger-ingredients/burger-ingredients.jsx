@@ -72,7 +72,7 @@ function BurgerIngredients({ ingredients, state, categoryTypes }) {
 }
 
 BurgerIngredients.propTypes = {
-  ingredients: PropTypes.arrayOf(ingredientPropTypes).isRequired,
+  ingredients: PropTypes.arrayOf(ingredientPropTypes.isRequired).isRequired,
   state: burgerStatePropTypes.isRequired,
   categoryTypes: PropTypes.arrayOf(
     PropTypes.shape({

@@ -61,7 +61,7 @@ function BurgerConstructor({ ingredients, state }) {
 }
 
 BurgerConstructor.propTypes = {
-  ingredients: PropTypes.arrayOf(ingredientPropTypes).isRequired,
+  ingredients: PropTypes.arrayOf(ingredientPropTypes.isRequired).isRequired,
   state: burgerStatePropTypes.isRequired,
 };
 
