@@ -18,5 +18,4 @@ export const ingredientPropTypes = PropTypes.shape({
 export const burgerStatePropTypes = PropTypes.shape({
   bun: PropTypes.string.isRequired,
   ingredients: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
-  total: PropTypes.number.isRequired,
 });

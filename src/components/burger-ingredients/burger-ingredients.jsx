@@ -50,14 +50,14 @@ function BurgerIngredients({ ingredients, state, categoryTypes }) {
                 {ingredients
                   .filter(({ type }) => type === key)
                   .map((ingredient) => {
-                    const { type, _id: id } = ingredient;
+                    const { type, _id } = ingredient;
                     const count =
-                      type === 'bun' && id === state.bun
+                      type === 'bun' && _id === state.bun
                         ? 1
-                        : state.ingredients.filter((i) => i === id).length;
+                        : state.ingredients.filter((i) => i === _id).length;
 
                     return (
-                      <li key={id}>
+                      <li key={_id}>
                         <BurgerIngredient ingredient={ingredient} count={count} />
                       </li>
                     );

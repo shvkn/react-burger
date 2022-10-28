@@ -11,6 +11,8 @@ import { ingredientPropTypes, burgerStatePropTypes } from '../../utils/prop-type
 
 function BurgerConstructor({ ingredients, state }) {
   const bun = ingredients.find(({ _id }) => _id === state.bun);
+  const filteredIngredients = ingredients.filter(({ _id }) => state.ingredients.includes(_id));
+  const total = filteredIngredients.reduce((sum, { price }) => sum + price, 0) + bun.price * 2;
   return (
     <div className={`${styles.burgerConstructor}`}>
       <div className={`ml-4 ${styles.container}`}>
@@ -24,11 +26,11 @@ function BurgerConstructor({ ingredients, state }) {
           />
         </div>
         <ul className={`${styles.ingredients} mt-10 scroll`}>
-          {state.ingredients.map((_id, index, arr) => {
-            const { image, name, price } = ingredients.find(({ _id: id }) => id === _id);
-            const key = `${_id}/${arr.filter((i) => i === _id).length}`;
+          {filteredIngredients.map(({ image, name, price }, index) => {
             return (
-              <li key={key} className={`mt-4 mb-4 ${styles.ingredient}`}>
+              // TODO Временно отключено для использования `index` в `key`
+              // eslint-disable-next-line react/no-array-index-key
+              <li key={index} className={`mt-4 mb-4 ${styles.ingredient}`}>
                 <span className={styles.draggable}>
                   <DragIcon type='primary' />
                 </span>
@@ -49,7 +51,7 @@ function BurgerConstructor({ ingredients, state }) {
       </div>
       <div className={`pt-10 pb-10 pr-4 ${styles.panel}`}>
         <div className={`mr-10 ${styles.price}`}>
-          <p className='mr-2 text text_type_digits-medium'>{state.total}</p>
+          <p className='mr-2 text text_type_digits-medium'>{total}</p>
           <CurrencyIcon type='primary' />
         </div>
         <Button type='primary' size='large' htmlType='button'>

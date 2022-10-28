@@ -13,5 +13,4 @@ export const BURGER_STATE_MOCKUP = {
     '60666c42cc7b410027a1a9b6',
     '60666c42cc7b410027a1a9b7',
   ],
-  total: 999,
 };
