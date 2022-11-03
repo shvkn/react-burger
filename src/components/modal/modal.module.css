@@ -5,11 +5,14 @@
   background-color: var(--background);
   border-radius: 40px;
   cursor: auto;
+  box-sizing: border-box;
 }
 
 .panel {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  min-height: 64px;
 }
 
 .close {

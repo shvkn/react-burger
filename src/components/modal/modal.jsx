@@ -21,9 +21,9 @@ function Modal({ children, handleClose, header = '' }) {
 
   const modal = (
     <ModalOverlay handleClick={handleClose}>
-      <div className={`pt-10 pr-10 pb-10 pl-10 ${styles.modal}`}>
+      <div className={`pt-10 pr-10 pb-15 pl-10 ${styles.modal}`}>
         <span className={`${styles.panel}`}>
-          <p className={'text text_type_main-medium'}>{header}</p>
+          <p className={'text text_type_main-large'}>{header}</p>
           <span className={styles.close}>
             <CloseIcon type='primary' onClick={handleClose} />
           </span>
