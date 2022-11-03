@@ -4,13 +4,14 @@ export const CATEGORY_TYPES = [
   { key: 'main', name: 'Начинки' },
 ];
 export const BURGER_STATE_MOCKUP = {
-  bun: '60666c42cc7b410027a1a9b1',
+  bun: '60d3b41abdacab0026a733c7',
   ingredients: [
-    '60666c42cc7b410027a1a9b9',
-    '60666c42cc7b410027a1a9b4',
-    '60666c42cc7b410027a1a9bc',
-    '60666c42cc7b410027a1a9bb',
-    '60666c42cc7b410027a1a9b6',
-    '60666c42cc7b410027a1a9b7',
+    '60d3b41abdacab0026a733ca',
+    '60d3b41abdacab0026a733cc',
+    '60d3b41abdacab0026a733d0',
+    '60d3b41abdacab0026a733d3',
+    '60d3b41abdacab0026a733d4',
+    '60d3b41abdacab0026a733d0',
   ],
 };
+export const domainUrl = 'https://norma.nomoreparties.space';
