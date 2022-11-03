@@ -1,16 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Counter, CurrencyIcon, Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypes from 'prop-types';
 import styles from './burger-ingredients.module.css';
-import { burgerStatePropTypes, ingredientPropTypes } from '../../utils/prop-types';
+import { orderStatePropTypes, ingredientPropTypes } from '../../utils/prop-types';
 import Modal from '../modal/modal';
 import IngredientDetails from '../ingredient-details/ingredient-details';
 
-function BurgerIngredient({ ingredient, count, modal }) {
-  const handleClick = () => {
-    modal(ingredient);
-  };
-
+function BurgerIngredient({ ingredient, count, handleClick }) {
   return (
     // TODO Временно отключено из-за якорной ссылки
     // eslint-disable-next-line jsx-a11y/anchor-is-valid
@@ -33,29 +29,27 @@ function BurgerIngredient({ ingredient, count, modal }) {
 BurgerIngredient.propTypes = {
   ingredient: ingredientPropTypes.isRequired,
   count: PropTypes.number.isRequired,
-  modal: PropTypes.func.isRequired,
+  handleClick: PropTypes.func.isRequired,
 };
 
-function BurgerIngredients({ ingredients, state, categoryTypes }) {
+function BurgerIngredients({ ingredients, order, categoryTypes }) {
   const [currentTab, setCurrentTab] = useState(categoryTypes[0].key);
-  const [isModalOpened, setIsModalOpened] = useState(false);
-  const [currentIngredient, setCurrentIngredient] = useState({});
-  const handleCloseModal = () => {
-    setIsModalOpened(false);
-  };
+  const [showModal, setShowModal] = useState(false);
+  const [ingredient, setIngredient] = useState(undefined);
 
-  const handleOpenModal = (ingredient) => {
-    setCurrentIngredient(ingredient);
-    setIsModalOpened(true);
-  };
+  useEffect(() => {
+    setShowModal(true);
+  }, [ingredient]);
+
+  const modal = (
+    <Modal handleClose={() => setShowModal(false)} title='Детали ингредиента'>
+      <IngredientDetails {...ingredient} />
+    </Modal>
+  );
 
   return (
     <section className={styles.burgerIngredients}>
-      {isModalOpened && currentIngredient && (
-        <Modal handleClose={handleCloseModal} header='Детали ингредиента'>
-          <IngredientDetails {...currentIngredient} />
-        </Modal>
-      )}
+      {showModal && ingredient && modal}
       <h1 className='mt-10 mb-5 heading text text_type_main-large'>Соберите бургер</h1>
       <div className='mb-10'>
         <ul className={`${styles.tabs}`}>
@@ -79,16 +73,16 @@ function BurgerIngredients({ ingredients, state, categoryTypes }) {
                   .map((ingredient) => {
                     const { type, _id } = ingredient;
                     const count =
-                      type === 'bun' && _id === state.bun
+                      type === 'bun' && _id === order.bun
                         ? 1
-                        : state.ingredients.filter((i) => i === _id).length;
+                        : order.ingredients.filter((i) => i === _id).length;
 
                     return (
                       <li key={_id}>
                         <BurgerIngredient
                           ingredient={ingredient}
                           count={count}
-                          modal={handleOpenModal}
+                          handleClick={() => setIngredient(ingredient)}
                         />
                       </li>
                     );
@@ -104,7 +98,7 @@ function BurgerIngredients({ ingredients, state, categoryTypes }) {
 
 BurgerIngredients.propTypes = {
   ingredients: PropTypes.arrayOf(ingredientPropTypes.isRequired).isRequired,
-  state: burgerStatePropTypes.isRequired,
+  order: orderStatePropTypes.isRequired,
   categoryTypes: PropTypes.arrayOf(
     PropTypes.shape({
       key: PropTypes.string.isRequired,

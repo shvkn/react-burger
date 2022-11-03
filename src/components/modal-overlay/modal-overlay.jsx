@@ -6,6 +6,7 @@ function ModalOverlay({ children, handleClick }) {
   const handleClose = (e) => {
     if (e.currentTarget === e.target) handleClick();
   };
+
   return (
     <div className={styles.overlay} onClick={handleClose}>
       {children}

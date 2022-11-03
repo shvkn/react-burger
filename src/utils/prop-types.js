@@ -15,7 +15,7 @@ export const ingredientPropTypes = PropTypes.shape({
   __v: PropTypes.number.isRequired,
 });
 
-export const burgerStatePropTypes = PropTypes.shape({
+export const orderStatePropTypes = PropTypes.shape({
   bun: PropTypes.string.isRequired,
   ingredients: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
 });

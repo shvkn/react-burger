@@ -6,14 +6,13 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 
-CloseIcon.propTypes = { type: PropTypes.string };
-
-function Modal({ children, handleClose, header = '' }) {
+function Modal({ children, handleClose, title = '' }) {
   const handleCloseByEsc = (e) => {
     if (e.key === 'Escape') {
       handleClose();
     }
   };
+
   useEffect(() => {
     document.addEventListener('keydown', handleCloseByEsc);
     return () => document.removeEventListener('keydown', handleCloseByEsc);
@@ -21,22 +20,25 @@ function Modal({ children, handleClose, header = '' }) {
 
   const modal = (
     <ModalOverlay handleClick={handleClose}>
-      <div className={`pt-10 pr-10 pb-15 pl-10 ${styles.modal}`}>
-        <span className={`${styles.panel}`}>
-          <p className={'text text_type_main-large'}>{header}</p>
+      <div className={`${styles.modal}`}>
+        <div className={`ml-10 mt-10 mr-10 ${styles.panel}`}>
+          <p className={`text text_type_main-large`}>{title}</p>
           <span className={styles.close}>
             <CloseIcon type='primary' onClick={handleClose} />
           </span>
-        </span>
-        {children}
+        </div>
+        <div className={`${styles.content} scroll`}>{children}</div>
       </div>
     </ModalOverlay>
   );
+
   return ReactDOM.createPortal(modal, modalRoot);
 }
+
 Modal.propTypes = {
   children: PropTypes.node.isRequired,
   handleClose: PropTypes.func.isRequired,
-  header: PropTypes.string.isRequired,
+  title: PropTypes.string,
 };
+
 export default Modal;

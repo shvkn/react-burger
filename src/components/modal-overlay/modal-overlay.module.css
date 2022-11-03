@@ -1,10 +1,10 @@
 .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
   width: 100vw;
   height: 100vh;
   background-color: rgba(0,0,0,60%);
-  display: flex;
-  position: absolute;
-  left: 0;
-  top: 0;
   cursor: pointer;
 }

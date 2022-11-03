@@ -16,14 +16,14 @@
 }
 
 .ingredients {
-  margin: 0;
   padding: 0;
+  margin: 0;
   list-style: none;
 }
 
 .ingredients::-webkit-scrollbar-track {
-  margin-bottom: calc(var(--offset-base-size) * 4);
   margin-top: calc(var(--offset-base-size) * 4);
+  margin-bottom: calc(var(--offset-base-size) * 4);
 }
 
 .ingredient {

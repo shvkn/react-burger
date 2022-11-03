@@ -40,11 +40,11 @@ function App() {
           <>
             <BurgerIngredients
               ingredients={state.ingredients}
-              state={state.order}
+              order={state.order}
               categoryTypes={CATEGORY_TYPES}
             />
             <div className='ml-10 pt-25'>
-              <BurgerConstructor ingredients={state.ingredients} state={state.order} />
+              <BurgerConstructor ingredients={state.ingredients} order={state.order} />
             </div>
           </>
         )}
