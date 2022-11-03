@@ -23,9 +23,9 @@ function Modal({ children, handleClose, title = '' }) {
       <div className={`${styles.modal}`}>
         <div className={`ml-10 mt-10 mr-10 ${styles.panel}`}>
           <p className={`text text_type_main-large`}>{title}</p>
-          <span className={styles.close}>
+          <button className={styles.close}>
             <CloseIcon type='primary' onClick={handleClose} />
-          </span>
+          </button>
         </div>
         <div className={`${styles.content} scroll`}>{children}</div>
       </div>
