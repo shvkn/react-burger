@@ -15,3 +15,4 @@ export const BURGER_STATE_MOCKUP = {
   ],
 };
 export const domainUrl = 'https://norma.nomoreparties.space';
+export const modalRoot = document.getElementById('react-modals');

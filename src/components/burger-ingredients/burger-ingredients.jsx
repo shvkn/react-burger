@@ -3,6 +3,7 @@ import { Counter, CurrencyIcon, Tab } from '@ya.praktikum/react-developer-burger
 import PropTypes from 'prop-types';
 import styles from './burger-ingredients.module.css';
 import { burgerStatePropTypes, ingredientPropTypes } from '../../utils/prop-types';
+import Modal from '../modal/modal';
 
 function BurgerIngredient({ ingredient: { image, name, price }, count }) {
   return (
@@ -27,8 +28,24 @@ BurgerIngredient.propTypes = {
 
 function BurgerIngredients({ ingredients, state, categoryTypes }) {
   const [currentTab, setCurrentTab] = useState(categoryTypes[0].key);
+  const [isModalOpened, setIsModalOpened] = useState(false);
+
+  const handleCloseModal = () => {
+    setIsModalOpened(false);
+  };
+
+  const handleOpenModal = () => {
+    setIsModalOpened(true);
+  };
+
+  const modal = (
+    <Modal handleClose={handleCloseModal} header='Детали ингридиента'>
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid, magni?
+    </Modal>
+  );
   return (
     <section className={styles.burgerIngredients}>
+      {isModalOpened && modal}
       <h1 className='mt-10 mb-5 heading text text_type_main-large'>Соберите бургер</h1>
       <div className='mb-10'>
         <ul className={`${styles.tabs}`}>
@@ -57,7 +74,7 @@ function BurgerIngredients({ ingredients, state, categoryTypes }) {
                         : state.ingredients.filter((i) => i === _id).length;
 
                     return (
-                      <li key={_id}>
+                      <li key={_id} onClick={handleOpenModal}>
                         <BurgerIngredient ingredient={ingredient} count={count} />
                       </li>
                     );

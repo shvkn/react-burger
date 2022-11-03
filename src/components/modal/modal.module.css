@@ -1,0 +1,17 @@
+.modal {
+  margin: auto;
+  z-index: 10;
+  width: 720px;
+  background-color: var(--background);
+  border-radius: 40px;
+  cursor: auto;
+}
+
+.panel {
+  display: flex;
+  justify-content: space-between;
+}
+
+.close {
+  cursor: pointer;
+}
