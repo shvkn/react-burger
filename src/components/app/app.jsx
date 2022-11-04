@@ -8,46 +8,41 @@ import '@ya.praktikum/react-developer-burger-ui-components';
 import { BURGER_STATE_MOCKUP, CATEGORY_TYPES, domainUrl } from '../../utils/constants';
 
 function App() {
-  const [state, setState] = useState({
-    isLoading: false,
-    hasError: false,
-    ingredients: [],
-    order: BURGER_STATE_MOCKUP,
-  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  const [ingredients, setIngredients] = useState([]);
 
   useEffect(() => {
     const getIngredients = async () => {
-      setState({ ...state, isLoading: true });
+      setIsLoading(true);
       const response = await fetch(`${domainUrl}/api/ingredients`);
       if (!response.ok) {
         throw new Error(`Error while fetching 'Ingredients' from API ${response.status}`);
       }
-      try {
-        const { data } = await response.json();
-        setState({ ...state, isLoading: false, ingredients: data });
-      } catch (error) {
-        setState({ ...state, isLoading: false, isError: true });
-        console.log(error);
-      }
+      const { data } = await response.json();
+      setIngredients(data);
     };
-    getIngredients();
-    // TODO
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    getIngredients()
+      .catch((error) => {
+        setHasError(true);
+        console.log(error);
+      })
+      .finally(() => setIsLoading(false));
   }, []);
 
   return (
     <div className={styles.app}>
       <AppHeader />
       <main className={`${styles.main}`}>
-        {!state.hasError && !state.isLoading && state.ingredients.length > 0 && (
+        {!hasError && !isLoading && ingredients.length && (
           <>
             <BurgerIngredients
-              ingredients={state.ingredients}
-              order={state.order}
+              ingredients={ingredients}
+              order={BURGER_STATE_MOCKUP}
               categoryTypes={CATEGORY_TYPES}
             />
             <div className='ml-10 pt-25'>
-              <BurgerConstructor ingredients={state.ingredients} order={state.order} />
+              <BurgerConstructor ingredients={ingredients} order={BURGER_STATE_MOCKUP} />
             </div>
           </>
         )}
