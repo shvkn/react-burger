@@ -3,8 +3,10 @@
   top: 0;
   left: 0;
   display: flex;
+  z-index: 9;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0,0,0,60%);
+  background-color: #000000;
   cursor: pointer;
+  opacity: .6;
 }

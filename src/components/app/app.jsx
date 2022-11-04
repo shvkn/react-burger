@@ -9,34 +9,37 @@ import { BURGER_STATE_MOCKUP, CATEGORY_TYPES, domainUrl } from '../../utils/cons
 
 function App() {
   const [state, setState] = useState({
-    pending: false,
-    error: false,
+    isLoading: false,
+    hasError: false,
     ingredients: [],
     order: BURGER_STATE_MOCKUP,
   });
 
   useEffect(() => {
-    setState({ ...state, pending: true });
-    fetch(`${domainUrl}/api/ingredients`)
-      .then((res) => res.json())
-      .then(({ success, data }) => {
-        if (success) {
-          setState({ ...state, pending: false, error: false, ingredients: data });
-        } else {
-          setState({ ...state, pending: false, error: true });
-        }
-      })
-      .catch((error) => {
-        setState({ ...state, pending: false, error: true });
+    const getIngredients = async () => {
+      setState({ ...state, isLoading: true });
+      const response = await fetch(`${domainUrl}/api/ingredients`);
+      if (!response.ok) {
+        throw new Error(`Error while fetching 'Ingredients' from API ${response.status}`);
+      }
+      try {
+        const { data } = await response.json();
+        setState({ ...state, isLoading: false, ingredients: data });
+      } catch (error) {
+        setState({ ...state, isLoading: false, isError: true });
         console.log(error);
-      });
+      }
+    };
+    getIngredients();
+    // TODO
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <div className={styles.app}>
       <AppHeader />
       <main className={`${styles.main}`}>
-        {!state.error && !state.pending && state.ingredients.length > 0 && (
+        {!state.hasError && !state.isLoading && state.ingredients.length > 0 && (
           <>
             <BurgerIngredients
               ingredients={state.ingredients}

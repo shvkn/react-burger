@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import ModalOverlay from '../modal-overlay/modal-overlay';
 import { modalRoot } from '../../utils/constants';
 import styles from './modal.module.css';
@@ -7,19 +7,22 @@ import PropTypes from 'prop-types';
 import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 
 function Modal({ children, handleClose, title = '' }) {
-  const handleCloseByEsc = (e) => {
-    if (e.key === 'Escape') {
-      handleClose();
-    }
-  };
+  const handleCloseByEsc = useCallback(
+    (e) => {
+      if (e.key === 'Escape') {
+        handleClose();
+      }
+    },
+    [handleClose]
+  );
 
   useEffect(() => {
     document.addEventListener('keydown', handleCloseByEsc);
     return () => document.removeEventListener('keydown', handleCloseByEsc);
-  }, []);
+  }, [handleCloseByEsc]);
 
   const modal = (
-    <ModalOverlay handleClick={handleClose}>
+    <>
       <div className={`${styles.modal}`}>
         <div className={`ml-10 mt-10 mr-10 ${styles.panel}`}>
           <p className={`text text_type_main-large`}>{title}</p>
@@ -27,9 +30,10 @@ function Modal({ children, handleClose, title = '' }) {
             <CloseIcon type='primary' onClick={handleClose} />
           </button>
         </div>
-        <div className={`${styles.content} scroll`}>{children}</div>
+        <div className={`${styles.content}`}>{children}</div>
       </div>
-    </ModalOverlay>
+      <ModalOverlay handleClick={handleClose} />
+    </>
   );
 
   return ReactDOM.createPortal(modal, modalRoot);

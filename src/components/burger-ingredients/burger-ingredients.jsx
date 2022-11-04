@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Counter, CurrencyIcon, Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypes from 'prop-types';
 import styles from './burger-ingredients.module.css';
@@ -35,14 +35,17 @@ BurgerIngredient.propTypes = {
 function BurgerIngredients({ ingredients, order, categoryTypes }) {
   const [currentTab, setCurrentTab] = useState(categoryTypes[0].key);
   const [showModal, setShowModal] = useState(false);
-  const [ingredient, setIngredient] = useState(undefined);
+  const [ingredient, setIngredient] = useState();
 
-  useEffect(() => {
+  const handleOpenModal = (ingredient) => {
+    setIngredient(ingredient);
     setShowModal(true);
-  }, [ingredient]);
+  };
+
+  const handleCloseModal = () => setShowModal(false);
 
   const modal = (
-    <Modal handleClose={() => setShowModal(false)} title='Детали ингредиента'>
+    <Modal handleClose={handleCloseModal} title='Детали ингредиента'>
       <IngredientDetails {...ingredient} />
     </Modal>
   );
@@ -82,7 +85,7 @@ function BurgerIngredients({ ingredients, order, categoryTypes }) {
                         <BurgerIngredient
                           ingredient={ingredient}
                           count={count}
-                          handleClick={() => setIngredient(ingredient)}
+                          handleClick={() => handleOpenModal(ingredient)}
                         />
                       </li>
                     );
