@@ -1,10 +1,11 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import ModalOverlay from '../modal-overlay/modal-overlay';
-import { modalRoot } from '../../utils/constants';
 import styles from './modal.module.css';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+
+const MODAL_ROOT = document.getElementById('react-modals');
 
 function Modal({ children, handleClose, title = '' }) {
   useEffect(() => {
@@ -30,7 +31,7 @@ function Modal({ children, handleClose, title = '' }) {
     </>
   );
 
-  return ReactDOM.createPortal(modal, modalRoot);
+  return ReactDOM.createPortal(modal, MODAL_ROOT);
 }
 
 Modal.propTypes = {

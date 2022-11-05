@@ -12,7 +12,7 @@ import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
 
 function BurgerConstructor({ ingredients }) {
-  const order = useMemo(
+  const burger = useMemo(
     () => ({
       bun: '60d3b41abdacab0026a733c7',
       ingredients: [
@@ -28,16 +28,19 @@ function BurgerConstructor({ ingredients }) {
   );
   const [showModal, setShowModal] = useState(false);
 
-  const bun = useMemo(() => ingredients.find(({ _id }) => _id === order.bun), [ingredients]);
+  const bun = useMemo(
+    () => ingredients.find(({ _id }) => _id === burger.bun),
+    [ingredients, burger.bun]
+  );
 
   const filteredIngredients = useMemo(
-    () => ingredients.filter(({ _id }) => order.ingredients.includes(_id)),
-    [ingredients]
+    () => ingredients.filter(({ _id }) => burger.ingredients.includes(_id)),
+    [ingredients, burger.ingredients]
   );
 
   const total = useMemo(
     () => filteredIngredients.reduce((sum, { price }) => sum + price, 0) + bun.price * 2,
-    [filteredIngredients]
+    [filteredIngredients, bun.price]
   );
 
   const handleOpenModal = () => setShowModal(true);

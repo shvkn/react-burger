@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 
 export function BurgerIngredient({ ingredient, handleClick, count }) {
   return (
-    // TODO Временно отключено из-за якорной ссылки
+    // TODO Временно отключено из-за отсутствия `href`
     // eslint-disable-next-line jsx-a11y/anchor-is-valid
     <a className={styles.ingredient} onClick={handleClick}>
       {count > 0 && <Counter count={count} size='default' />}

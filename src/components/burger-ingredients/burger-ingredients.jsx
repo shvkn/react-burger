@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypes from 'prop-types';
 import styles from './burger-ingredients.module.css';
@@ -10,6 +10,16 @@ import { BurgerIngredient } from '../burger-ingredient/burger-ingredient';
 function BurgerIngredients({ ingredients }) {
   const [currentTab, setCurrentTab] = useState('buns');
   const [ingredient, setIngredient] = useState(null);
+  const refs = {
+    buns: useRef(),
+    sauces: useRef(),
+    mains: useRef(),
+  };
+
+  const handleTabClick = (value) => {
+    setCurrentTab(value);
+    refs[value].current.scrollIntoView({ behavior: 'smooth' });
+  };
 
   const handleOpenModal = (ingredient) => {
     setIngredient(ingredient);
@@ -46,31 +56,31 @@ function BurgerIngredients({ ingredients }) {
       <div className='mb-10'>
         <ul className={`${styles.tabs}`}>
           <li key={'buns'}>
-            <Tab active={currentTab === 'buns'} value={'buns'} onClick={setCurrentTab}>
+            <Tab active={currentTab === 'buns'} value={'buns'} onClick={handleTabClick}>
               Булки
             </Tab>
           </li>
 
           <li key={'sauces'}>
-            <Tab active={currentTab === 'sauces'} value={'sauces'} onClick={setCurrentTab}>
+            <Tab active={currentTab === 'sauces'} value={'sauces'} onClick={handleTabClick}>
               Соусы
             </Tab>
           </li>
 
           <li key={'mains'}>
-            <Tab active={currentTab === 'mains'} value={'mains'} onClick={setCurrentTab}>
+            <Tab active={currentTab === 'mains'} value={'mains'} onClick={handleTabClick}>
               Начинки
             </Tab>
           </li>
         </ul>
       </div>
       <ul className={`${styles.categories} scroll`}>
-        <li key='bun'>
+        <li key='buns' ref={refs['buns']}>
           <h2 className='text text_type_main-medium'>Булки</h2>
           <div className='mt-6 mr-2 mb-10 ml-4'>
             <ul className={`${styles.ingredients}`}>
               {buns.map((item) => (
-                <li key={`${item._id}`}>
+                <li key={item._id}>
                   <BurgerIngredient
                     ingredient={item}
                     handleClick={() => handleOpenModal(item)}
@@ -82,12 +92,12 @@ function BurgerIngredients({ ingredients }) {
           </div>
         </li>
 
-        <li key='sauce'>
+        <li key='sauces' ref={refs['sauces']}>
           <h2 className='text text_type_main-medium'>Соусы</h2>
           <div className='mt-6 mr-2 mb-10 ml-4'>
             <ul className={`${styles.ingredients}`}>
               {sauces.map((item) => (
-                <li key={`${item._id}`}>
+                <li key={item._id}>
                   <BurgerIngredient
                     ingredient={item}
                     handleClick={() => handleOpenModal(item)}
@@ -99,12 +109,12 @@ function BurgerIngredients({ ingredients }) {
           </div>
         </li>
 
-        <li key='main'>
+        <li key='mains' ref={refs['mains']}>
           <h2 className='text text_type_main-medium'>Начинки</h2>
           <div className='mt-6 mr-2 mb-10 ml-4'>
             <ul className={`${styles.ingredients}`}>
               {mains.map((item) => (
-                <li key={`${item._id}`}>
+                <li key={item._id}>
                   <BurgerIngredient
                     ingredient={item}
                     handleClick={() => handleOpenModal(item)}
