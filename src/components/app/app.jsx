@@ -10,17 +10,14 @@ import { getIngredients } from '../../utils/burger-api';
 
 function App() {
   const [isLoading, setIsLoading] = useState(false);
-  const [hasError, setHasError] = useState(false);
+  const [error, setError] = useState(null);
   const [ingredients, setIngredients] = useState([]);
 
   useEffect(() => {
     setIsLoading(true);
     getIngredients()
       .then(({ data }) => setIngredients(data))
-      .catch((error) => {
-        setHasError(true);
-        console.log(error);
-      })
+      .catch((error) => setError(error))
       .finally(() => setIsLoading(false));
   }, []);
 
@@ -28,7 +25,12 @@ function App() {
     <div className={styles.app}>
       <AppHeader />
       <main className={`${styles.main}`}>
-        {!hasError && !isLoading && ingredients.length && (
+        {(isLoading || error) && (
+          <p className={`text text_type_main-large text_color_inactive ${styles.message}`}>
+            {isLoading ? 'Загрузка данных' : error ? `Ошибка: ${error.message}` : ''}
+          </p>
+        )}
+        {!error && !isLoading && ingredients.length && (
           <>
             <BurgerIngredients
               ingredients={ingredients}
