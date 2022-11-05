@@ -24,7 +24,9 @@ function AppHeader() {
             <li className={`ml-2 ${styles.item}`}>
               <a href='#' className={`pt-4 pl-5 pb-4 pr-5 ${styles.link}`}>
                 <ListIcon type='secondary' />
-                <p className='ml-2 text text_type_main-default'>Лента заказов</p>
+                <p className='ml-2 text text_type_main-default text_color_inactive'>
+                  Лента заказов
+                </p>
               </a>
             </li>
           </ul>
@@ -33,7 +35,7 @@ function AppHeader() {
         <nav className={`${styles.nav} ${styles.end}`}>
           <a href='#' className={`pt-4 pl-5 pb-4 pr-5 ${styles.link}`}>
             <ProfileIcon type='secondary' />
-            <p className='ml-2 text text_type_main-default'>Личный кабинет</p>
+            <p className='ml-2 text text_type_main-default text_color_inactive'>Личный кабинет</p>
           </a>
         </nav>
       </div>
