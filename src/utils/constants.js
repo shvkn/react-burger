@@ -1,8 +1,3 @@
-export const CATEGORY_TYPES = [
-  { key: 'bun', name: 'Булки' },
-  { key: 'sauce', name: 'Соусы' },
-  { key: 'main', name: 'Начинки' },
-];
 export const BURGER_STATE_MOCKUP = {
   bun: '60d3b41abdacab0026a733c7',
   ingredients: [

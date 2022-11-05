@@ -5,7 +5,7 @@ import AppHeader from '../app-header/app-header';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
 import '@ya.praktikum/react-developer-burger-ui-components';
-import { BURGER_STATE_MOCKUP, CATEGORY_TYPES, NORMA_API } from '../../utils/constants';
+import { BURGER_STATE_MOCKUP } from '../../utils/constants';
 import { getIngredients } from '../../utils/burger-api';
 
 function App() {
@@ -32,11 +32,7 @@ function App() {
         )}
         {!error && !isLoading && ingredients.length && (
           <>
-            <BurgerIngredients
-              ingredients={ingredients}
-              order={BURGER_STATE_MOCKUP}
-              categoryTypes={CATEGORY_TYPES}
-            />
+            <BurgerIngredients ingredients={ingredients} />
             <div className='ml-10 pt-25'>
               <BurgerConstructor ingredients={ingredients} order={BURGER_STATE_MOCKUP} />
             </div>

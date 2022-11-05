@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   Button,
   ConstructorElement,
@@ -7,11 +7,25 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypes from 'prop-types';
 import styles from './burger-constructor.module.css';
-import { ingredientPropTypes, orderStatePropTypes } from '../../utils/prop-types';
+import { ingredientPropTypes } from '../../utils/prop-types';
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
 
-function BurgerConstructor({ ingredients, order }) {
+function BurgerConstructor({ ingredients }) {
+  const order = useMemo(
+    () => ({
+      bun: '60d3b41abdacab0026a733c7',
+      ingredients: [
+        '60d3b41abdacab0026a733ca',
+        '60d3b41abdacab0026a733cc',
+        '60d3b41abdacab0026a733d0',
+        '60d3b41abdacab0026a733d3',
+        '60d3b41abdacab0026a733d4',
+        '60d3b41abdacab0026a733d0',
+      ],
+    }),
+    []
+  );
   const [showModal, setShowModal] = useState(false);
 
   const bun = ingredients.find(({ _id }) => _id === order.bun);
@@ -76,7 +90,6 @@ function BurgerConstructor({ ingredients, order }) {
 
 BurgerConstructor.propTypes = {
   ingredients: PropTypes.arrayOf(ingredientPropTypes.isRequired).isRequired,
-  order: orderStatePropTypes.isRequired,
 };
 
 export default BurgerConstructor;
