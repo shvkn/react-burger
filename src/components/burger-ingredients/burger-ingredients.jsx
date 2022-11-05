@@ -39,7 +39,7 @@ function BurgerIngredients({ ingredients }) {
     <section className={styles.burgerIngredients}>
       {ingredient && (
         <Modal handleClose={handleCloseModal} title='Детали ингредиента'>
-          <IngredientDetails {...ingredient} />
+          <IngredientDetails ingredient={ingredient} />
         </Modal>
       )}
       <h1 className='mt-10 mb-5 heading text text_type_main-large'>Соберите бургер</h1>

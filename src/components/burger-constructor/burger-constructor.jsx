@@ -28,19 +28,28 @@ function BurgerConstructor({ ingredients }) {
   );
   const [showModal, setShowModal] = useState(false);
 
-  const bun = ingredients.find(({ _id }) => _id === order.bun);
-  const filteredIngredients = ingredients.filter(({ _id }) => order.ingredients.includes(_id));
-  const total = filteredIngredients.reduce((sum, { price }) => sum + price, 0) + bun.price * 2;
+  const bun = useMemo(() => ingredients.find(({ _id }) => _id === order.bun), [ingredients]);
 
-  const modal = (
-    <Modal handleClose={() => setShowModal(false)}>
-      <OrderDetails />
-    </Modal>
+  const filteredIngredients = useMemo(
+    () => ingredients.filter(({ _id }) => order.ingredients.includes(_id)),
+    [ingredients]
   );
+
+  const total = useMemo(
+    () => filteredIngredients.reduce((sum, { price }) => sum + price, 0) + bun.price * 2,
+    [filteredIngredients]
+  );
+
+  const handleOpenModal = () => setShowModal(true);
+  const handleCloseModal = () => setShowModal(false);
 
   return (
     <div className={`${styles.burgerConstructor}`}>
-      {showModal && modal}
+      {showModal && (
+        <Modal handleClose={handleCloseModal}>
+          <OrderDetails />
+        </Modal>
+      )}
       <div className={`ml-4 ${styles.container}`}>
         <div className={`ml-8 ${styles.bun}`}>
           <ConstructorElement
@@ -80,7 +89,7 @@ function BurgerConstructor({ ingredients }) {
           <p className='mr-2 text text_type_digits-medium'>{total}</p>
           <CurrencyIcon type='primary' />
         </div>
-        <Button type='primary' size='large' htmlType='button' onClick={() => setShowModal(true)}>
+        <Button type='primary' size='large' htmlType='button' onClick={handleOpenModal}>
           Оформить заказ
         </Button>
       </div>

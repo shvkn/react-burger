@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './ingredient-details.module.css';
 import { ingredientPropTypes } from '../../utils/prop-types';
 
-function IngredientDetails(ingredient) {
+function IngredientDetails({ ingredient }) {
   return (
     <div className={`pb-15 ${styles.inner}`}>
       <img className={styles.image} src={ingredient.image_large} alt={ingredient.name} />
