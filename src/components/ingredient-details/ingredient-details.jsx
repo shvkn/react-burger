@@ -2,30 +2,33 @@ import React from 'react';
 import styles from './ingredient-details.module.css';
 import { ingredientPropTypes } from '../../utils/prop-types';
 
-function IngredientDetails({ calories, carbohydrates, fat, image_large, name, proteins }) {
+function IngredientDetails(ingredient) {
   return (
     <div className={`pb-15 ${styles.inner}`}>
-      <img className={styles.image} src={image_large} alt={name} />
-      <p className={`mt-4 mb-8 text text_type_main-medium ${styles.name}`}>{name}</p>
+      <img className={styles.image} src={ingredient.image_large} alt={ingredient.name} />
+      <p className={`mt-4 mb-8 text text_type_main-medium ${styles.name}`}>{ingredient.name}</p>
       <ul className={`text text_type_main-default text_color_inactive ${styles.facts}`}>
         <li className={`${styles.fact}`}>
           Калории,ккал
-          <span className='mt-2 text text_type_digits-default'>{calories}</span>
+          <span className='mt-2 text text_type_digits-default'>{ingredient.calories}</span>
         </li>
         <li className={`ml-5 ${styles.fact}`}>
-          Белки, г<span className='mt-2 text text_type_digits-default'>{proteins}</span>
+          Белки, г<span className='mt-2 text text_type_digits-default'>{ingredient.proteins}</span>
         </li>
         <li className={`ml-5 ${styles.fact}`}>
-          Жиры, г<span className='mt-2 text text_type_digits-default'>{fat}</span>
+          Жиры, г<span className='mt-2 text text_type_digits-default'>{ingredient.fat}</span>
         </li>
         <li className={`ml-5 ${styles.fact}`}>
-          Углеводы, г<span className='mt-2 text text_type_digits-default'>{carbohydrates}</span>
+          Углеводы, г
+          <span className='mt-2 text text_type_digits-default'>{ingredient.carbohydrates}</span>
         </li>
       </ul>
     </div>
   );
 }
 
-IngredientDetails.propTypes = ingredientPropTypes.isRequired;
+IngredientDetails.propTypes = {
+  ingredient: ingredientPropTypes.isRequired,
+};
 
 export default IngredientDetails;
