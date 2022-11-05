@@ -7,19 +7,13 @@ import PropTypes from 'prop-types';
 import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 
 function Modal({ children, handleClose, title = '' }) {
-  const handleCloseByEsc = useCallback(
-    (e) => {
-      if (e.key === 'Escape') {
-        handleClose();
-      }
-    },
-    [handleClose]
-  );
-
   useEffect(() => {
+    const handleCloseByEsc = (e) => {
+      if (e.key === 'Escape') handleClose();
+    };
     document.addEventListener('keydown', handleCloseByEsc);
     return () => document.removeEventListener('keydown', handleCloseByEsc);
-  }, [handleCloseByEsc]);
+  }, [handleClose]);
 
   const modal = (
     <>
