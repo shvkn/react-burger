@@ -14,5 +14,5 @@ export const BURGER_STATE_MOCKUP = {
     '60d3b41abdacab0026a733d0',
   ],
 };
-export const domainUrl = 'https://norma.nomoreparties.space';
+export const NORMA_API = 'https://norma.nomoreparties.space/api';
 export const modalRoot = document.getElementById('react-modals');

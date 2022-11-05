@@ -5,7 +5,8 @@ import AppHeader from '../app-header/app-header';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
 import '@ya.praktikum/react-developer-burger-ui-components';
-import { BURGER_STATE_MOCKUP, CATEGORY_TYPES, domainUrl } from '../../utils/constants';
+import { BURGER_STATE_MOCKUP, CATEGORY_TYPES, NORMA_API } from '../../utils/constants';
+import { getIngredients } from '../../utils/burger-api';
 
 function App() {
   const [isLoading, setIsLoading] = useState(false);
@@ -13,16 +14,9 @@ function App() {
   const [ingredients, setIngredients] = useState([]);
 
   useEffect(() => {
-    const getIngredients = async () => {
-      setIsLoading(true);
-      const response = await fetch(`${domainUrl}/api/ingredients`);
-      if (!response.ok) {
-        throw new Error(`Error while fetching 'Ingredients' from API ${response.status}`);
-      }
-      const { data } = await response.json();
-      setIngredients(data);
-    };
+    setIsLoading(true);
     getIngredients()
+      .then(({ data }) => setIngredients(data))
       .catch((error) => {
         setHasError(true);
         console.log(error);
