@@ -6,9 +6,7 @@ import PropTypes from 'prop-types';
 
 export function BurgerIngredient({ ingredient, handleClick, count }) {
   return (
-    // TODO Временно отключено из-за отсутствия `href`
-    // eslint-disable-next-line jsx-a11y/anchor-is-valid
-    <a className={styles.ingredient} onClick={handleClick}>
+    <article className={styles.ingredient} onClick={handleClick}>
       {count > 0 && <Counter count={count} size='default' />}
       <img
         className={`ml-4 mr-4 mb-2 ${styles.ingredientImage}`}
@@ -20,7 +18,7 @@ export function BurgerIngredient({ ingredient, handleClick, count }) {
         <CurrencyIcon type='primary' />
       </div>
       <h3 className='mt-2 text text_type_main-default'>{ingredient.name}</h3>
-    </a>
+    </article>
   );
 }
 
