@@ -1,0 +1,21 @@
+body {
+  overflow: hidden;
+}
+
+.scroll {
+  overflow-y: auto;
+}
+.scroll::-webkit-scrollbar {
+  width: calc(var(--offset-base-size) * 2);
+}
+
+.scroll::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+.scroll::-webkit-scrollbar-thumb {
+  width: calc(var(--offset-base-size) * 2);
+  background: var(--text-inactive-color);
+  border: 0;
+  border-radius: 0;
+}
