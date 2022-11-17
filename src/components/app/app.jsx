@@ -41,7 +41,7 @@ function App() {
           <IngredientsContext.Provider value={ingredients.items}>
             <BurgerIngredients />
             <div className='ml-10 pt-25'>
-              <BurgerConstructor ingredients={ingredients.items} />
+              <BurgerConstructor />
             </div>
           </IngredientsContext.Provider>
         )}

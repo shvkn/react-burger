@@ -1,17 +1,17 @@
-import React, { useMemo, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import {
   Button,
   ConstructorElement,
   CurrencyIcon,
   DragIcon,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import PropTypes from 'prop-types';
 import styles from './burger-constructor.module.css';
-import { ingredientPropTypes } from '../../utils/prop-types';
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
+import { IngredientsContext } from '../../services/context/ingredients-context';
 
-function BurgerConstructor({ ingredients }) {
+function BurgerConstructor() {
+  const ingredients = useContext(IngredientsContext);
   const burger = useMemo(
     () => ({
       bun: '60d3b41abdacab0026a733c7',
@@ -99,9 +99,5 @@ function BurgerConstructor({ ingredients }) {
     </div>
   );
 }
-
-BurgerConstructor.propTypes = {
-  ingredients: PropTypes.arrayOf(ingredientPropTypes.isRequired).isRequired,
-};
 
 export default BurgerConstructor;
