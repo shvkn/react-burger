@@ -1,8 +1,4 @@
-import {
-  BURGER_ADD_INGREDIENT,
-  BURGER_REMOVE_INGREDIENT,
-  BURGER_RESET,
-} from '../actions/burger-constructor';
+import { BURGER_ADD_INGREDIENT, BURGER_REMOVE_INGREDIENT, BURGER_RESET } from '../actions/burger';
 
 export const burgerInitState = {
   bun: null,

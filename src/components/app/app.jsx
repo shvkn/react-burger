@@ -6,12 +6,15 @@ import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
 import '@ya.praktikum/react-developer-burger-ui-components';
 import { getIngredients } from '../../utils/burger-api';
-import { ingredientsInitState, ingredientsReducer } from '../../services/reducers';
+import {
+  ingredientsInitState,
+  ingredientsReducer,
+} from '../../services/reducers/ingredients-reducer';
 import {
   INGREDIENTS_GET_FAILED,
   INGREDIENTS_GET_REQUESTED,
   INGREDIENTS_GET_SUCCEED,
-} from '../../services/actions';
+} from '../../services/actions/ingredients';
 import { IngredientsContext } from '../../services/context/ingredients-context';
 import { burgerInitState, burgerReducer } from '../../services/reducers/burger-reducer';
 import { BurgerConstructorContext } from '../../services/context/burger-constructor-context';

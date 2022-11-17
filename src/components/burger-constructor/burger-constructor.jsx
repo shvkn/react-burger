@@ -11,15 +11,17 @@ import OrderDetails from '../order-details/order-details';
 import { IngredientsContext } from '../../services/context/ingredients-context';
 import {
   BURGER_ADD_INGREDIENT,
-  ORDER_MAKE_FAILED,
-  ORDER_MAKE_REQUEST,
-  ORDER_MAKE_SUCCESS,
   BURGER_REMOVE_INGREDIENT,
   BURGER_RESET,
-} from '../../services/actions/burger-constructor';
+} from '../../services/actions/burger';
 import { postOrder } from '../../utils/burger-api';
 import { BurgerConstructorContext } from '../../services/context/burger-constructor-context';
 import { orderInitState, orderReducer } from '../../services/reducers/order-reducer';
+import {
+  ORDER_MAKE_FAILED,
+  ORDER_MAKE_REQUEST,
+  ORDER_MAKE_SUCCESS,
+} from '../../services/actions/order';
 
 function BurgerConstructor() {
   const ingredients = useContext(IngredientsContext);

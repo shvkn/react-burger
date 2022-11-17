@@ -2,7 +2,7 @@ import {
   INGREDIENTS_GET_FAILED,
   INGREDIENTS_GET_REQUESTED,
   INGREDIENTS_GET_SUCCEED,
-} from '../actions';
+} from '../actions/ingredients';
 
 export const ingredientsInitState = {
   items: [],

@@ -1,8 +1,4 @@
-import {
-  ORDER_MAKE_FAILED,
-  ORDER_MAKE_REQUEST,
-  ORDER_MAKE_SUCCESS,
-} from '../actions/burger-constructor';
+import { ORDER_MAKE_FAILED, ORDER_MAKE_REQUEST, ORDER_MAKE_SUCCESS } from '../actions/order';
 
 export const orderInitState = {
   number: null,
