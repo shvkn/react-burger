@@ -1,37 +1,41 @@
 import {
-  GET_INGREDIENTS_FAILED,
-  GET_INGREDIENTS_REQUEST,
-  GET_INGREDIENTS_SUCCESS,
+  INGREDIENTS_GET_FAILED,
+  INGREDIENTS_GET_REQUESTED,
+  INGREDIENTS_GET_SUCCEED,
 } from '../actions';
 
 export const ingredientsInitState = {
   items: [],
   isRequested: false,
   isFailed: false,
+  isSucceed: false,
 };
 
 export const ingredientsReducer = (state, action) => {
   switch (action.type) {
-    case GET_INGREDIENTS_REQUEST: {
+    case INGREDIENTS_GET_REQUESTED: {
       return {
         ...state,
         isRequested: true,
+        isFailed: false,
       };
     }
-    case GET_INGREDIENTS_FAILED: {
+    case INGREDIENTS_GET_FAILED: {
       return {
         ...state,
-        isRequested: false,
         isFailed: true,
+        isRequested: false,
+        isSucceed: false,
       };
     }
 
-    case GET_INGREDIENTS_SUCCESS: {
+    case INGREDIENTS_GET_SUCCEED: {
       return {
         ...state,
         items: action.data,
         isRequested: false,
         isFailed: false,
+        isSucceed: true,
       };
     }
 

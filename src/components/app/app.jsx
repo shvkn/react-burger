@@ -8,23 +8,23 @@ import '@ya.praktikum/react-developer-burger-ui-components';
 import { getIngredients } from '../../utils/burger-api';
 import { ingredientsInitState, ingredientsReducer } from '../../services/reducers';
 import {
-  GET_INGREDIENTS_FAILED,
-  GET_INGREDIENTS_REQUEST,
-  GET_INGREDIENTS_SUCCESS,
+  INGREDIENTS_GET_FAILED,
+  INGREDIENTS_GET_REQUESTED,
+  INGREDIENTS_GET_SUCCEED,
 } from '../../services/actions';
 import { IngredientsContext } from '../../services/context/ingredients-context';
 import { burgerInitState, burgerReducer } from '../../services/reducers/burger-reducer';
 import { BurgerConstructorContext } from '../../services/context/burger-constructor-context';
 
 function App() {
-  const [ingredients, dispatch] = useReducer(ingredientsReducer, ingredientsInitState);
+  const [ingredients, dispatchIngredients] = useReducer(ingredientsReducer, ingredientsInitState);
   const [burger, dispatchBurger] = useReducer(burgerReducer, burgerInitState);
 
   useEffect(() => {
-    dispatch({ type: GET_INGREDIENTS_REQUEST });
+    dispatchIngredients({ type: INGREDIENTS_GET_REQUESTED });
     getIngredients()
-      .then(({ data }) => dispatch({ type: GET_INGREDIENTS_SUCCESS, data: data }))
-      .catch((error) => dispatch({ type: GET_INGREDIENTS_FAILED, error }));
+      .then(({ data }) => dispatchIngredients({ type: INGREDIENTS_GET_SUCCEED, data }))
+      .catch((error) => dispatchIngredients({ type: INGREDIENTS_GET_FAILED, error }));
   }, []);
 
   return (
@@ -40,7 +40,7 @@ function App() {
               : ''}
           </p>
         )}
-        {!ingredients.isFailed && !ingredients.isRequested && ingredients.items.length && (
+        {ingredients.isSucceed && ingredients.items.length && (
           <IngredientsContext.Provider value={ingredients.items}>
             <BurgerConstructorContext.Provider value={{ burger, dispatchBurger }}>
               <BurgerIngredients />

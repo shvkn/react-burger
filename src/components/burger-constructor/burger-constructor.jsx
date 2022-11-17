@@ -47,13 +47,13 @@ function BurgerConstructor() {
 
   const handleMakeOrder = () => {
     dispatchOrder({ type: ORDER_MAKE_REQUEST });
+    handleOpenModal();
     const items = [burger.bun._id, ...burger.ingredients.map(({ _id }) => _id), burger.bun._id];
     postOrder(items)
       .then(({ success, order }) => {
-        if (!success) throw new Error('error');
+        if (!success) throw new Error(`Error in "postOrder"`);
         dispatchOrder({ type: ORDER_MAKE_SUCCESS, number: order.number });
         dispatchBurger({ type: BURGER_RESET });
-        handleOpenModal();
       })
       .catch((error) => {
         console.error(error);
@@ -65,19 +65,32 @@ function BurgerConstructor() {
 
   return (
     <div className={`${styles.burgerConstructor}`}>
-      {showModal && !order.isFailed && (
+      {showModal && (
         <Modal handleClose={handleCloseModal}>
-          <OrderDetails number={order.number} />
+          {order.isRequested && (
+            <p className='mt-8 mb-30 text text_type_main-default'>Оформляем ваш заказ</p>
+          )}
+          {order.isFailed && (
+            <p className='mt-8 mb-30 text text_type_main-default'>
+              Произошла ошибка и мы не смогли принять ваш заказ. Пожалуйста, повторите позже.
+            </p>
+          )}
+          {order.isSucceed && <OrderDetails number={order.number} />}
         </Modal>
       )}
-      {showModal && order.isFailed && (
-        <Modal handleClose={handleCloseModal} title='Ошибка'>
-          <p className='mt-8 mb-30 text text_type_main-default'>
-            Произошла ошибка и мы не смогли принять ваш заказ. Пожалуйста, повторите позже.
-          </p>
-        </Modal>
+      {!burger.bun && !burger.ingredients.length > 0 && (
+        <div className={`ml-4 ${styles.container}`}>
+          <div className={styles.message}>
+            <p className={`mt-8 text text_type_main-medium text_color_inactive`}>
+              Здесь пока пусто.
+            </p>
+            <p className={`mt-4 mb-30 text text_type_main-medium text_color_inactive`}>
+              Перетащите нужные ингредиенты.
+            </p>
+          </div>
+        </div>
       )}
-      {(burger.bun || burger.ingredients.length) && (
+      {(burger.bun || burger.ingredients.length > 0) && (
         <div className={`ml-4 ${styles.container}`}>
           <div className={`ml-8 ${styles.bun}`}>
             <ConstructorElement

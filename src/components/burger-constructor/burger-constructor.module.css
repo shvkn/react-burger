@@ -9,8 +9,13 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  height: 100%;
 }
 
+.message {
+  margin: auto;
+  text-align: center;
+}
 .bun {
   flex: 0;
 }

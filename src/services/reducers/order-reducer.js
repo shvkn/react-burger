@@ -8,6 +8,7 @@ export const orderInitState = {
   number: null,
   isRequested: false,
   isFailed: false,
+  isSucceed: false,
 };
 export const orderReducer = (state, action) => {
   switch (action.type) {
@@ -15,6 +16,8 @@ export const orderReducer = (state, action) => {
       return {
         ...state,
         isRequested: true,
+        isFailed: false,
+        isSucceed: false,
       };
     }
 
@@ -23,6 +26,7 @@ export const orderReducer = (state, action) => {
         ...state,
         isFailed: true,
         isRequested: false,
+        isSucceed: false,
       };
     }
 
@@ -30,6 +34,9 @@ export const orderReducer = (state, action) => {
       return {
         ...state,
         number: action.number,
+        isRequested: false,
+        isFailed: false,
+        isSucceed: true,
       };
     }
     default:
