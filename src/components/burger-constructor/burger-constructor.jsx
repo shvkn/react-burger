@@ -12,35 +12,59 @@ import { IngredientsContext } from '../../services/context/ingredients-context';
 import {
   burgerConstructorInitState,
   burgerConstructorReducer,
+  orderInitState,
+  orderReducer,
 } from '../../services/reducers/burger-constructor';
 import {
-  ADD_INGREDIENT,
-  REMOVE_INGREDIENT,
-  RESET,
+  CONSTRUCTOR_ADD_INGREDIENT,
+  ORDER_MAKE_FAIL,
+  ORDER_MAKE_REQUEST,
+  ORDER_MAKE_SUCCESS,
+  CONSTRUCTOR_REMOVE_INGREDIENT,
+  CONSTRUCTOR_RESET,
 } from '../../services/actions/burger-constructor';
+import { postOrder } from '../../utils/burger-api';
 
 function BurgerConstructor() {
   const ingredients = useContext(IngredientsContext);
   const [showModal, setShowModal] = useState(false);
-  const [burger, dispatch] = useReducer(burgerConstructorReducer, burgerConstructorInitState);
+  const [burger, dispatchBurger] = useReducer(burgerConstructorReducer, burgerConstructorInitState);
+  const [order, dispatchOrder] = useReducer(orderReducer, orderInitState);
 
   useEffect(() => {
-    dispatch({ type: RESET });
-    dispatch({ type: ADD_INGREDIENT, ingredient: ingredients.find(({ type }) => type === 'bun') });
+    dispatchBurger({ type: CONSTRUCTOR_RESET });
+    dispatchBurger({
+      type: CONSTRUCTOR_ADD_INGREDIENT,
+      ingredient: ingredients.find(({ type }) => type === 'bun'),
+    });
     ingredients
       .filter(({ type }) => type !== 'bun')
-      .forEach((ingredient) => dispatch({ type: ADD_INGREDIENT, ingredient }));
-  }, [dispatch, ingredients]);
+      .forEach((ingredient) => dispatchBurger({ type: CONSTRUCTOR_ADD_INGREDIENT, ingredient }));
+  }, [dispatchBurger, ingredients]);
 
   const handleOpenModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
-  const handleRemove = (index) => dispatch({ type: REMOVE_INGREDIENT, index });
+  const handleRemove = (index) => dispatchBurger({ type: CONSTRUCTOR_REMOVE_INGREDIENT, index });
 
+  const handleMakeOrder = () => {
+    dispatchOrder({ type: ORDER_MAKE_REQUEST });
+    const items = [burger.bun._id, ...burger.ingredients.map(({ _id }) => _id), burger.bun._id];
+    postOrder(items)
+      .then(({ success, order }) => {
+        if (!success) throw new Error('error');
+        dispatchOrder({ type: ORDER_MAKE_SUCCESS, number: order.number });
+        handleOpenModal();
+      })
+      .catch((error) => {
+        console.error(error);
+        dispatchOrder({ type: ORDER_MAKE_FAIL });
+      });
+  };
   return (
     <div className={`${styles.burgerConstructor}`}>
-      {showModal && (
+      {showModal && !order.isFailed && (
         <Modal handleClose={handleCloseModal}>
-          <OrderDetails />
+          <OrderDetails number={order.number} />
         </Modal>
       )}
       {(burger.bun || burger.ingredients.length) && (
@@ -89,7 +113,7 @@ function BurgerConstructor() {
           <p className='mr-2 text text_type_digits-medium'>{burger.totalPrice}</p>
           <CurrencyIcon type='primary' />
         </div>
-        <Button type='primary' size='large' htmlType='button' onClick={handleOpenModal}>
+        <Button type='primary' size='large' htmlType='button' onClick={handleMakeOrder}>
           Оформить заказ
         </Button>
       </div>
