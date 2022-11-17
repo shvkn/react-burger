@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import '../../style/common.css';
 import styles from './app.module.css';
 import AppHeader from '../app-header/app-header';
@@ -6,34 +6,41 @@ import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
 import '@ya.praktikum/react-developer-burger-ui-components';
 import { getIngredients } from '../../utils/burger-api';
+import { ingredientsInitState, ingredientsReducer } from '../../services/reducers';
+import {
+  GET_INGREDIENTS_FAILED,
+  GET_INGREDIENTS_REQUEST,
+  GET_INGREDIENTS_SUCCESS,
+} from '../../services/actions';
 
 function App() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [ingredients, setIngredients] = useState([]);
+  const [ingredients, dispatch] = useReducer(ingredientsReducer, ingredientsInitState);
 
   useEffect(() => {
-    setIsLoading(true);
+    dispatch({ type: GET_INGREDIENTS_REQUEST });
     getIngredients()
-      .then(({ data }) => setIngredients(data))
-      .catch((error) => setError(error))
-      .finally(() => setIsLoading(false));
+      .then(({ data }) => dispatch({ type: GET_INGREDIENTS_SUCCESS, data: data }))
+      .catch((error) => dispatch({ type: GET_INGREDIENTS_FAILED, error }));
   }, []);
 
   return (
     <div className={styles.app}>
       <AppHeader />
       <main className={`${styles.main}`}>
-        {(isLoading || error) && (
+        {(ingredients.isRequested || ingredients.isFailed) && (
           <p className={`text text_type_main-large text_color_inactive ${styles.message}`}>
-            {isLoading ? 'Загрузка данных' : error ? `Ошибка: ${error.message}` : ''}
+            {ingredients.isRequested
+              ? 'Загрузка данных'
+              : ingredients.isFailed
+              ? 'Ошибка загрузки данных'
+              : ''}
           </p>
         )}
-        {!error && !isLoading && ingredients.length && (
+        {!ingredients.isFailed && !ingredients.isRequested && ingredients.items.length && (
           <>
-            <BurgerIngredients ingredients={ingredients} />
+            <BurgerIngredients ingredients={ingredients.items} />
             <div className='ml-10 pt-25'>
-              <BurgerConstructor ingredients={ingredients} />
+              <BurgerConstructor ingredients={ingredients.items} />
             </div>
           </>
         )}
