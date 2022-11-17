@@ -5,6 +5,7 @@ import Modal from '../modal/modal';
 import IngredientDetails from '../ingredient-details/ingredient-details';
 import { BurgerIngredient } from '../burger-ingredient/burger-ingredient';
 import { IngredientsContext } from '../../services/context/ingredients-context';
+import { BurgerConstructorContext } from '../../services/context/burger-constructor-context';
 
 function BurgerIngredients() {
   const ingredients = useContext(IngredientsContext);
@@ -33,17 +34,15 @@ function BurgerIngredients() {
   const sauces = useMemo(() => ingredients.filter((i) => i.type === 'sauce'), [ingredients]);
   const mains = useMemo(() => ingredients.filter((i) => i.type === 'main'), [ingredients]);
 
-  const selectedItems = useMemo(
-    () => ({
-      '60d3b41abdacab0026a733c7': 1,
-      '60d3b41abdacab0026a733ca': 1,
-      '60d3b41abdacab0026a733cc': 1,
-      '60d3b41abdacab0026a733d0': 2,
-      '60d3b41abdacab0026a733d3': 1,
-      '60d3b41abdacab0026a733d4': 1,
-    }),
-    []
-  );
+  const { burger } = useContext(BurgerConstructorContext);
+
+  const selectedItems = useMemo(() => {
+    const items = burger.bun ? { [burger.bun._id]: 2 } : {};
+    burger.ingredients.forEach(({ _id }) => {
+      items[_id] = items[_id] + 1 || 1;
+    });
+    return items;
+  }, [burger]);
 
   return (
     <section className={styles.burgerIngredients}>

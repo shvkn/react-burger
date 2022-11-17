@@ -10,41 +10,40 @@ import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
 import { IngredientsContext } from '../../services/context/ingredients-context';
 import {
-  burgerConstructorInitState,
-  burgerConstructorReducer,
-  orderInitState,
-  orderReducer,
-} from '../../services/reducers/burger-constructor';
-import {
-  CONSTRUCTOR_ADD_INGREDIENT,
-  ORDER_MAKE_FAIL,
+  BURGER_ADD_INGREDIENT,
+  ORDER_MAKE_FAILED,
   ORDER_MAKE_REQUEST,
   ORDER_MAKE_SUCCESS,
-  CONSTRUCTOR_REMOVE_INGREDIENT,
-  CONSTRUCTOR_RESET,
+  BURGER_REMOVE_INGREDIENT,
+  BURGER_RESET,
 } from '../../services/actions/burger-constructor';
 import { postOrder } from '../../utils/burger-api';
+import { BurgerConstructorContext } from '../../services/context/burger-constructor-context';
+import { orderInitState, orderReducer } from '../../services/reducers/order-reducer';
 
 function BurgerConstructor() {
   const ingredients = useContext(IngredientsContext);
+  const { burger, dispatchBurger } = useContext(BurgerConstructorContext);
   const [showModal, setShowModal] = useState(false);
-  const [burger, dispatchBurger] = useReducer(burgerConstructorReducer, burgerConstructorInitState);
   const [order, dispatchOrder] = useReducer(orderReducer, orderInitState);
 
   useEffect(() => {
-    dispatchBurger({ type: CONSTRUCTOR_RESET });
-    dispatchBurger({
-      type: CONSTRUCTOR_ADD_INGREDIENT,
-      ingredient: ingredients.find(({ type }) => type === 'bun'),
-    });
-    ingredients
-      .filter(({ type }) => type !== 'bun')
-      .forEach((ingredient) => dispatchBurger({ type: CONSTRUCTOR_ADD_INGREDIENT, ingredient }));
+    const fillConstructor = () => {
+      dispatchBurger({ type: BURGER_RESET });
+      dispatchBurger({
+        type: BURGER_ADD_INGREDIENT,
+        ingredient: ingredients.find(({ type }) => type === 'bun'),
+      });
+      ingredients
+        .filter(({ type }) => type !== 'bun')
+        .forEach((ingredient) => dispatchBurger({ type: BURGER_ADD_INGREDIENT, ingredient }));
+    };
+    fillConstructor();
   }, [dispatchBurger, ingredients]);
 
   const handleOpenModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
-  const handleRemove = (index) => dispatchBurger({ type: CONSTRUCTOR_REMOVE_INGREDIENT, index });
+  const handleRemove = (index) => dispatchBurger({ type: BURGER_REMOVE_INGREDIENT, index });
 
   const handleMakeOrder = () => {
     dispatchOrder({ type: ORDER_MAKE_REQUEST });
@@ -53,13 +52,15 @@ function BurgerConstructor() {
       .then(({ success, order }) => {
         if (!success) throw new Error('error');
         dispatchOrder({ type: ORDER_MAKE_SUCCESS, number: order.number });
+        dispatchBurger({ type: BURGER_RESET });
         handleOpenModal();
       })
       .catch((error) => {
         console.error(error);
-        dispatchOrder({ type: ORDER_MAKE_FAIL });
+        dispatchOrder({ type: ORDER_MAKE_FAILED });
       });
   };
+
   return (
     <div className={`${styles.burgerConstructor}`}>
       {showModal && !order.isFailed && (
@@ -70,7 +71,7 @@ function BurgerConstructor() {
       {showModal && order.isFailed && (
         <Modal handleClose={handleCloseModal} title='Ошибка'>
           <p className='mt-8 mb-30 text text_type_main-default'>
-            Произошла ошибка и мы не смогли принять ваш заказ. Повторите позже.
+            Произошла ошибка и мы не смогли принять ваш заказ. Пожалуйста, повторите позже.
           </p>
         </Modal>
       )}

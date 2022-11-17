@@ -13,9 +13,12 @@ import {
   GET_INGREDIENTS_SUCCESS,
 } from '../../services/actions';
 import { IngredientsContext } from '../../services/context/ingredients-context';
+import { burgerInitState, burgerReducer } from '../../services/reducers/burger-reducer';
+import { BurgerConstructorContext } from '../../services/context/burger-constructor-context';
 
 function App() {
   const [ingredients, dispatch] = useReducer(ingredientsReducer, ingredientsInitState);
+  const [burger, dispatchBurger] = useReducer(burgerReducer, burgerInitState);
 
   useEffect(() => {
     dispatch({ type: GET_INGREDIENTS_REQUEST });
@@ -39,10 +42,12 @@ function App() {
         )}
         {!ingredients.isFailed && !ingredients.isRequested && ingredients.items.length && (
           <IngredientsContext.Provider value={ingredients.items}>
-            <BurgerIngredients />
-            <div className='ml-10 pt-25'>
-              <BurgerConstructor />
-            </div>
+            <BurgerConstructorContext.Provider value={{ burger, dispatchBurger }}>
+              <BurgerIngredients />
+              <div className='ml-10 pt-25'>
+                <BurgerConstructor />
+              </div>
+            </BurgerConstructorContext.Provider>
           </IngredientsContext.Provider>
         )}
       </main>
