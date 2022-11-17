@@ -61,6 +61,8 @@ function BurgerConstructor() {
       });
   };
 
+  const isOrderAllowed = () => burger.ingredients.length > 0;
+
   return (
     <div className={`${styles.burgerConstructor}`}>
       {showModal && !order.isFailed && (
@@ -121,7 +123,13 @@ function BurgerConstructor() {
           <p className='mr-2 text text_type_digits-medium'>{burger.totalPrice}</p>
           <CurrencyIcon type='primary' />
         </div>
-        <Button type='primary' size='large' htmlType='button' onClick={handleMakeOrder}>
+        <Button
+          type='primary'
+          size='large'
+          htmlType='button'
+          onClick={handleMakeOrder}
+          disabled={!isOrderAllowed()}
+        >
           Оформить заказ
         </Button>
       </div>
