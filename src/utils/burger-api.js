@@ -1,12 +1,12 @@
 import { NORMA_API } from './constants';
 
+const processResponse = (res) => {
+  if (res.ok) return res.json();
+  throw new Error(`Ошибка: ${res.status}`);
+};
+
 export const getIngredients = () => {
-  return fetch(`${NORMA_API}/ingredients`).then((response) => {
-    if (!response.ok) {
-      throw new Error(`Error while fetching 'Ingredients' from API ${response.status}`);
-    }
-    return response.json();
-  });
+  return fetch(`${NORMA_API}/ingredients`).then(processResponse);
 };
 
 export const postOrder = (ingredients) => {
@@ -17,10 +17,5 @@ export const postOrder = (ingredients) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ ingredients }),
-  }).then((response) => {
-    if (!response.ok) {
-      throw new Error(`Error while fetching 'Ingredients' from API ${response.status}`);
-    }
-    return response.json();
-  });
+  }).then(processResponse);
 };

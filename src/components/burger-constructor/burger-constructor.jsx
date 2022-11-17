@@ -67,6 +67,13 @@ function BurgerConstructor() {
           <OrderDetails number={order.number} />
         </Modal>
       )}
+      {showModal && order.isFailed && (
+        <Modal handleClose={handleCloseModal} title='Ошибка'>
+          <p className='mt-8 mb-30 text text_type_main-default'>
+            Произошла ошибка и мы не смогли принять ваш заказ. Повторите позже.
+          </p>
+        </Modal>
+      )}
       {(burger.bun || burger.ingredients.length) && (
         <div className={`ml-4 ${styles.container}`}>
           <div className={`ml-8 ${styles.bun}`}>
