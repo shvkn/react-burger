@@ -12,6 +12,7 @@ import {
   GET_INGREDIENTS_REQUEST,
   GET_INGREDIENTS_SUCCESS,
 } from '../../services/actions';
+import { IngredientsContext } from '../../services/context/ingredients-context';
 
 function App() {
   const [ingredients, dispatch] = useReducer(ingredientsReducer, ingredientsInitState);
@@ -37,12 +38,12 @@ function App() {
           </p>
         )}
         {!ingredients.isFailed && !ingredients.isRequested && ingredients.items.length && (
-          <>
-            <BurgerIngredients ingredients={ingredients.items} />
+          <IngredientsContext.Provider value={ingredients.items}>
+            <BurgerIngredients />
             <div className='ml-10 pt-25'>
               <BurgerConstructor ingredients={ingredients.items} />
             </div>
-          </>
+          </IngredientsContext.Provider>
         )}
       </main>
     </div>

@@ -1,13 +1,13 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useContext, useMemo, useRef, useState } from 'react';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
-import PropTypes from 'prop-types';
 import styles from './burger-ingredients.module.css';
-import { ingredientPropTypes } from '../../utils/prop-types';
 import Modal from '../modal/modal';
 import IngredientDetails from '../ingredient-details/ingredient-details';
 import { BurgerIngredient } from '../burger-ingredient/burger-ingredient';
+import { IngredientsContext } from '../../services/context/ingredients-context';
 
-function BurgerIngredients({ ingredients }) {
+function BurgerIngredients() {
+  const ingredients = useContext(IngredientsContext);
   const [currentTab, setCurrentTab] = useState('buns');
   const [ingredient, setIngredient] = useState(null);
   const refs = {
@@ -129,9 +129,5 @@ function BurgerIngredients({ ingredients }) {
     </section>
   );
 }
-
-BurgerIngredients.propTypes = {
-  ingredients: PropTypes.arrayOf(ingredientPropTypes.isRequired).isRequired,
-};
 
 export default BurgerIngredients;
