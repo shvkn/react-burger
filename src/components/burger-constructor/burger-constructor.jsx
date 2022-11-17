@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useReducer, useState } from 'react';
 import {
   Button,
   ConstructorElement,
@@ -9,42 +9,32 @@ import styles from './burger-constructor.module.css';
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
 import { IngredientsContext } from '../../services/context/ingredients-context';
+import {
+  burgerConstructorInitState,
+  burgerConstructorReducer,
+} from '../../services/reducers/burger-constructor';
+import {
+  ADD_INGREDIENT,
+  REMOVE_INGREDIENT,
+  RESET,
+} from '../../services/actions/burger-constructor';
 
 function BurgerConstructor() {
   const ingredients = useContext(IngredientsContext);
-  const burger = useMemo(
-    () => ({
-      bun: '60d3b41abdacab0026a733c7',
-      ingredients: [
-        '60d3b41abdacab0026a733ca',
-        '60d3b41abdacab0026a733cc',
-        '60d3b41abdacab0026a733d0',
-        '60d3b41abdacab0026a733d3',
-        '60d3b41abdacab0026a733d4',
-        '60d3b41abdacab0026a733d0',
-      ],
-    }),
-    []
-  );
   const [showModal, setShowModal] = useState(false);
+  const [burger, dispatch] = useReducer(burgerConstructorReducer, burgerConstructorInitState);
 
-  const bun = useMemo(
-    () => ingredients.find(({ _id }) => _id === burger.bun),
-    [ingredients, burger.bun]
-  );
-
-  const filteredIngredients = useMemo(
-    () => ingredients.filter(({ _id }) => burger.ingredients.includes(_id)),
-    [ingredients, burger.ingredients]
-  );
-
-  const total = useMemo(
-    () => filteredIngredients.reduce((sum, { price }) => sum + price, 0) + bun.price * 2,
-    [filteredIngredients, bun.price]
-  );
+  useEffect(() => {
+    dispatch({ type: RESET });
+    dispatch({ type: ADD_INGREDIENT, ingredient: ingredients.find(({ type }) => type === 'bun') });
+    ingredients
+      .filter(({ type }) => type !== 'bun')
+      .forEach((ingredient) => dispatch({ type: ADD_INGREDIENT, ingredient }));
+  }, [dispatch, ingredients]);
 
   const handleOpenModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
+  const handleRemove = (index) => dispatch({ type: REMOVE_INGREDIENT, index });
 
   return (
     <div className={`${styles.burgerConstructor}`}>
@@ -53,43 +43,50 @@ function BurgerConstructor() {
           <OrderDetails />
         </Modal>
       )}
-      <div className={`ml-4 ${styles.container}`}>
-        <div className={`ml-8 ${styles.bun}`}>
-          <ConstructorElement
-            text={`${bun.name} (верх)`}
-            thumbnail={bun.image}
-            price={bun.price}
-            type='top'
-            isLocked
-          />
+      {(burger.bun || burger.ingredients.length) && (
+        <div className={`ml-4 ${styles.container}`}>
+          <div className={`ml-8 ${styles.bun}`}>
+            <ConstructorElement
+              text={`${burger.bun.name} (верх)`}
+              thumbnail={burger.bun.image}
+              price={burger.bun.price}
+              type='top'
+              isLocked
+            />
+          </div>
+          <ul className={`${styles.ingredients} mt-10 scroll`}>
+            {burger.ingredients.map(({ image, name, price }, index) => {
+              return (
+                // TODO Временно отключено для использования `index` в `key`
+                // eslint-disable-next-line react/no-array-index-key
+                <li key={index} className={`mt-4 mb-4 ${styles.ingredient}`}>
+                  <span className={styles.draggable}>
+                    <DragIcon type='primary' />
+                  </span>
+                  <ConstructorElement
+                    text={name}
+                    thumbnail={image}
+                    price={price}
+                    handleClose={() => handleRemove(index)}
+                  />
+                </li>
+              );
+            })}
+          </ul>
+          <div className={`ml-8 ${styles.bun}`}>
+            <ConstructorElement
+              text={`${burger.bun.name} (низ)`}
+              thumbnail={burger.bun.image}
+              price={burger.bun.price}
+              type='bottom'
+              isLocked
+            />
+          </div>
         </div>
-        <ul className={`${styles.ingredients} mt-10 scroll`}>
-          {filteredIngredients.map(({ image, name, price }, index) => {
-            return (
-              // TODO Временно отключено для использования `index` в `key`
-              // eslint-disable-next-line react/no-array-index-key
-              <li key={index} className={`mt-4 mb-4 ${styles.ingredient}`}>
-                <span className={styles.draggable}>
-                  <DragIcon type='primary' />
-                </span>
-                <ConstructorElement text={name} thumbnail={image} price={price} />
-              </li>
-            );
-          })}
-        </ul>
-        <div className={`ml-8 ${styles.bun}`}>
-          <ConstructorElement
-            text={`${bun.name} (низ)`}
-            thumbnail={bun.image}
-            price={bun.price}
-            type='bottom'
-            isLocked
-          />
-        </div>
-      </div>
+      )}
       <div className={`pt-10 pb-10 pr-4 ${styles.panel}`}>
         <div className={`mr-10 ${styles.price}`}>
-          <p className='mr-2 text text_type_digits-medium'>{total}</p>
+          <p className='mr-2 text text_type_digits-medium'>{burger.totalPrice}</p>
           <CurrencyIcon type='primary' />
         </div>
         <Button type='primary' size='large' htmlType='button' onClick={handleOpenModal}>
