@@ -4,7 +4,7 @@ import { orderReducer } from './order-reducer';
 import { ingredientsReducer } from './ingredients-reducer';
 
 const rootReducer = combineReducers({
-  ingredientsList: ingredientsReducer,
+  ingredients: ingredientsReducer,
   order: orderReducer,
   burger: burgerReducer,
 });

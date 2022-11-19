@@ -4,19 +4,22 @@ import styles from './burger-ingredients.module.css';
 import Modal from '../modal/modal';
 import IngredientDetails from '../ingredient-details/ingredient-details';
 import { BurgerIngredient } from '../burger-ingredient/burger-ingredient';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { resetCurrentIngredient, setCurrentIngredient } from '../../services/actions/ingredients';
 
 function BurgerIngredients() {
-  const ingredientsItems = useSelector((store) => store.ingredientsList.items);
+  const { ingredientsItems, currentIngredient } = useSelector((store) => store.ingredients);
   const burger = useSelector((store) => store.burger);
 
   const [currentTab, setCurrentTab] = useState('buns');
-  const [ingredient, setIngredient] = useState(null);
+
   const refs = {
     buns: useRef(),
     sauces: useRef(),
     mains: useRef(),
   };
+
+  const dispatch = useDispatch();
 
   const handleTabClick = (value) => {
     setCurrentTab(value);
@@ -24,19 +27,22 @@ function BurgerIngredients() {
   };
 
   const handleOpenModal = (ingredient) => {
-    setIngredient(ingredient);
+    dispatch(setCurrentIngredient(ingredient));
   };
 
   const handleCloseModal = () => {
-    setIngredient(null);
+    dispatch(resetCurrentIngredient());
   };
 
-  const buns = useMemo(() => ingredientsItems.filter((i) => i.type === 'bun'), [ingredientsItems]);
-  const sauces = useMemo(
+  const ingredientsTypeBun = useMemo(
+    () => ingredientsItems.filter((i) => i.type === 'bun'),
+    [ingredientsItems]
+  );
+  const ingredientsTypeSauce = useMemo(
     () => ingredientsItems.filter((i) => i.type === 'sauce'),
     [ingredientsItems]
   );
-  const mains = useMemo(
+  const ingredientsTypeMain = useMemo(
     () => ingredientsItems.filter((i) => i.type === 'main'),
     [ingredientsItems]
   );
@@ -51,9 +57,9 @@ function BurgerIngredients() {
 
   return (
     <section className={styles.burgerIngredients}>
-      {ingredient && (
+      {currentIngredient && (
         <Modal handleClose={handleCloseModal} title='Детали ингредиента'>
-          <IngredientDetails ingredient={ingredient} />
+          <IngredientDetails ingredient={currentIngredient} />
         </Modal>
       )}
       <h1 className='mt-10 mb-5 heading text text_type_main-large'>Соберите бургер</h1>
@@ -83,7 +89,7 @@ function BurgerIngredients() {
           <h2 className='text text_type_main-medium'>Булки</h2>
           <div className='mt-6 mr-2 mb-10 ml-4'>
             <ul className={`${styles.ingredients}`}>
-              {buns.map((item) => (
+              {ingredientsTypeBun.map((item) => (
                 <li key={item._id}>
                   <BurgerIngredient
                     ingredient={item}
@@ -100,7 +106,7 @@ function BurgerIngredients() {
           <h2 className='text text_type_main-medium'>Соусы</h2>
           <div className='mt-6 mr-2 mb-10 ml-4'>
             <ul className={`${styles.ingredients}`}>
-              {sauces.map((item) => (
+              {ingredientsTypeSauce.map((item) => (
                 <li key={item._id}>
                   <BurgerIngredient
                     ingredient={item}
@@ -117,7 +123,7 @@ function BurgerIngredients() {
           <h2 className='text text_type_main-medium'>Начинки</h2>
           <div className='mt-6 mr-2 mb-10 ml-4'>
             <ul className={`${styles.ingredients}`}>
-              {mains.map((item) => (
+              {ingredientsTypeMain.map((item) => (
                 <li key={item._id}>
                   <BurgerIngredient
                     ingredient={item}

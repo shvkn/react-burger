@@ -9,11 +9,11 @@ const request = (url, options) => {
   return fetch(url, options).then(processResponse);
 };
 
-export const getIngredients = () => {
+export const getIngredientsRequest = () => {
   return request(`${NORMA_API}/ingredients`);
 };
 
-export const postOrder = (ingredients) => {
+export const postOrderRequest = (ingredients) => {
   const options = {
     method: 'POST',
     headers: {

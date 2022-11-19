@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useReducer, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   ConstructorElement,
@@ -9,59 +9,33 @@ import styles from './burger-constructor.module.css';
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
 import {
-  BURGER_ADD_INGREDIENT,
-  BURGER_REMOVE_INGREDIENT,
-  BURGER_RESET,
+  fillBurgerIngredients,
+  removeBurgerIngredientByIndex,
 } from '../../services/actions/burger';
-import { postOrder } from '../../utils/burger-api';
-import { orderInitState, orderReducer } from '../../services/reducers/order-reducer';
-import {
-  ORDER_MAKE_FAILED,
-  ORDER_MAKE_REQUEST,
-  ORDER_MAKE_SUCCESS,
-} from '../../services/actions/order';
+import { makeOrder } from '../../services/actions/order';
 import { useDispatch, useSelector } from 'react-redux';
 
 function BurgerConstructor() {
-  const ingredients = useSelector((store) => store.ingredientsList.items);
-  // const { burger, dispatchBurger } = useContext(BurgerConstructorContext);
-  const burger = useSelector((store) => store.burger);
-  const dispatch = useDispatch();
+  const { burger, order } = useSelector((store) => store);
+  const { ingredientsItems } = useSelector((store) => store.ingredients);
+
   const [showModal, setShowModal] = useState(false);
-  const [order, dispatchOrder] = useReducer(orderReducer, orderInitState);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const fillConstructor = () => {
-      dispatch({ type: BURGER_RESET });
-      dispatch({
-        type: BURGER_ADD_INGREDIENT,
-        ingredient: ingredients.find(({ type }) => type === 'bun'),
-      });
-      ingredients
-        .filter(({ type }) => type !== 'bun')
-        .forEach((ingredient) => dispatch({ type: BURGER_ADD_INGREDIENT, ingredient }));
-    };
-    fillConstructor();
-  }, [dispatch, ingredients]);
+    if (!ingredientsItems) return;
+    const bun = ingredientsItems.find(({ type }) => type === 'bun');
+    const burgerIngredients = ingredientsItems.filter(({ type }) => type !== 'bun');
+    dispatch(fillBurgerIngredients(bun, burgerIngredients));
+  }, [dispatch, ingredientsItems]);
 
   const handleOpenModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
-  const handleRemove = (index) => dispatch({ type: BURGER_REMOVE_INGREDIENT, index });
+  const handleRemove = (index) => dispatch(removeBurgerIngredientByIndex(index));
 
   const handleMakeOrder = () => {
-    dispatchOrder({ type: ORDER_MAKE_REQUEST });
     handleOpenModal();
-    const items = [burger.bun._id, ...burger.ingredients.map(({ _id }) => _id), burger.bun._id];
-    postOrder(items)
-      .then(({ success, order }) => {
-        if (!success) throw new Error(`Error in "postOrder"`);
-        dispatchOrder({ type: ORDER_MAKE_SUCCESS, number: order.number });
-        dispatch({ type: BURGER_RESET });
-      })
-      .catch((error) => {
-        console.error(error);
-        dispatchOrder({ type: ORDER_MAKE_FAILED });
-      });
+    makeOrder([burger.bun, ...burger.ingredients, burger.bun]);
   };
 
   const isOrderAllowed = () => burger.ingredients.length > 0;

@@ -2,10 +2,13 @@ import {
   INGREDIENTS_GET_FAILED,
   INGREDIENTS_GET_REQUESTED,
   INGREDIENTS_GET_SUCCEED,
+  INGREDIENTS_RESET_CURRENT,
+  INGREDIENTS_SET_CURRENT,
 } from '../actions/ingredients';
 
 export const ingredientsInitState = {
-  items: [],
+  ingredientsItems: [],
+  currentIngredient: null,
   isRequested: false,
   isFailed: false,
   isSucceed: false,
@@ -32,10 +35,24 @@ export const ingredientsReducer = (state = ingredientsInitState, action) => {
     case INGREDIENTS_GET_SUCCEED: {
       return {
         ...state,
-        items: action.data,
+        ingredientsItems: action.data,
         isRequested: false,
         isFailed: false,
         isSucceed: true,
+      };
+    }
+
+    case INGREDIENTS_SET_CURRENT: {
+      return {
+        ...state,
+        currentIngredient: action.ingredient,
+      };
+    }
+
+    case INGREDIENTS_RESET_CURRENT: {
+      return {
+        ...state,
+        currentIngredient: null,
       };
     }
 
