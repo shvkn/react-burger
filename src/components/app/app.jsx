@@ -12,8 +12,6 @@ import {
   INGREDIENTS_GET_REQUESTED,
   INGREDIENTS_GET_SUCCEED,
 } from '../../services/actions/ingredients';
-import { burgerInitState, burgerReducer } from '../../services/reducers/burger-reducer';
-import { BurgerConstructorContext } from '../../services/context/burger-constructor-context';
 import { useDispatch, useSelector } from 'react-redux';
 
 const getIngredientsThunk = () => (dispatch) => {
@@ -24,7 +22,6 @@ const getIngredientsThunk = () => (dispatch) => {
 };
 
 function App() {
-  const [burger, dispatchBurger] = useReducer(burgerReducer, burgerInitState);
   const ingredients = useSelector((store) => store.ingredientsList);
   const dispatch = useDispatch();
 
@@ -46,10 +43,12 @@ function App() {
           </p>
         )}
         {ingredients.isSucceed && ingredients.items.length && (
-          <BurgerConstructorContext.Provider value={{ burger, dispatchBurger }}>
+          <>
             <BurgerIngredients />
-            <div className='ml-10 pt-25'>{<BurgerConstructor />}</div>
-          </BurgerConstructorContext.Provider>
+            <div className='ml-10 pt-25'>
+              <BurgerConstructor />
+            </div>
+          </>
         )}
       </main>
     </div>

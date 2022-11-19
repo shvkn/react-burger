@@ -1,14 +1,15 @@
-import React, { useContext, useMemo, useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './burger-ingredients.module.css';
 import Modal from '../modal/modal';
 import IngredientDetails from '../ingredient-details/ingredient-details';
 import { BurgerIngredient } from '../burger-ingredient/burger-ingredient';
-import { BurgerConstructorContext } from '../../services/context/burger-constructor-context';
 import { useSelector } from 'react-redux';
 
 function BurgerIngredients() {
-  const ingredients = useSelector((store) => store.ingredientsList.items);
+  const ingredientsItems = useSelector((store) => store.ingredientsList.items);
+  const burger = useSelector((store) => store.burger);
+
   const [currentTab, setCurrentTab] = useState('buns');
   const [ingredient, setIngredient] = useState(null);
   const refs = {
@@ -30,11 +31,15 @@ function BurgerIngredients() {
     setIngredient(null);
   };
 
-  const buns = useMemo(() => ingredients.filter((i) => i.type === 'bun'), [ingredients]);
-  const sauces = useMemo(() => ingredients.filter((i) => i.type === 'sauce'), [ingredients]);
-  const mains = useMemo(() => ingredients.filter((i) => i.type === 'main'), [ingredients]);
-
-  const { burger } = useContext(BurgerConstructorContext);
+  const buns = useMemo(() => ingredientsItems.filter((i) => i.type === 'bun'), [ingredientsItems]);
+  const sauces = useMemo(
+    () => ingredientsItems.filter((i) => i.type === 'sauce'),
+    [ingredientsItems]
+  );
+  const mains = useMemo(
+    () => ingredientsItems.filter((i) => i.type === 'main'),
+    [ingredientsItems]
+  );
 
   const selectedItems = useMemo(() => {
     const items = burger.bun ? { [burger.bun._id]: 2 } : {};

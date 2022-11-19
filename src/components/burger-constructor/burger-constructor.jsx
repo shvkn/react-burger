@@ -14,38 +14,39 @@ import {
   BURGER_RESET,
 } from '../../services/actions/burger';
 import { postOrder } from '../../utils/burger-api';
-import { BurgerConstructorContext } from '../../services/context/burger-constructor-context';
 import { orderInitState, orderReducer } from '../../services/reducers/order-reducer';
 import {
   ORDER_MAKE_FAILED,
   ORDER_MAKE_REQUEST,
   ORDER_MAKE_SUCCESS,
 } from '../../services/actions/order';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 function BurgerConstructor() {
   const ingredients = useSelector((store) => store.ingredientsList.items);
-  const { burger, dispatchBurger } = useContext(BurgerConstructorContext);
+  // const { burger, dispatchBurger } = useContext(BurgerConstructorContext);
+  const burger = useSelector((store) => store.burger);
+  const dispatch = useDispatch();
   const [showModal, setShowModal] = useState(false);
   const [order, dispatchOrder] = useReducer(orderReducer, orderInitState);
 
   useEffect(() => {
     const fillConstructor = () => {
-      dispatchBurger({ type: BURGER_RESET });
-      dispatchBurger({
+      dispatch({ type: BURGER_RESET });
+      dispatch({
         type: BURGER_ADD_INGREDIENT,
         ingredient: ingredients.find(({ type }) => type === 'bun'),
       });
       ingredients
         .filter(({ type }) => type !== 'bun')
-        .forEach((ingredient) => dispatchBurger({ type: BURGER_ADD_INGREDIENT, ingredient }));
+        .forEach((ingredient) => dispatch({ type: BURGER_ADD_INGREDIENT, ingredient }));
     };
     fillConstructor();
-  }, [dispatchBurger, ingredients]);
+  }, [dispatch, ingredients]);
 
   const handleOpenModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
-  const handleRemove = (index) => dispatchBurger({ type: BURGER_REMOVE_INGREDIENT, index });
+  const handleRemove = (index) => dispatch({ type: BURGER_REMOVE_INGREDIENT, index });
 
   const handleMakeOrder = () => {
     dispatchOrder({ type: ORDER_MAKE_REQUEST });
@@ -55,7 +56,7 @@ function BurgerConstructor() {
       .then(({ success, order }) => {
         if (!success) throw new Error(`Error in "postOrder"`);
         dispatchOrder({ type: ORDER_MAKE_SUCCESS, number: order.number });
-        dispatchBurger({ type: BURGER_RESET });
+        dispatch({ type: BURGER_RESET });
       })
       .catch((error) => {
         console.error(error);
