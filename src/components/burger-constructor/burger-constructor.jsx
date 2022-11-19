@@ -8,7 +8,6 @@ import {
 import styles from './burger-constructor.module.css';
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
-import { IngredientsContext } from '../../services/context/ingredients-context';
 import {
   BURGER_ADD_INGREDIENT,
   BURGER_REMOVE_INGREDIENT,
@@ -22,9 +21,10 @@ import {
   ORDER_MAKE_REQUEST,
   ORDER_MAKE_SUCCESS,
 } from '../../services/actions/order';
+import { useSelector } from 'react-redux';
 
 function BurgerConstructor() {
-  const ingredients = useContext(IngredientsContext);
+  const ingredients = useSelector((store) => store.ingredientsList.items);
   const { burger, dispatchBurger } = useContext(BurgerConstructorContext);
   const [showModal, setShowModal] = useState(false);
   const [order, dispatchOrder] = useReducer(orderReducer, orderInitState);
