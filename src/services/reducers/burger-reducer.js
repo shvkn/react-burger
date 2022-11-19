@@ -6,7 +6,7 @@ export const burgerInitState = {
   totalPrice: 0,
 };
 
-export const burgerReducer = (state, action) => {
+export const burgerReducer = (state = burgerInitState, action) => {
   const isBun = () => action.ingredient.type === 'bun';
   const calcTotalPrice = (ingredients, bun) =>
     ingredients.reduce((sum, { price }) => sum + price, 0) + bun.price * 2;

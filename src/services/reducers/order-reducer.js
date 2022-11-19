@@ -6,7 +6,7 @@ export const orderInitState = {
   isFailed: false,
   isSucceed: false,
 };
-export const orderReducer = (state, action) => {
+export const orderReducer = (state = orderInitState, action) => {
   switch (action.type) {
     case ORDER_MAKE_REQUEST: {
       return {

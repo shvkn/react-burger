@@ -11,7 +11,7 @@ export const ingredientsInitState = {
   isSucceed: false,
 };
 
-export const ingredientsReducer = (state, action) => {
+export const ingredientsReducer = (state = ingredientsInitState, action) => {
   switch (action.type) {
     case INGREDIENTS_GET_REQUESTED: {
       return {
