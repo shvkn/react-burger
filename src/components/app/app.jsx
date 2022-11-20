@@ -8,7 +8,8 @@ import '@ya.praktikum/react-developer-burger-ui-components';
 
 import { getIngredients } from '../../services/actions/ingredients';
 import { useDispatch, useSelector } from 'react-redux';
-
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 function App() {
   const ingredients = useSelector((store) => store.ingredients);
   const dispatch = useDispatch();
@@ -32,10 +33,12 @@ function App() {
         )}
         {ingredients.isSucceed && ingredients.ingredientsItems.length && (
           <>
-            <BurgerIngredients />
-            <div className='ml-10 pt-25'>
-              <BurgerConstructor />
-            </div>
+            <DndProvider backend={HTML5Backend}>
+              <BurgerIngredients />
+              <div className='ml-10 pt-25'>
+                <BurgerConstructor />
+              </div>
+            </DndProvider>
           </>
         )}
       </main>
