@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './burger-ingredients.module.css';
 import Modal from '../modal/modal';
@@ -8,42 +8,41 @@ import { useDispatch, useSelector } from 'react-redux';
 import { resetCurrentIngredient, setCurrentIngredient } from '../../services/actions/ingredients';
 
 function BurgerIngredients() {
+  const dispatch = useDispatch();
   const { ingredientsItems, currentIngredient } = useSelector((store) => store.ingredients);
   const burger = useSelector((store) => store.burger);
+  const [currentTab, setCurrentTab] = useState('');
 
-  const [currentTab, setCurrentTab] = useState('buns');
-
-  const refs = {
+  const ingredientsRootRef = useRef();
+  const ingredinentsRefsByType = {
     buns: useRef(),
     sauces: useRef(),
     mains: useRef(),
   };
 
-  const dispatch = useDispatch();
+  const observeCurrentTab = useCallback(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setCurrentTab(entry.target.id);
+        });
+      },
+      { root: ingredientsRootRef.current, rootMargin: '-50% 0px' }
+    );
+    for (const type in ingredinentsRefsByType)
+      observer.observe(ingredinentsRefsByType[type].current);
+  }, [ingredientsRootRef, ingredinentsRefsByType]);
 
-  const handleTabClick = (value) => {
-    setCurrentTab(value);
-    refs[value].current.scrollIntoView({ behavior: 'smooth' });
-  };
+  useEffect(() => {
+    observeCurrentTab();
+  }, [observeCurrentTab]);
 
-  const handleOpenModal = (ingredient) => {
-    dispatch(setCurrentIngredient(ingredient));
-  };
-
-  const handleCloseModal = () => {
-    dispatch(resetCurrentIngredient());
-  };
-
-  const ingredientsTypeBun = useMemo(
-    () => ingredientsItems.filter((i) => i.type === 'bun'),
-    [ingredientsItems]
-  );
-  const ingredientsTypeSauce = useMemo(
-    () => ingredientsItems.filter((i) => i.type === 'sauce'),
-    [ingredientsItems]
-  );
-  const ingredientsTypeMain = useMemo(
-    () => ingredientsItems.filter((i) => i.type === 'main'),
+  const ingredientsByType = useMemo(
+    () => ({
+      bun: ingredientsItems.filter(({ type }) => type === 'bun'),
+      sauce: ingredientsItems.filter(({ type }) => type === 'sauce'),
+      main: ingredientsItems.filter(({ type }) => type === 'main'),
+    }),
     [ingredientsItems]
   );
 
@@ -54,6 +53,19 @@ function BurgerIngredients() {
     });
     return items;
   }, [burger]);
+
+  const handleTabClick = (value) => {
+    setCurrentTab(value);
+    ingredinentsRefsByType[value].current.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleOpenModal = (ingredient) => {
+    dispatch(setCurrentIngredient(ingredient));
+  };
+
+  const handleCloseModal = () => {
+    dispatch(resetCurrentIngredient());
+  };
 
   return (
     <section className={styles.burgerIngredients}>
@@ -84,12 +96,12 @@ function BurgerIngredients() {
           </li>
         </ul>
       </div>
-      <ul className={`${styles.categories} scroll`}>
-        <li key='buns' ref={refs['buns']}>
+      <ul className={`${styles.categories} scroll`} ref={ingredientsRootRef}>
+        <li key='buns' id='buns' ref={ingredinentsRefsByType['buns']}>
           <h2 className='text text_type_main-medium'>Булки</h2>
           <div className='mt-6 mr-2 mb-10 ml-4'>
             <ul className={`${styles.ingredients}`}>
-              {ingredientsTypeBun.map((item) => (
+              {ingredientsByType.bun.map((item) => (
                 <li key={item._id}>
                   <BurgerIngredient
                     ingredient={item}
@@ -102,11 +114,11 @@ function BurgerIngredients() {
           </div>
         </li>
 
-        <li key='sauces' ref={refs['sauces']}>
+        <li key='sauces' id='sauces' ref={ingredinentsRefsByType['sauces']}>
           <h2 className='text text_type_main-medium'>Соусы</h2>
           <div className='mt-6 mr-2 mb-10 ml-4'>
             <ul className={`${styles.ingredients}`}>
-              {ingredientsTypeSauce.map((item) => (
+              {ingredientsByType.sauce.map((item) => (
                 <li key={item._id}>
                   <BurgerIngredient
                     ingredient={item}
@@ -119,11 +131,11 @@ function BurgerIngredients() {
           </div>
         </li>
 
-        <li key='mains' ref={refs['mains']}>
+        <li key='mains' id='mains' ref={ingredinentsRefsByType['mains']}>
           <h2 className='text text_type_main-medium'>Начинки</h2>
           <div className='mt-6 mr-2 mb-10 ml-4'>
             <ul className={`${styles.ingredients}`}>
-              {ingredientsTypeMain.map((item) => (
+              {ingredientsByType.main.map((item) => (
                 <li key={item._id}>
                   <BurgerIngredient
                     ingredient={item}
