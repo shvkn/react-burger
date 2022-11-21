@@ -7,7 +7,9 @@ export const ORDER_MAKE_SUCCESS = 'ORDER_MAKE_SUCCESS';
 
 export const makeOrder = (items) => (dispatch) => {
   dispatch({ type: ORDER_MAKE_REQUEST });
-  postOrderRequest(items)
+  const idsList = items.map(({ _id }) => _id);
+  console.log(idsList);
+  postOrderRequest(idsList)
     .then(({ success, order }) => {
       if (!success) throw new Error(`Error in "postOrder"`);
       dispatch({ type: ORDER_MAKE_SUCCESS, number: order.number });

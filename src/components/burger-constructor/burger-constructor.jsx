@@ -53,7 +53,7 @@ function BurgerConstructor() {
 
   const handleMakeOrder = () => {
     handleOpenModal();
-    makeOrder([burger.bun, ...burger.ingredients, burger.bun]);
+    dispatch(makeOrder([burger.bun, ...burger.ingredients, burger.bun]));
   };
 
   const isOrderValid = () => burger.bun && burger.ingredients.length > 0;
