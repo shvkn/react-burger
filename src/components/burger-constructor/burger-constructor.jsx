@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   ConstructorElement,
@@ -10,12 +10,14 @@ import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
 import {
   addBurgerIngredient,
+  moveBurgerIngredient,
   removeBurgerIngredientByIndex,
 } from '../../services/actions/burger';
 import { makeOrder } from '../../services/actions/order';
 import { useDispatch, useSelector } from 'react-redux';
 import { DndProvider, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import SortableElement from '../sortable-element/sortable-element';
 
 function BurgerConstructor() {
   const { burger, order } = useSelector((store) => store);
@@ -23,6 +25,16 @@ function BurgerConstructor() {
 
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const addAnyBun = () => {
+      const bun = ingredientsItems.find(({ type }) => type === 'bun');
+      dispatch(addBurgerIngredient(bun));
+    };
+    if (!burger.bun) {
+      addAnyBun();
+    }
+  }, [ingredientsItems]);
 
   const handleOnDrop = (item) => {
     const ingredient = ingredientsItems.find(({ _id }) => _id === item.id);
@@ -44,7 +56,11 @@ function BurgerConstructor() {
     makeOrder([burger.bun, ...burger.ingredients, burger.bun]);
   };
 
-  const isOrderAllowed = () => burger.ingredients.length > 0;
+  const isOrderValid = () => burger.bun && burger.ingredients.length > 0;
+
+  const handleMove = (hoverIndex, dragIndex) => {
+    dispatch(moveBurgerIngredient(hoverIndex, dragIndex));
+  };
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -62,19 +78,7 @@ function BurgerConstructor() {
             {order.isSucceed && <OrderDetails number={order.number} />}
           </Modal>
         )}
-        {!burger.bun && !burger.ingredients.length > 0 && (
-          <div className={`ml-4 ${styles.container}`}>
-            <div className={styles.message}>
-              <p className={`mt-8 text text_type_main-medium text_color_inactive`}>
-                Здесь пока пусто.
-              </p>
-              <p className={`mt-4 mb-30 text text_type_main-medium text_color_inactive`}>
-                Перетащите нужные ингредиенты.
-              </p>
-            </div>
-          </div>
-        )}
-        {(burger.bun || burger.ingredients.length > 0) && (
+        {burger.bun && (
           <div className={`ml-4 ${styles.container}`}>
             <div className={`ml-8 ${styles.bun}`}>
               <ConstructorElement
@@ -85,25 +89,34 @@ function BurgerConstructor() {
                 isLocked
               />
             </div>
-            <ul className={`${styles.ingredients} mt-10 scroll`}>
-              {burger.ingredients.map(({ image, name, price }, index) => {
-                return (
-                  // TODO Временно отключено для использования `index` в `key`
-                  // eslint-disable-next-line react/no-array-index-key
-                  <li key={index} className={`mt-4 mb-4 ${styles.ingredient}`}>
-                    <span className={styles.draggable}>
-                      <DragIcon type='primary' />
-                    </span>
-                    <ConstructorElement
-                      text={name}
-                      thumbnail={image}
-                      price={price}
-                      handleClose={() => handleRemove(index)}
-                    />
-                  </li>
-                );
-              })}
-            </ul>
+            {burger.ingredients.length === 0 && (
+              <div className={styles.message}>
+                <p className={`mt-8 text text_type_main-medium text_color_inactive`}>
+                  Добавьте ингредиенты
+                </p>
+              </div>
+            )}
+            {!!burger.ingredients.length && (
+              <ul className={`${styles.ingredients} mt-10 scroll`}>
+                {burger.ingredients.map(({ image, name, price, uid }, index) => {
+                  return (
+                    <li key={uid} className={`mt-4 mb-4`}>
+                      <SortableElement index={index} handleMove={handleMove}>
+                        <div className={styles.ingredient}>
+                          <DragIcon type='primary' />
+                          <ConstructorElement
+                            text={name}
+                            thumbnail={image}
+                            price={price}
+                            handleClose={() => handleRemove(index)}
+                          />
+                        </div>
+                      </SortableElement>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
             <div className={`ml-8 ${styles.bun}`}>
               <ConstructorElement
                 text={`${burger.bun.name} (низ)`}
@@ -125,7 +138,7 @@ function BurgerConstructor() {
             size='large'
             htmlType='button'
             onClick={handleMakeOrder}
-            disabled={!isOrderAllowed()}
+            disabled={!isOrderValid()}
           >
             Оформить заказ
           </Button>

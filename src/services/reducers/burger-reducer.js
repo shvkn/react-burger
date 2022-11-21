@@ -1,4 +1,9 @@
-import { BURGER_ADD_INGREDIENT, BURGER_REMOVE_INGREDIENT, BURGER_RESET } from '../actions/burger';
+import {
+  BURGER_ADD_INGREDIENT,
+  BURGER_MOVE_INGREDIENT,
+  BURGER_REMOVE_INGREDIENT,
+  BURGER_RESET,
+} from '../actions/burger';
 
 export const burgerInitState = {
   bun: null,
@@ -30,6 +35,21 @@ export const burgerReducer = (state = burgerInitState, action) => {
         ...state,
         ingredients,
         totalPrice: calcTotalPrice(ingredients, state.bun),
+      };
+    }
+
+    case BURGER_MOVE_INGREDIENT: {
+      const ingredients = [...state.ingredients];
+      const { hoverIndex, dragIndex } = action;
+      const [dragItem] = ingredients.splice(dragIndex, 1);
+      ingredients.splice(hoverIndex, 0, dragItem);
+      // const dragItem = ingredients[dragIndex];
+      // const hoverItem = ingredients[hoverIndex];
+      // ingredients[hoverIndex] = dragItem;
+      // ingredients[dragIndex] = hoverItem;
+      return {
+        ...state,
+        ingredients,
       };
     }
 
