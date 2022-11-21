@@ -4,11 +4,12 @@ import React from 'react';
 import { ingredientPropTypes } from '../../utils/prop-types';
 import PropTypes from 'prop-types';
 import { useDrag } from 'react-dnd';
+import { ItemTypes } from '../../utils/constants';
 
 export function BurgerIngredient({ ingredient, handleClick, count }) {
   const id = ingredient._id;
   const [, dragRef] = useDrag({
-    type: 'burger-ingredient',
+    type: ItemTypes.BURGER_INGREDIENT,
     item: { id },
   });
   return (

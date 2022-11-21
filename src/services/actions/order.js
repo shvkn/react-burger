@@ -13,7 +13,6 @@ export const makeOrder = (items) => (dispatch) => {
     .then(({ success, order }) => {
       if (!success) throw new Error(`Error in "postOrder"`);
       dispatch({ type: ORDER_MAKE_SUCCESS, number: order.number });
-      dispatch({ type: BURGER_RESET });
     })
     .catch((error) => {
       console.error(error);

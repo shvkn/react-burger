@@ -6,13 +6,13 @@ import { useDrag, useDrop } from 'react-dnd';
 function SortableElement({ children, index, handleMove }) {
   const ref = useRef();
   const [{ isDragging }, dragRef] = useDrag({
-    type: ItemTypes.BURGER_INGREDIENT,
+    type: ItemTypes.SORTABLE_ITEM,
     item: { index },
     collect: (monitor) => ({ isDragging: monitor.isDragging() }),
   });
 
   const [, dropRef] = useDrop({
-    accept: ItemTypes.BURGER_INGREDIENT,
+    accept: ItemTypes.SORTABLE_ITEM,
     hover: (item, monitor) => {
       if (!ref.current) return;
 

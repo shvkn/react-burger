@@ -17,3 +17,7 @@ export const addBurgerIngredient = (ingredient) => (dispatch) => {
 export const moveBurgerIngredient = (hoverIndex, dragIndex) => (dispatch) => {
   dispatch({ type: BURGER_MOVE_INGREDIENT, hoverIndex, dragIndex });
 };
+
+export const resetBurgerIngredients = () => (dispatch) => {
+  dispatch({ type: BURGER_RESET });
+};
