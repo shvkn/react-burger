@@ -13,6 +13,8 @@
   padding: 0;
   margin: 0;
   list-style: none;
+  background-color: salmon;
+  position: relative;
 }
 
 .categories::-webkit-scrollbar-track {

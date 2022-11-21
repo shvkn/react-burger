@@ -1,5 +1,4 @@
 import { postOrderRequest } from '../../utils/burger-api';
-import { BURGER_RESET } from './burger';
 
 export const ORDER_MAKE_REQUEST = 'ORDER_MAKE_REQUEST';
 export const ORDER_MAKE_FAILED = 'ORDER_MAKE_FAILED';
@@ -8,7 +7,6 @@ export const ORDER_MAKE_SUCCESS = 'ORDER_MAKE_SUCCESS';
 export const makeOrder = (items) => (dispatch) => {
   dispatch({ type: ORDER_MAKE_REQUEST });
   const idsList = items.map(({ _id }) => _id);
-  console.log(idsList);
   postOrderRequest(idsList)
     .then(({ success, order }) => {
       if (!success) throw new Error(`Error in "postOrder"`);

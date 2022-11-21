@@ -31,7 +31,7 @@ function BurgerConstructor() {
     dispatch(resetBurgerIngredients());
     const bun = ingredientsItems.find(({ type }) => type === 'bun');
     dispatch(addBurgerIngredient(bun));
-  }, [ingredientsItems]);
+  }, [dispatch, ingredientsItems]);
 
   useEffect(() => {
     resetBurger();

@@ -13,38 +13,57 @@ function BurgerIngredients() {
   const burger = useSelector((store) => store.burger);
   const [currentTab, setCurrentTab] = useState('');
 
+  const ingredientsByType = useMemo(
+    () => ({
+      bun: {
+        ref: null,
+        items: ingredientsItems.filter(({ type }) => type === 'bun'),
+        title: 'Булки',
+      },
+      sauce: {
+        ref: null,
+        items: ingredientsItems.filter(({ type }) => type === 'sauce'),
+        title: 'Соусы',
+      },
+      main: {
+        ref: null,
+        items: ingredientsItems.filter(({ type }) => type === 'main'),
+        title: 'Начинки',
+      },
+    }),
+    [ingredientsItems]
+  );
+
+  const ingredientsTypesList = useMemo(
+    () => Array.from(Object.keys(ingredientsByType)),
+    [ingredientsByType]
+  );
+  ingredientsByType.bun.ref = useRef();
+  ingredientsByType.sauce.ref = useRef();
+  ingredientsByType.main.ref = useRef();
+
   const ingredientsRootRef = useRef();
-  const ingredinentsRefsByType = {
-    buns: useRef(),
-    sauces: useRef(),
-    mains: useRef(),
-  };
 
   const observeCurrentTab = useCallback(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) setCurrentTab(entry.target.id);
+          if (entry.isIntersecting) {
+            setCurrentTab(entry.target.id);
+          }
         });
       },
-      { root: ingredientsRootRef.current, rootMargin: '-50% 0px' }
+      {
+        root: ingredientsRootRef.current,
+        rootMargin: '-50% 0px',
+      }
     );
-    for (const type in ingredinentsRefsByType)
-      observer.observe(ingredinentsRefsByType[type].current);
-  }, [ingredientsRootRef, ingredinentsRefsByType]);
+    ingredientsTypesList.forEach((type) => observer.observe(ingredientsByType[type].ref.current));
+  }, [ingredientsRootRef, ingredientsByType, ingredientsTypesList]);
 
   useEffect(() => {
     observeCurrentTab();
   }, [observeCurrentTab]);
-
-  const ingredientsByType = useMemo(
-    () => ({
-      bun: ingredientsItems.filter(({ type }) => type === 'bun'),
-      sauce: ingredientsItems.filter(({ type }) => type === 'sauce'),
-      main: ingredientsItems.filter(({ type }) => type === 'main'),
-    }),
-    [ingredientsItems]
-  );
 
   const selectedItems = useMemo(() => {
     const items = burger.bun ? { [burger.bun._id]: 2 } : {};
@@ -54,9 +73,9 @@ function BurgerIngredients() {
     return items;
   }, [burger]);
 
-  const handleTabClick = (value) => {
-    setCurrentTab(value);
-    ingredinentsRefsByType[value].current.scrollIntoView({ behavior: 'smooth' });
+  const handleTabClick = (type) => {
+    setCurrentTab(type);
+    ingredientsByType[type].ref.current.scrollIntoView({ behavior: 'smooth' });
   };
 
   const handleOpenModal = (ingredient) => {
@@ -77,76 +96,34 @@ function BurgerIngredients() {
       <h1 className='mt-10 mb-5 heading text text_type_main-large'>Соберите бургер</h1>
       <div className='mb-10'>
         <ul className={`${styles.tabs}`}>
-          <li key={'buns'}>
-            <Tab active={currentTab === 'buns'} value={'buns'} onClick={handleTabClick}>
-              Булки
-            </Tab>
-          </li>
-
-          <li key={'sauces'}>
-            <Tab active={currentTab === 'sauces'} value={'sauces'} onClick={handleTabClick}>
-              Соусы
-            </Tab>
-          </li>
-
-          <li key={'mains'}>
-            <Tab active={currentTab === 'mains'} value={'mains'} onClick={handleTabClick}>
-              Начинки
-            </Tab>
-          </li>
+          {ingredientsTypesList.map((type) => (
+            <li key={type}>
+              <Tab active={currentTab === type} value={type} onClick={handleTabClick}>
+                {ingredientsByType[type].title}
+              </Tab>
+            </li>
+          ))}
         </ul>
       </div>
       <ul className={`${styles.categories} scroll`} ref={ingredientsRootRef}>
-        <li key='buns' id='buns' ref={ingredinentsRefsByType['buns']}>
-          <h2 className='text text_type_main-medium'>Булки</h2>
-          <div className='mt-6 mr-2 mb-10 ml-4'>
-            <ul className={`${styles.ingredients}`}>
-              {ingredientsByType.bun.map((item) => (
-                <li key={item._id}>
-                  <BurgerIngredient
-                    ingredient={item}
-                    handleClick={() => handleOpenModal(item)}
-                    count={selectedItems[item._id] ?? 0}
-                  />
-                </li>
-              ))}
-            </ul>
-          </div>
-        </li>
-
-        <li key='sauces' id='sauces' ref={ingredinentsRefsByType['sauces']}>
-          <h2 className='text text_type_main-medium'>Соусы</h2>
-          <div className='mt-6 mr-2 mb-10 ml-4'>
-            <ul className={`${styles.ingredients}`}>
-              {ingredientsByType.sauce.map((item) => (
-                <li key={item._id}>
-                  <BurgerIngredient
-                    ingredient={item}
-                    handleClick={() => handleOpenModal(item)}
-                    count={selectedItems[item._id] ?? 0}
-                  />
-                </li>
-              ))}
-            </ul>
-          </div>
-        </li>
-
-        <li key='mains' id='mains' ref={ingredinentsRefsByType['mains']}>
-          <h2 className='text text_type_main-medium'>Начинки</h2>
-          <div className='mt-6 mr-2 mb-10 ml-4'>
-            <ul className={`${styles.ingredients}`}>
-              {ingredientsByType.main.map((item) => (
-                <li key={item._id}>
-                  <BurgerIngredient
-                    ingredient={item}
-                    handleClick={() => handleOpenModal(item)}
-                    count={selectedItems[item._id] ?? 0}
-                  />
-                </li>
-              ))}
-            </ul>
-          </div>
-        </li>
+        {ingredientsTypesList.map((type) => (
+          <li id={type} key={type} ref={ingredientsByType[type].ref}>
+            <h2 className='text text_type_main-medium'>{ingredientsByType[type].title}</h2>
+            <div className='pt-6 pr-2 pb-10 pl-4'>
+              <ul className={`${styles.ingredients}`}>
+                {ingredientsByType[type].items.map((item) => (
+                  <li key={item._id}>
+                    <BurgerIngredient
+                      ingredient={item}
+                      handleClick={() => handleOpenModal(item)}
+                      count={selectedItems[item._id] ?? 0}
+                    />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </li>
+        ))}
       </ul>
     </section>
   );
