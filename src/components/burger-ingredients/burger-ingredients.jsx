@@ -49,7 +49,7 @@ function BurgerIngredients() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            setCurrentTab(entry.target.id);
+            setCurrentTab(entry.target.dataset.tab);
           }
         });
       },
@@ -107,7 +107,7 @@ function BurgerIngredients() {
       </div>
       <ul className={`${styles.categories} scroll`} ref={ingredientsRootRef}>
         {ingredientsTypesList.map((type) => (
-          <li id={type} key={type} ref={ingredientsByType[type].ref}>
+          <li key={type} ref={ingredientsByType[type].ref} data-tab={type}>
             <h2 className='text text_type_main-medium'>{ingredientsByType[type].title}</h2>
             <div className='pt-6 pr-2 pb-10 pl-4'>
               <ul className={`${styles.ingredients}`}>
