@@ -10,7 +10,7 @@ export const makeOrder = (items) => (dispatch) => {
   const idsList = items.map(({ _id }) => _id);
   postOrderRequest(idsList)
     .then(({ success, order }) => {
-      if (!success) throw new Error(`Error in "postOrder"`);
+      if (!success) throw new Error(`Error in "makeOrder"`);
       dispatch({ type: ORDER_MAKE_SUCCESS, number: order.number });
       dispatch(resetBurgerIngredients());
     })

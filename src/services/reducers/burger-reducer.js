@@ -14,8 +14,9 @@ export const burgerInitState = {
 
 export const burgerReducer = (state = burgerInitState, action) => {
   const isBun = () => action.ingredient.type === IngredientTypes.BUN;
-  const calcTotalPrice = (ingredients, bun) =>
-    ingredients.reduce((sum, { price }) => sum + price, 0) + bun.price * 2;
+  const calcTotalPrice = (ingredients, bun) => {
+    return ingredients.reduce((sum, { price }) => sum + price, 0) + (bun?.price || 0) * 2;
+  };
 
   switch (action.type) {
     case BURGER_ADD_INGREDIENT: {

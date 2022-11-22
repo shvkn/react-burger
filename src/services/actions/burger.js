@@ -1,5 +1,4 @@
 import uniqid from 'uniqid';
-import { IngredientTypes } from '../../utils/constants';
 
 export const BURGER_ADD_INGREDIENT = 'BURGER_ADD_INGREDIENT';
 export const BURGER_REMOVE_INGREDIENT = 'BURGER_REMOVE_INGREDIENT';
@@ -19,9 +18,4 @@ export const moveBurgerIngredient = (hoverIndex, dragIndex) => ({
   dragIndex,
 });
 
-export const resetBurgerIngredients = () => (dispatch, getState) => {
-  const { ingredients } = getState();
-  const bun = ingredients.ingredientsItems.find(({ type }) => type === IngredientTypes.BUN);
-  dispatch({ type: BURGER_RESET });
-  dispatch(addBurgerIngredient(bun));
-};
+export const resetBurgerIngredients = () => ({ type: BURGER_RESET });
