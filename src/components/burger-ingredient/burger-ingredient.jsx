@@ -3,10 +3,17 @@ import { Counter, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-c
 import React from 'react';
 import { ingredientPropTypes } from '../../utils/prop-types';
 import PropTypes from 'prop-types';
+import { useDrag } from 'react-dnd';
+import { ItemTypes } from '../../utils/constants';
 
 export function BurgerIngredient({ ingredient, handleClick, count }) {
+  const id = ingredient._id;
+  const [, dragRef] = useDrag({
+    type: ItemTypes.BURGER_INGREDIENT,
+    item: { id },
+  });
   return (
-    <article className={styles.ingredient} onClick={handleClick}>
+    <article className={styles.ingredient} onClick={handleClick} ref={dragRef}>
       {count > 0 && <Counter count={count} size='default' />}
       <img
         className={`ml-4 mr-4 mb-2 ${styles.ingredientImage}`}

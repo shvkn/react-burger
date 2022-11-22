@@ -4,10 +4,10 @@ import { ingredientPropTypes } from '../../utils/prop-types';
 
 function IngredientDetails({ ingredient }) {
   return (
-    <div className={`pb-15 ${styles.inner}`}>
+    <>
       <img className={styles.image} src={ingredient.image_large} alt={ingredient.name} />
       <p className={`mt-4 mb-8 text text_type_main-medium ${styles.name}`}>{ingredient.name}</p>
-      <ul className={`text text_type_main-default text_color_inactive ${styles.facts}`}>
+      <ul className={`mb-15 text text_type_main-default text_color_inactive ${styles.facts}`}>
         <li className={`${styles.fact}`}>
           Калории,ккал
           <span className='mt-2 text text_type_digits-default'>{ingredient.calories}</span>
@@ -23,7 +23,7 @@ function IngredientDetails({ ingredient }) {
           <span className='mt-2 text text_type_digits-default'>{ingredient.carbohydrates}</span>
         </li>
       </ul>
-    </div>
+    </>
   );
 }
 

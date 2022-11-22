@@ -1,137 +1,133 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
-import PropTypes from 'prop-types';
 import styles from './burger-ingredients.module.css';
-import { ingredientPropTypes } from '../../utils/prop-types';
 import Modal from '../modal/modal';
 import IngredientDetails from '../ingredient-details/ingredient-details';
 import { BurgerIngredient } from '../burger-ingredient/burger-ingredient';
+import { useDispatch, useSelector } from 'react-redux';
+import { resetCurrentIngredient, setCurrentIngredient } from '../../services/actions/ingredients';
+import { IngredientTypes } from '../../utils/constants';
 
-function BurgerIngredients({ ingredients }) {
-  const [currentTab, setCurrentTab] = useState('buns');
-  const [ingredient, setIngredient] = useState(null);
-  const refs = {
-    buns: useRef(),
-    sauces: useRef(),
-    mains: useRef(),
-  };
+function BurgerIngredients() {
+  const dispatch = useDispatch();
+  const { ingredientsItems, currentIngredient } = useSelector((store) => store.ingredients);
+  const burger = useSelector((store) => store.burger);
+  const [currentTab, setCurrentTab] = useState('');
 
-  const handleTabClick = (value) => {
-    setCurrentTab(value);
-    refs[value].current.scrollIntoView({ behavior: 'smooth' });
+  const ingredientsByType = useMemo(
+    () => ({
+      bun: {
+        ref: null,
+        items: ingredientsItems.filter(({ type }) => type === IngredientTypes.BUN),
+        title: 'Булки',
+      },
+      sauce: {
+        ref: null,
+        items: ingredientsItems.filter(({ type }) => type === IngredientTypes.SAUCE),
+        title: 'Соусы',
+      },
+      main: {
+        ref: null,
+        items: ingredientsItems.filter(({ type }) => type === IngredientTypes.MAIN),
+        title: 'Начинки',
+      },
+    }),
+    [ingredientsItems]
+  );
+
+  const ingredientsTypesList = useMemo(
+    () => Array.from(Object.keys(ingredientsByType)),
+    [ingredientsByType]
+  );
+  ingredientsByType.bun.ref = useRef();
+  ingredientsByType.sauce.ref = useRef();
+  ingredientsByType.main.ref = useRef();
+
+  const ingredientsRootRef = useRef();
+
+  const observeCurrentTab = useCallback(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setCurrentTab(entry.target.dataset.tab);
+          }
+        });
+      },
+      {
+        root: ingredientsRootRef.current,
+        rootMargin: '-50% 0px',
+      }
+    );
+    ingredientsTypesList.forEach((type) => observer.observe(ingredientsByType[type].ref.current));
+  }, [ingredientsRootRef, ingredientsByType, ingredientsTypesList]);
+
+  useEffect(() => {
+    observeCurrentTab();
+  }, [observeCurrentTab]);
+
+  const selectedItems = useMemo(() => {
+    const items = burger.bun ? { [burger.bun._id]: 2 } : {};
+    burger.ingredients.forEach(({ _id }) => {
+      items[_id] = items[_id] + 1 || 1;
+    });
+    return items;
+  }, [burger]);
+
+  const handleTabClick = (type) => {
+    setCurrentTab(type);
+    ingredientsByType[type].ref.current.scrollIntoView({ behavior: 'smooth' });
   };
 
   const handleOpenModal = (ingredient) => {
-    setIngredient(ingredient);
+    dispatch(setCurrentIngredient(ingredient));
   };
 
   const handleCloseModal = () => {
-    setIngredient(null);
+    dispatch(resetCurrentIngredient());
   };
-
-  const buns = useMemo(() => ingredients.filter((i) => i.type === 'bun'), [ingredients]);
-  const sauces = useMemo(() => ingredients.filter((i) => i.type === 'sauce'), [ingredients]);
-  const mains = useMemo(() => ingredients.filter((i) => i.type === 'main'), [ingredients]);
-
-  const selectedItems = useMemo(
-    () => ({
-      '60d3b41abdacab0026a733c7': 1,
-      '60d3b41abdacab0026a733ca': 1,
-      '60d3b41abdacab0026a733cc': 1,
-      '60d3b41abdacab0026a733d0': 2,
-      '60d3b41abdacab0026a733d3': 1,
-      '60d3b41abdacab0026a733d4': 1,
-    }),
-    []
-  );
 
   return (
     <section className={styles.burgerIngredients}>
-      {ingredient && (
+      {currentIngredient && (
         <Modal handleClose={handleCloseModal} title='Детали ингредиента'>
-          <IngredientDetails ingredient={ingredient} />
+          <IngredientDetails ingredient={currentIngredient} />
         </Modal>
       )}
       <h1 className='mt-10 mb-5 heading text text_type_main-large'>Соберите бургер</h1>
       <div className='mb-10'>
         <ul className={`${styles.tabs}`}>
-          <li key={'buns'}>
-            <Tab active={currentTab === 'buns'} value={'buns'} onClick={handleTabClick}>
-              Булки
-            </Tab>
-          </li>
-
-          <li key={'sauces'}>
-            <Tab active={currentTab === 'sauces'} value={'sauces'} onClick={handleTabClick}>
-              Соусы
-            </Tab>
-          </li>
-
-          <li key={'mains'}>
-            <Tab active={currentTab === 'mains'} value={'mains'} onClick={handleTabClick}>
-              Начинки
-            </Tab>
-          </li>
+          {ingredientsTypesList.map((type) => (
+            <li key={type}>
+              <Tab active={currentTab === type} value={type} onClick={handleTabClick}>
+                {ingredientsByType[type].title}
+              </Tab>
+            </li>
+          ))}
         </ul>
       </div>
-      <ul className={`${styles.categories} scroll`}>
-        <li key='buns' ref={refs['buns']}>
-          <h2 className='text text_type_main-medium'>Булки</h2>
-          <div className='mt-6 mr-2 mb-10 ml-4'>
-            <ul className={`${styles.ingredients}`}>
-              {buns.map((item) => (
-                <li key={item._id}>
-                  <BurgerIngredient
-                    ingredient={item}
-                    handleClick={() => handleOpenModal(item)}
-                    count={selectedItems[item._id] ?? 0}
-                  />
-                </li>
-              ))}
-            </ul>
-          </div>
-        </li>
-
-        <li key='sauces' ref={refs['sauces']}>
-          <h2 className='text text_type_main-medium'>Соусы</h2>
-          <div className='mt-6 mr-2 mb-10 ml-4'>
-            <ul className={`${styles.ingredients}`}>
-              {sauces.map((item) => (
-                <li key={item._id}>
-                  <BurgerIngredient
-                    ingredient={item}
-                    handleClick={() => handleOpenModal(item)}
-                    count={selectedItems[item._id] ?? 0}
-                  />
-                </li>
-              ))}
-            </ul>
-          </div>
-        </li>
-
-        <li key='mains' ref={refs['mains']}>
-          <h2 className='text text_type_main-medium'>Начинки</h2>
-          <div className='mt-6 mr-2 mb-10 ml-4'>
-            <ul className={`${styles.ingredients}`}>
-              {mains.map((item) => (
-                <li key={item._id}>
-                  <BurgerIngredient
-                    ingredient={item}
-                    handleClick={() => handleOpenModal(item)}
-                    count={selectedItems[item._id] ?? 0}
-                  />
-                </li>
-              ))}
-            </ul>
-          </div>
-        </li>
+      <ul className={`${styles.categories} scroll`} ref={ingredientsRootRef}>
+        {ingredientsTypesList.map((type) => (
+          <li key={type} ref={ingredientsByType[type].ref} data-tab={type}>
+            <h2 className='text text_type_main-medium'>{ingredientsByType[type].title}</h2>
+            <div className='pt-6 pr-2 pb-10 pl-4'>
+              <ul className={`${styles.ingredients}`}>
+                {ingredientsByType[type].items.map((item) => (
+                  <li key={item._id}>
+                    <BurgerIngredient
+                      ingredient={item}
+                      handleClick={() => handleOpenModal(item)}
+                      count={selectedItems[item._id] ?? 0}
+                    />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </li>
+        ))}
       </ul>
     </section>
   );
 }
-
-BurgerIngredients.propTypes = {
-  ingredients: PropTypes.arrayOf(ingredientPropTypes.isRequired).isRequired,
-};
 
 export default BurgerIngredients;
