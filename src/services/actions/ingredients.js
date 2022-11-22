@@ -13,10 +13,6 @@ export const getIngredients = () => (dispatch) => {
     .catch((error) => dispatch({ type: INGREDIENTS_GET_FAILED, error }));
 };
 // TODO Вынести в самостоятельный редьюсер
-export const setCurrentIngredient = (ingredient) => (dispatch) => {
-  dispatch({ type: INGREDIENTS_SET_CURRENT, ingredient });
-};
+export const setCurrentIngredient = (ingredient) => ({ type: INGREDIENTS_SET_CURRENT, ingredient });
 
-export const resetCurrentIngredient = () => (dispatch) => {
-  dispatch({ type: INGREDIENTS_RESET_CURRENT });
-};
+export const resetCurrentIngredient = () => ({ type: INGREDIENTS_RESET_CURRENT });
