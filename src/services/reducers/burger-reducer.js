@@ -4,6 +4,7 @@ import {
   BURGER_REMOVE_INGREDIENT,
   BURGER_RESET,
 } from '../actions/burger';
+import { IngredientTypes } from '../../utils/constants';
 
 export const burgerInitState = {
   bun: null,
@@ -12,7 +13,7 @@ export const burgerInitState = {
 };
 
 export const burgerReducer = (state = burgerInitState, action) => {
-  const isBun = () => action.ingredient.type === 'bun';
+  const isBun = () => action.ingredient.type === IngredientTypes.BUN;
   const calcTotalPrice = (ingredients, bun) =>
     ingredients.reduce((sum, { price }) => sum + price, 0) + bun.price * 2;
 

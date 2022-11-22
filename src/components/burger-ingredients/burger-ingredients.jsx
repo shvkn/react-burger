@@ -6,6 +6,7 @@ import IngredientDetails from '../ingredient-details/ingredient-details';
 import { BurgerIngredient } from '../burger-ingredient/burger-ingredient';
 import { useDispatch, useSelector } from 'react-redux';
 import { resetCurrentIngredient, setCurrentIngredient } from '../../services/actions/ingredients';
+import { IngredientTypes } from '../../utils/constants';
 
 function BurgerIngredients() {
   const dispatch = useDispatch();
@@ -17,17 +18,17 @@ function BurgerIngredients() {
     () => ({
       bun: {
         ref: null,
-        items: ingredientsItems.filter(({ type }) => type === 'bun'),
+        items: ingredientsItems.filter(({ type }) => type === IngredientTypes.BUN),
         title: 'Булки',
       },
       sauce: {
         ref: null,
-        items: ingredientsItems.filter(({ type }) => type === 'sauce'),
+        items: ingredientsItems.filter(({ type }) => type === IngredientTypes.SAUCE),
         title: 'Соусы',
       },
       main: {
         ref: null,
-        items: ingredientsItems.filter(({ type }) => type === 'main'),
+        items: ingredientsItems.filter(({ type }) => type === IngredientTypes.MAIN),
         title: 'Начинки',
       },
     }),
