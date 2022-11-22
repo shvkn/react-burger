@@ -43,10 +43,6 @@ export const burgerReducer = (state = burgerInitState, action) => {
       const { hoverIndex, dragIndex } = action;
       const [dragItem] = ingredients.splice(dragIndex, 1);
       ingredients.splice(hoverIndex, 0, dragItem);
-      // const dragItem = ingredients[dragIndex];
-      // const hoverItem = ingredients[hoverIndex];
-      // ingredients[hoverIndex] = dragItem;
-      // ingredients[dragIndex] = hoverItem;
       return {
         ...state,
         ingredients,

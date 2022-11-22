@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   ConstructorElement,
@@ -27,15 +27,12 @@ function BurgerConstructor() {
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
 
-  const resetBurger = useCallback(() => {
-    dispatch(resetBurgerIngredients());
-    const bun = ingredientsItems.find(({ type }) => type === 'bun');
-    dispatch(addBurgerIngredient(bun));
-  }, [dispatch, ingredientsItems]);
-
   useEffect(() => {
+    const resetBurger = () => {
+      dispatch(resetBurgerIngredients());
+    };
     resetBurger();
-  }, [resetBurger]);
+  }, [dispatch]);
 
   const handleOnDrop = (item) => {
     const ingredient = ingredientsItems.find(({ _id }) => _id === item.id);
@@ -55,7 +52,6 @@ function BurgerConstructor() {
   const handleMakeOrder = () => {
     handleOpenModal();
     dispatch(makeOrder([burger.bun, ...burger.ingredients, burger.bun]));
-    resetBurger();
   };
 
   const isOrderValid = () => burger.bun && burger.ingredients.length > 0;

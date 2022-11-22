@@ -18,6 +18,9 @@ export const moveBurgerIngredient = (hoverIndex, dragIndex) => (dispatch) => {
   dispatch({ type: BURGER_MOVE_INGREDIENT, hoverIndex, dragIndex });
 };
 
-export const resetBurgerIngredients = () => (dispatch) => {
+export const resetBurgerIngredients = () => (dispatch, getState) => {
+  const { ingredients } = getState();
+  const bun = ingredients.ingredientsItems.find(({ type }) => type === 'bun');
   dispatch({ type: BURGER_RESET });
+  dispatch(addBurgerIngredient(bun));
 };
