@@ -13,7 +13,7 @@ export function BurgerIngredient({ ingredient, handleClick, count }) {
     item: { id },
   });
   return (
-    <article className={styles.ingredient} onClick={handleClick} ref={dragRef}>
+    <article className={styles.ingredient} onClick={() => handleClick(ingredient)} ref={dragRef}>
       {count > 0 && <Counter count={count} size='default' />}
       <img
         className={`ml-4 mr-4 mb-2 ${styles.ingredientImage}`}

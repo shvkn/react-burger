@@ -3,10 +3,10 @@ import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './burger-ingredients.module.css';
 import Modal from '../modal/modal';
 import IngredientDetails from '../ingredient-details/ingredient-details';
-import { BurgerIngredient } from '../burger-ingredient/burger-ingredient';
 import { useDispatch, useSelector } from 'react-redux';
 import { resetCurrentIngredient, setCurrentIngredient } from '../../services/actions/ingredients';
 import { IngredientTypes } from '../../utils/constants';
+import IngredientsCategory from '../ingredients-category/ingredients-category';
 
 function BurgerIngredients() {
   const dispatch = useDispatch();
@@ -109,20 +109,11 @@ function BurgerIngredients() {
       <ul className={`${styles.categories} scroll`} ref={ingredientsRootRef}>
         {ingredientsTypesList.map((type) => (
           <li key={type} ref={ingredientsByType[type].ref} data-tab={type}>
-            <h2 className='text text_type_main-medium'>{ingredientsByType[type].title}</h2>
-            <div className='pt-6 pr-2 pb-10 pl-4'>
-              <ul className={`${styles.ingredients}`}>
-                {ingredientsByType[type].items.map((item) => (
-                  <li key={item._id}>
-                    <BurgerIngredient
-                      ingredient={item}
-                      handleClick={() => handleOpenModal(item)}
-                      count={selectedItems[item._id] ?? 0}
-                    />
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <IngredientsCategory
+              onIngredientClick={handleOpenModal}
+              title={ingredientsByType[type].title}
+              items={ingredientsByType[type].items}
+            />
           </li>
         ))}
       </ul>
