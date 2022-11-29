@@ -6,8 +6,13 @@ import {
 
 export const selectIngredientsSlice = (state) => state.ingredients;
 export const selectOrderSlice = (state) => state.order;
-export const selectBurgerBun = (state) => state.burger.bun;
-export const selectBurgerIngredients = (state) => state.burger.ingredients;
+export const selectBurgerSlice = (state) => state.burger;
+
+export const selectBurgerBun = createSelector(selectBurgerSlice, (burger) => burger.bun);
+export const selectBurgerIngredients = createSelector(
+  selectBurgerSlice,
+  (burger) => burger.ingredients
+);
 
 export const selectTotalPrice = createSelector(
   [selectBurgerBun, selectBurgerIngredients, selectIngredientsEntities],
@@ -23,8 +28,7 @@ export const selectIngredientsByType = createSelector(
   (ingredients, type) => ingredients.filter((ingredient) => ingredient.type === type)
 );
 
-export const selectOrder = (state) => state.order;
-export const selectOrderNumber = (state) => state.order.number;
+export const selectOrderNumber = createSelector(selectOrderSlice, (order) => order.number);
 
 export const selectIsBurgerBunEmpty = createSelector(selectBurgerBun, (bun) => bun === null);
 export const selectIsBurgerIngredientsEmpty = createSelector(
