@@ -7,12 +7,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { resetCurrentIngredient, setCurrentIngredient } from '../../services/actions/ingredients';
 import { IngredientTypes } from '../../utils/constants';
 import IngredientsCategory from '../ingredients-category/ingredients-category';
+import { selectAllIngredients } from '../../services/slices/ingredientsSlice';
 
 function BurgerIngredients() {
   const dispatch = useDispatch();
-  const { ingredientsItems, currentIngredient } = useSelector((store) => store.ingredients);
+  // const { ingredientsItems, currentIngredient } = useSelector((store) => store.ingredients);
   const burger = useSelector((store) => store.burger);
   const [currentTab, setCurrentTab] = useState('');
+  const ingredientsItems = useSelector(selectAllIngredients);
+  const currentIngredient = null;
 
   const ingredientsByType = useMemo(
     () => ({
