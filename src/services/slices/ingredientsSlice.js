@@ -1,10 +1,6 @@
-import {
-  createEntityAdapter,
-  createAsyncThunk,
-  createSlice,
-  createSelector,
-} from '@reduxjs/toolkit';
+import { createAsyncThunk, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { getIngredientsRequest } from '../../utils/burger-api';
+import { selectIngredientsSlice } from '../../utils/selectors';
 
 const ingredientsAdapter = createEntityAdapter({
   selectId: ({ _id }) => _id,
@@ -53,11 +49,6 @@ export const {
   selectTotal: selectIngredientsTotal,
   selectById: selectIngredientById,
   selectEntities: selectIngredientsEntities,
-} = ingredientsAdapter.getSelectors((state) => state.ingredients);
-
-export const selectIngredientsByType = createSelector(
-  [selectAllIngredients, (state, type) => type],
-  (ingredients, type) => ingredients.filter((ingredient) => ingredient.type === type)
-);
+} = ingredientsAdapter.getSelectors(selectIngredientsSlice);
 
 export default ingredientsSlice.reducer;

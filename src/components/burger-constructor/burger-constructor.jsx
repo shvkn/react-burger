@@ -18,12 +18,8 @@ import {
   selectIngredientsEntities,
 } from '../../services/slices/ingredientsSlice';
 
-import {
-  actions as burgerActions,
-  selectBurgerBun,
-  selectBurgerIngredients,
-  selectTotalPrice,
-} from '../../services/slices/burgerSlice';
+import { actions as burgerActions } from '../../services/slices/burgerSlice';
+import { selectBurgerBun, selectBurgerIngredients, selectTotalPrice } from '../../utils/selectors';
 
 function BurgerConstructor() {
   const [showModal, setShowModal] = useState(false);
@@ -75,7 +71,6 @@ function BurgerConstructor() {
   );
 
   const handleMove = (hoverIndex, dragIndex) => {
-    // console.log({ hoverIndex, dragIndex });
     dispatch(burgerActions.moveIngredient({ hoverIndex, dragIndex }));
   };
 

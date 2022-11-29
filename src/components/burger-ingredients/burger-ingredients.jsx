@@ -6,7 +6,7 @@ import IngredientDetails from '../ingredient-details/ingredient-details';
 import { useSelector } from 'react-redux';
 import { IngredientTypes } from '../../utils/constants';
 import IngredientsCategory from '../ingredients-category/ingredients-category';
-import { selectIngredientsByType } from '../../services/slices/ingredientsSlice';
+import { selectIngredientsByType } from '../../utils/selectors';
 
 const typeBun = IngredientTypes.BUN;
 const typeSauce = IngredientTypes.SAUCE;

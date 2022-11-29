@@ -10,8 +10,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { fetchIngredients } from '../../services/slices/ingredientsSlice';
+import { selectIngredientsSlice } from '../../utils/selectors';
 function App() {
-  const ingredients = useSelector((store) => store.ingredients);
+  const ingredients = useSelector(selectIngredientsSlice);
   const dispatch = useDispatch();
 
   useEffect(() => {
