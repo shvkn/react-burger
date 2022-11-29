@@ -5,6 +5,7 @@ import {
 } from '../services/slices/ingredientsSlice';
 
 export const selectIngredientsSlice = (state) => state.ingredients;
+export const selectOrderSlice = (state) => state.order;
 export const selectBurgerBun = (state) => state.burger.bun;
 export const selectBurgerIngredients = (state) => state.burger.ingredients;
 
@@ -24,3 +25,9 @@ export const selectIngredientsByType = createSelector(
 
 export const selectOrder = (state) => state.order;
 export const selectOrderNumber = (state) => state.order.number;
+
+export const selectIsBurgerBunEmpty = createSelector(selectBurgerBun, (bun) => bun === null);
+export const selectIsBurgerIngredientsEmpty = createSelector(
+  selectBurgerIngredients,
+  (ingredients) => ingredients.length === 0
+);

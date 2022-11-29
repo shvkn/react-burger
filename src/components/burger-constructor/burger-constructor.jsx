@@ -22,7 +22,10 @@ import { actions as burgerActions } from '../../services/slices/burgerSlice';
 import {
   selectBurgerBun,
   selectBurgerIngredients,
+  selectIsBurgerBunEmpty,
+  selectIsBurgerIngredientsEmpty,
   selectOrderNumber,
+  selectOrderSlice,
   selectTotalPrice,
 } from '../../utils/selectors';
 
@@ -30,7 +33,7 @@ function BurgerConstructor() {
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
 
-  const { order } = useSelector((store) => store);
+  const order = useSelector(selectOrderSlice);
   const orderNumber = useSelector(selectOrderNumber);
   const ingredientsEntities = useSelector(selectIngredientsEntities);
   const burgerIngredients = useSelector(selectBurgerIngredients);
@@ -39,8 +42,13 @@ function BurgerConstructor() {
   const burgerBunId = useSelector(selectBurgerBun);
   const burgerBun = useSelector((state) => selectIngredientById(state, burgerBunId));
 
-  const hasBurgerBun = useMemo(() => !!burgerBunId, [burgerBunId]);
-  const hasBurgerIngredients = useMemo(() => !!burgerIngredients.length, [burgerIngredients]);
+  const isBunEmpty = useSelector(selectIsBurgerBunEmpty);
+  const isIngredientsEmpty = useSelector(selectIsBurgerIngredientsEmpty);
+
+  const isOrderValid = useMemo(
+    () => !isBunEmpty && !isIngredientsEmpty,
+    [isBunEmpty, isIngredientsEmpty]
+  );
 
   const burgerBunName = burgerBun?.name;
   const burgerBunPrice = burgerBun?.price;
@@ -67,15 +75,10 @@ function BurgerConstructor() {
   const handleRemove = (index) => dispatch(burgerActions.removeIngredient(index));
 
   const handleMakeOrder = () => {
-    const ingredientsIds = burgerIngredients.map(({ id }) => id);
+    const burgerIngredientsIds = burgerIngredients.map(({ id }) => id);
     handleOpenModal();
-    dispatch(makeOrder([burgerBunId, ...ingredientsIds]));
+    dispatch(makeOrder([burgerBunId, ...burgerIngredientsIds]));
   };
-
-  const isOrderValid = useMemo(
-    () => hasBurgerBun && hasBurgerIngredients,
-    [hasBurgerBun, hasBurgerIngredients]
-  );
 
   const handleMove = (hoverIndex, dragIndex) => {
     dispatch(burgerActions.moveIngredient({ hoverIndex, dragIndex }));
@@ -97,7 +100,7 @@ function BurgerConstructor() {
         </Modal>
       )}
       <div className={`ml-4 ${styles.container}`}>
-        {hasBurgerBun && (
+        {!isBunEmpty && (
           <div className={`ml-8 ${styles.bun}`}>
             <ConstructorElement
               text={`${burgerBunName} (верх)`}
@@ -111,15 +114,15 @@ function BurgerConstructor() {
         {!isOrderValid && (
           <div className={styles.message}>
             <p className={`mt-8 text text_type_main-medium text_color_inactive`}>
-              {!hasBurgerIngredients
-                ? !hasBurgerBun
+              {isIngredientsEmpty
+                ? isBunEmpty
                   ? 'Пожалуйста, перетащите булку и ингредиенты'
                   : 'Добавьте ингредиенты'
                 : 'Добавьте булку'}
             </p>
           </div>
         )}
-        {hasBurgerIngredients && (
+        {!isIngredientsEmpty && (
           <ul className={`${styles.ingredients} mt-10 scroll`}>
             {burgerIngredients.map(({ id, uid }, index) => {
               const { image, price, name } = ingredientsEntities[id];
@@ -141,7 +144,7 @@ function BurgerConstructor() {
             })}
           </ul>
         )}
-        {hasBurgerBun && (
+        {!isBunEmpty && (
           <div className={`ml-8 ${styles.bun}`}>
             <ConstructorElement
               text={`${burgerBunName} (низ)`}
