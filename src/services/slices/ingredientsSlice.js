@@ -2,7 +2,7 @@ import { createAsyncThunk, createEntityAdapter, createSlice } from '@reduxjs/too
 import { getIngredientsRequest } from '../../utils/burger-api';
 import { processFulfilled, processPending, processRejected } from '../../utils/utils';
 
-const ingredientsAdapter = createEntityAdapter({
+export const ingredientsAdapter = createEntityAdapter({
   selectId: ({ _id }) => _id,
 });
 const initialState = ingredientsAdapter.getInitialState({ loadingState: 'idle', error: null });
@@ -24,13 +24,5 @@ const ingredientsSlice = createSlice({
       });
   },
 });
-
-export const {
-  selectAll: selectAllIngredients,
-  selectIds: selectIngredientsIds,
-  selectTotal: selectIngredientsTotal,
-  selectById: selectIngredientById,
-  selectEntities: selectIngredientsEntities,
-} = ingredientsAdapter.getSelectors((state) => state.ingredients);
 
 export default ingredientsSlice.reducer;

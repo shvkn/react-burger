@@ -13,15 +13,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useDrop } from 'react-dnd';
 import SortableElement from '../sortable-element/sortable-element';
 import { IngredientTypes, ItemTypes } from '../../utils/constants';
-import {
-  selectIngredientById,
-  selectIngredientsEntities,
-} from '../../services/slices/ingredientsSlice';
+import {} from '../../services/slices/ingredientsSlice';
 
 import { actions as burgerActions } from '../../services/slices/burgerSlice';
 import {
   selectBurgerBun,
   selectBurgerIngredients,
+  selectIngredientById,
+  selectIngredientsEntities,
   selectIsBurgerBunEmpty,
   selectIsBurgerIngredientsEmpty,
   selectOrderNumber,
@@ -40,7 +39,7 @@ function BurgerConstructor() {
   const totalPrice = useSelector(selectTotalPrice);
 
   const burgerBunId = useSelector(selectBurgerBun);
-  const burgerBun = useSelector((state) => selectIngredientById(state, burgerBunId));
+  const burgerBun = useSelector(selectIngredientById(burgerBunId));
 
   const isBunEmpty = useSelector(selectIsBurgerBunEmpty);
   const isIngredientsEmpty = useSelector(selectIsBurgerIngredientsEmpty);
