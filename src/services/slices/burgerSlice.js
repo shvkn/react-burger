@@ -23,6 +23,11 @@ const removeIngredient = (state, { payload: index }) => {
   state.ingredients.splice(index, 1);
 };
 
+const moveIngredient = (state, { payload: { hoverIndex, dragIndex } }) => {
+  const [dragElement] = state.ingredients.splice(dragIndex, 1);
+  state.ingredients.splice(hoverIndex, 0, dragElement);
+};
+
 const burgerSlice = createSlice({
   name: 'burger',
   initialState,
@@ -30,6 +35,7 @@ const burgerSlice = createSlice({
     setBun,
     addIngredient,
     removeIngredient,
+    moveIngredient,
   },
 });
 

@@ -8,7 +8,6 @@ import {
 import styles from './burger-constructor.module.css';
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
-import { moveBurgerIngredient } from '../../services/actions/burger';
 import { makeOrder } from '../../services/actions/order';
 import { useDispatch, useSelector } from 'react-redux';
 import { useDrop } from 'react-dnd';
@@ -76,7 +75,8 @@ function BurgerConstructor() {
   );
 
   const handleMove = (hoverIndex, dragIndex) => {
-    dispatch(moveBurgerIngredient(hoverIndex, dragIndex));
+    // console.log({ hoverIndex, dragIndex });
+    dispatch(burgerActions.moveIngredient({ hoverIndex, dragIndex }));
   };
 
   return (
