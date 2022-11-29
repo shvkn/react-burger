@@ -8,7 +8,7 @@ import {
 import styles from './burger-constructor.module.css';
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
-import { moveBurgerIngredient, removeBurgerIngredientByIndex } from '../../services/actions/burger';
+import { moveBurgerIngredient } from '../../services/actions/burger';
 import { makeOrder } from '../../services/actions/order';
 import { useDispatch, useSelector } from 'react-redux';
 import { useDrop } from 'react-dnd';
@@ -63,7 +63,7 @@ function BurgerConstructor() {
 
   const handleOpenModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
-  const handleRemove = (index) => dispatch(removeBurgerIngredientByIndex(index));
+  const handleRemove = (index) => dispatch(burgerActions.removeIngredient(index));
 
   const handleMakeOrder = () => {
     handleOpenModal();

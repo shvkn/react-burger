@@ -19,12 +19,17 @@ const addIngredient = {
   },
 };
 
+const removeIngredient = (state, { payload: index }) => {
+  state.ingredients.splice(index, 1);
+};
+
 const burgerSlice = createSlice({
   name: 'burger',
   initialState,
   reducers: {
     setBun,
     addIngredient,
+    removeIngredient,
   },
 });
 
