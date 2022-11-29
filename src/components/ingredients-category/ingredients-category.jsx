@@ -17,7 +17,7 @@ function IngredientsCategory({ items, title, onIngredientClick }) {
         <ul className={`${styles.ingredients}`}>
           {items.map((item) => (
             <li key={item._id}>
-              <BurgerIngredient ingredient={item} handleClick={onIngredientClick} count={1} />
+              <BurgerIngredient ingredient={item} handleClick={onIngredientClick} />
             </li>
           ))}
         </ul>

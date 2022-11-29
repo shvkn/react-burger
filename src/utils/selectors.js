@@ -11,6 +11,7 @@ export const selectIngredientById = (id) => (state) => ingredientsActions.select
 
 export const selectBurgerBun = (state) => selectBurgerSlice(state).bun;
 export const selectBurgerIngredients = (state) => selectBurgerSlice(state).ingredients;
+export const selectBurgerCounts = (state) => selectBurgerSlice(state).counts;
 
 export const selectOrderNumber = (state) => selectOrderSlice(state).number;
 
