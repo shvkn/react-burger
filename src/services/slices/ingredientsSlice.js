@@ -7,10 +7,9 @@ const ingredientsAdapter = createEntityAdapter({
 });
 const initialState = ingredientsAdapter.getInitialState({ loadingState: 'idle', error: null });
 
-export const fetchIngredients = createAsyncThunk('ingredients/fetchIngredients', async () => {
-  const { data } = await getIngredientsRequest();
-  return data;
-});
+export const fetchIngredients = createAsyncThunk('ingredients/fetchIngredients', async () =>
+  getIngredientsRequest()
+);
 
 const processPending = () => (state) => {
   state.loadingState = 'loading';
@@ -36,9 +35,9 @@ const ingredientsSlice = createSlice({
     builder
       .addCase(fetchIngredients.pending, processPending())
       .addCase(fetchIngredients.rejected, processRejected())
-      .addCase(fetchIngredients.fulfilled, (state, { payload: ingredients }) => {
+      .addCase(fetchIngredients.fulfilled, (state, { payload: { data } }) => {
         processFulfilled(state);
-        ingredientsAdapter.setAll(state, ingredients);
+        ingredientsAdapter.setAll(state, data);
       });
   },
 });

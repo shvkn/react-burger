@@ -38,7 +38,6 @@ const orderSlice = createSlice({
       .addCase(makeOrder.fulfilled, (state, { payload: { order } }) => {
         processFulfilled(state);
         state.number = order.number;
-        // console.log(action);
       });
   },
 });
