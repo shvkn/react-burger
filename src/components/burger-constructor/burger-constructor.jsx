@@ -8,7 +8,7 @@ import {
 import styles from './burger-constructor.module.css';
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
-import { makeOrder } from '../../services/actions/order';
+import { makeOrder } from '../../services/slices/orderSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useDrop } from 'react-dnd';
 import SortableElement from '../sortable-element/sortable-element';
@@ -19,13 +19,19 @@ import {
 } from '../../services/slices/ingredientsSlice';
 
 import { actions as burgerActions } from '../../services/slices/burgerSlice';
-import { selectBurgerBun, selectBurgerIngredients, selectTotalPrice } from '../../utils/selectors';
+import {
+  selectBurgerBun,
+  selectBurgerIngredients,
+  selectOrderNumber,
+  selectTotalPrice,
+} from '../../utils/selectors';
 
 function BurgerConstructor() {
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
 
   const { order } = useSelector((store) => store);
+  const orderNumber = useSelector(selectOrderNumber);
   const ingredientsEntities = useSelector(selectIngredientsEntities);
   const burgerIngredients = useSelector(selectBurgerIngredients);
   const totalPrice = useSelector(selectTotalPrice);
@@ -61,8 +67,9 @@ function BurgerConstructor() {
   const handleRemove = (index) => dispatch(burgerActions.removeIngredient(index));
 
   const handleMakeOrder = () => {
+    const ingredientsIds = burgerIngredients.map(({ id }) => id);
     handleOpenModal();
-    dispatch(makeOrder([burgerBunId, ...burgerIngredients, burgerBunId]));
+    dispatch(makeOrder([burgerBunId, ...ingredientsIds]));
   };
 
   const isOrderValid = useMemo(
@@ -78,15 +85,15 @@ function BurgerConstructor() {
     <div className={`${styles.burgerConstructor}`} ref={dropTarget}>
       {showModal && (
         <Modal handleClose={handleCloseModal}>
-          {order.isRequested && (
+          {order.loadingState === 'loading' && (
             <p className='mt-8 mb-30 text text_type_main-default'>Оформляем ваш заказ</p>
           )}
-          {order.isFailed && (
+          {order.error && (
             <p className='mt-8 mb-30 text text_type_main-default'>
               Произошла ошибка и мы не смогли принять ваш заказ. Пожалуйста, повторите позже.
             </p>
           )}
-          {order.isSucceed && <OrderDetails number={order.number} />}
+          {order.loadingState === 'idle' && !order.error && <OrderDetails number={orderNumber} />}
         </Modal>
       )}
       <div className={`ml-4 ${styles.container}`}>

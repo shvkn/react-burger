@@ -49,6 +49,6 @@ export const {
   selectTotal: selectIngredientsTotal,
   selectById: selectIngredientById,
   selectEntities: selectIngredientsEntities,
-} = ingredientsAdapter.getSelectors(selectIngredientsSlice);
+} = ingredientsAdapter.getSelectors((state) => state.ingredients);
 
 export default ingredientsSlice.reducer;

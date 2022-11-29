@@ -21,3 +21,6 @@ export const selectIngredientsByType = createSelector(
   [selectAllIngredients, (state, type) => type],
   (ingredients, type) => ingredients.filter((ingredient) => ingredient.type === type)
 );
+
+export const selectOrder = (state) => state.order;
+export const selectOrderNumber = (state) => state.order.number;
