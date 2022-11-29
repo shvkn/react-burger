@@ -1,93 +1,65 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './burger-ingredients.module.css';
 import Modal from '../modal/modal';
 import IngredientDetails from '../ingredient-details/ingredient-details';
-import { useDispatch, useSelector } from 'react-redux';
-import { resetCurrentIngredient, setCurrentIngredient } from '../../services/actions/ingredients';
+import { useSelector } from 'react-redux';
 import { IngredientTypes } from '../../utils/constants';
 import IngredientsCategory from '../ingredients-category/ingredients-category';
-import { selectAllIngredients } from '../../services/slices/ingredientsSlice';
+import { selectIngredientsByType } from '../../services/slices/ingredientsSlice';
+
+const typeBun = IngredientTypes.BUN;
+const typeSauce = IngredientTypes.SAUCE;
+const typeMain = IngredientTypes.MAIN;
+
+const selectBuns = (state) => selectIngredientsByType(state, typeBun);
+const selectSauces = (state) => selectIngredientsByType(state, typeSauce);
+const selectMains = (state) => selectIngredientsByType(state, typeMain);
 
 function BurgerIngredients() {
-  const dispatch = useDispatch();
-  // const { ingredientsItems, currentIngredient } = useSelector((store) => store.ingredients);
-  const burger = useSelector((store) => store.burger);
   const [currentTab, setCurrentTab] = useState('');
-  const ingredientsItems = useSelector(selectAllIngredients);
-  const currentIngredient = null;
 
-  const ingredientsByType = useMemo(
-    () => ({
-      bun: {
-        ref: null,
-        items: ingredientsItems.filter(({ type }) => type === IngredientTypes.BUN),
-        title: 'Булки',
-      },
-      sauce: {
-        ref: null,
-        items: ingredientsItems.filter(({ type }) => type === IngredientTypes.SAUCE),
-        title: 'Соусы',
-      },
-      main: {
-        ref: null,
-        items: ingredientsItems.filter(({ type }) => type === IngredientTypes.MAIN),
-        title: 'Начинки',
-      },
-    }),
-    [ingredientsItems]
-  );
+  const ingredientsTypeBun = useSelector(selectBuns);
+  const ingredientsTypeSauce = useSelector(selectSauces);
+  const ingredientsTypeMain = useSelector(selectMains);
 
-  const ingredientsTypesList = useMemo(
-    () => Array.from(Object.keys(ingredientsByType)),
-    [ingredientsByType]
-  );
-  ingredientsByType.bun.ref = useRef();
-  ingredientsByType.sauce.ref = useRef();
-  ingredientsByType.main.ref = useRef();
+  const [currentIngredient, setCurrentIngredient] = useState(null);
 
-  const ingredientsRootRef = useRef();
-
-  const observeCurrentTab = useCallback(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setCurrentTab(entry.target.dataset.tab);
-          }
-        });
-      },
-      {
-        root: ingredientsRootRef.current,
-        rootMargin: '-50% 0px',
-      }
-    );
-    ingredientsTypesList.forEach((type) => observer.observe(ingredientsByType[type].ref.current));
-  }, [ingredientsRootRef, ingredientsByType, ingredientsTypesList]);
+  const categoriesRootRef = useRef();
+  const categoriesRefs = {
+    [typeBun]: useRef(),
+    [typeMain]: useRef(),
+    [typeSauce]: useRef(),
+  };
 
   useEffect(() => {
-    observeCurrentTab();
-  }, [observeCurrentTab]);
-
-  const selectedItems = useMemo(() => {
-    const items = burger.bun ? { [burger.bun._id]: 2 } : {};
-    burger.ingredients.forEach(({ _id }) => {
-      items[_id] = items[_id] + 1 || 1;
-    });
-    return items;
-  }, [burger]);
+    const createTabObserver = () => {
+      return new IntersectionObserver(
+        (entries) =>
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) setCurrentTab(entry.target.dataset.tab);
+          }),
+        {
+          root: categoriesRootRef.current,
+          rootMargin: '-50% 0px',
+        }
+      );
+    };
+    const observer = createTabObserver();
+    Object.values(categoriesRefs).forEach((ref) => observer.observe(ref.current));
+  }, [categoriesRefs]);
 
   const handleTabClick = (type) => {
     setCurrentTab(type);
-    ingredientsByType[type].ref.current.scrollIntoView({ behavior: 'smooth' });
+    categoriesRefs[type].current.scrollIntoView({ behavior: 'smooth' });
   };
 
   const handleOpenModal = (ingredient) => {
-    dispatch(setCurrentIngredient(ingredient));
+    setCurrentIngredient(ingredient);
   };
 
   const handleCloseModal = () => {
-    dispatch(resetCurrentIngredient());
+    setCurrentIngredient(null);
   };
 
   return (
@@ -100,25 +72,45 @@ function BurgerIngredients() {
       <h1 className='mt-10 mb-5 heading text text_type_main-large'>Соберите бургер</h1>
       <div className='mb-10'>
         <ul className={`${styles.tabs}`}>
-          {ingredientsTypesList.map((type) => (
-            <li key={type}>
-              <Tab active={currentTab === type} value={type} onClick={handleTabClick}>
-                {ingredientsByType[type].title}
-              </Tab>
-            </li>
-          ))}
+          <li key={typeBun}>
+            <Tab active={currentTab === typeBun} value={typeBun} onClick={handleTabClick}>
+              Булки
+            </Tab>
+          </li>
+          <li key={typeSauce}>
+            <Tab active={currentTab === typeSauce} value={typeSauce} onClick={handleTabClick}>
+              Соусы
+            </Tab>
+          </li>
+          <li key={typeMain}>
+            <Tab active={currentTab === typeMain} value={typeMain} onClick={handleTabClick}>
+              Начинки
+            </Tab>
+          </li>
         </ul>
       </div>
-      <ul className={`${styles.categories} scroll`} ref={ingredientsRootRef}>
-        {ingredientsTypesList.map((type) => (
-          <li key={type} ref={ingredientsByType[type].ref} data-tab={type}>
-            <IngredientsCategory
-              onIngredientClick={handleOpenModal}
-              title={ingredientsByType[type].title}
-              items={ingredientsByType[type].items}
-            />
-          </li>
-        ))}
+      <ul className={`${styles.categories} scroll`} ref={categoriesRootRef}>
+        <li key={typeBun} ref={categoriesRefs[typeBun]} data-tab={typeBun}>
+          <IngredientsCategory
+            onIngredientClick={handleOpenModal}
+            title={'Булки'}
+            items={ingredientsTypeBun}
+          />
+        </li>
+        <li key={typeSauce} ref={categoriesRefs[typeSauce]} data-tab={typeSauce}>
+          <IngredientsCategory
+            onIngredientClick={handleOpenModal}
+            title={'Соусы'}
+            items={ingredientsTypeSauce}
+          />
+        </li>
+        <li key={typeMain} ref={categoriesRefs[typeMain]} data-tab={typeMain}>
+          <IngredientsCategory
+            onIngredientClick={handleOpenModal}
+            title={'Начинки'}
+            items={ingredientsTypeMain}
+          />
+        </li>
       </ul>
     </section>
   );
