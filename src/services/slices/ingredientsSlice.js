@@ -49,8 +49,9 @@ const ingredientsSlice = createSlice({
 
 export const {
   selectAll: selectAllIngredients,
-  selectIds: selectIngredientById,
+  selectIds: selectIngredientsIds,
   selectTotal: selectIngredientsTotal,
+  selectById: selectIngredientById,
   selectEntities: selectIngredientsEntities,
 } = ingredientsAdapter.getSelectors((state) => state.ingredients);
 
