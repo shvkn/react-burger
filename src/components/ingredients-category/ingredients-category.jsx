@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styles from '../burger-ingredients/burger-ingredients.module.css';
-import { BurgerIngredient } from '../burger-ingredient/burger-ingredient';
+import BurgerIngredient from '../burger-ingredient/burger-ingredient';
 
 IngredientsCategory.propTypes = {
   items: PropTypes.array.isRequired,
@@ -26,4 +26,4 @@ function IngredientsCategory({ items, title, onIngredientClick }) {
   );
 }
 
-export default IngredientsCategory;
+export default React.memo(IngredientsCategory);

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './burger-ingredients.module.css';
 import Modal from '../modal/modal';
@@ -17,8 +17,7 @@ const selectSauces = (state) => selectIngredientsByType(state, typeSauce);
 const selectMains = (state) => selectIngredientsByType(state, typeMain);
 
 function BurgerIngredients() {
-  const [currentTab, setCurrentTab] = useState('');
-
+  const [activeTab, setActiveTab] = useState('');
   const ingredientsTypeBun = useSelector(selectBuns);
   const ingredientsTypeSauce = useSelector(selectSauces);
   const ingredientsTypeMain = useSelector(selectMains);
@@ -37,7 +36,7 @@ function BurgerIngredients() {
       return new IntersectionObserver(
         (entries) =>
           entries.forEach((entry) => {
-            if (entry.isIntersecting) setCurrentTab(entry.target.dataset.tab);
+            if (entry.isIntersecting) setActiveTab(entry.target.dataset.tab);
           }),
         {
           root: categoriesRootRef.current,
@@ -50,13 +49,13 @@ function BurgerIngredients() {
   }, [categoriesRefs]);
 
   const handleTabClick = (type) => {
-    setCurrentTab(type);
+    setActiveTab(type);
     categoriesRefs[type].current.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const handleOpenModal = (ingredient) => {
+  const handleOpenModal = useCallback((ingredient) => {
     setCurrentIngredient(ingredient);
-  };
+  }, []);
 
   const handleCloseModal = () => {
     setCurrentIngredient(null);
@@ -72,21 +71,23 @@ function BurgerIngredients() {
       <h1 className='mt-10 mb-5 heading text text_type_main-large'>Соберите бургер</h1>
       <div className='mb-10'>
         <ul className={`${styles.tabs}`}>
-          <li key={typeBun}>
-            <Tab active={currentTab === typeBun} value={typeBun} onClick={handleTabClick}>
-              Булки
-            </Tab>
-          </li>
-          <li key={typeSauce}>
-            <Tab active={currentTab === typeSauce} value={typeSauce} onClick={handleTabClick}>
-              Соусы
-            </Tab>
-          </li>
-          <li key={typeMain}>
-            <Tab active={currentTab === typeMain} value={typeMain} onClick={handleTabClick}>
-              Начинки
-            </Tab>
-          </li>
+          <>
+            <li key={typeBun}>
+              <Tab active={activeTab === typeBun} value={typeBun} onClick={handleTabClick}>
+                Булки
+              </Tab>
+            </li>
+            <li key={typeSauce}>
+              <Tab active={activeTab === typeSauce} value={typeSauce} onClick={handleTabClick}>
+                Соусы
+              </Tab>
+            </li>
+            <li key={typeMain}>
+              <Tab active={activeTab === typeMain} value={typeMain} onClick={handleTabClick}>
+                Начинки
+              </Tab>
+            </li>
+          </>
         </ul>
       </div>
       <ul className={`${styles.categories} scroll`} ref={categoriesRootRef}>

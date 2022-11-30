@@ -8,7 +8,7 @@ import { ItemTypes } from '../../utils/constants';
 import { useSelector } from 'react-redux';
 import { selectBurgerCounts } from '../../utils/selectors';
 
-export function BurgerIngredient({ ingredient, handleClick }) {
+function BurgerIngredient({ ingredient, handleClick }) {
   const burgerCounts = useSelector(selectBurgerCounts);
   const id = ingredient._id;
   const [, dragRef] = useDrag({
@@ -37,3 +37,5 @@ BurgerIngredient.propTypes = {
   ingredient: ingredientPropTypes.isRequired,
   handleClick: PropTypes.func.isRequired,
 };
+
+export default React.memo(BurgerIngredient);
