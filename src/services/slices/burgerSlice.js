@@ -7,8 +7,8 @@ const initialState = {
 };
 
 const setBun = (state, { payload: id }) => {
+  delete state.counts[state.bun];
   state.bun = id;
-  delete state.counts[id];
   state.counts[id] = 2;
 };
 
@@ -23,10 +23,10 @@ const addIngredient = {
 };
 
 const removeIngredient = (state, { payload: index }) => {
-  state.ingredients.splice(index, 1);
   const { id } = state.ingredients[index];
-  state.counts[id] = state.counts[id] || 0;
-  if (state.counts[id] === 0) delete state.counts[id];
+  state.ingredients.splice(index, 1);
+  state.counts[id] = state.counts[id] - 1;
+  if (state.counts[id] <= 0) delete state.counts[id];
 };
 
 const moveIngredient = (state, { payload: { hoverIndex, dragIndex } }) => {

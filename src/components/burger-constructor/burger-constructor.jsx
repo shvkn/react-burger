@@ -13,7 +13,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useDrop } from 'react-dnd';
 import SortableElement from '../sortable-element/sortable-element';
 import { IngredientTypes, ItemTypes } from '../../utils/constants';
-import {} from '../../services/slices/ingredientsSlice';
 
 import { actions as burgerActions } from '../../services/slices/burgerSlice';
 import {
