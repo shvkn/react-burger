@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './burger-ingredients.module.css';
 import Modal from '../modal/modal';
@@ -6,21 +6,28 @@ import IngredientDetails from '../ingredient-details/ingredient-details';
 import { useSelector } from 'react-redux';
 import { IngredientTypes } from '../../utils/constants';
 import IngredientsCategory from '../ingredients-category/ingredients-category';
-import { selectIngredientsByType } from '../../utils/selectors';
+import { selectIngredients } from '../../utils/selectors';
 
 const typeBun = IngredientTypes.BUN;
 const typeSauce = IngredientTypes.SAUCE;
 const typeMain = IngredientTypes.MAIN;
 
-const selectBuns = (state) => selectIngredientsByType(state, typeBun);
-const selectSauces = (state) => selectIngredientsByType(state, typeSauce);
-const selectMains = (state) => selectIngredientsByType(state, typeMain);
-
 function BurgerIngredients() {
-  const [activeTab, setActiveTab] = useState('');
-  const ingredientsTypeBun = useSelector(selectBuns);
-  const ingredientsTypeSauce = useSelector(selectSauces);
-  const ingredientsTypeMain = useSelector(selectMains);
+  const [activeTab, setActiveTab] = useState(typeBun);
+  const ingredients = useSelector(selectIngredients);
+
+  const ingredientsTypeBun = useMemo(
+    () => ingredients.filter(({ type }) => type === typeBun),
+    [ingredients]
+  );
+  const ingredientsTypeSauce = useMemo(
+    () => ingredients.filter(({ type }) => type === typeSauce),
+    [ingredients]
+  );
+  const ingredientsTypeMain = useMemo(
+    () => ingredients.filter(({ type }) => type === typeMain),
+    [ingredients]
+  );
 
   const [currentIngredient, setCurrentIngredient] = useState(null);
 
@@ -36,7 +43,11 @@ function BurgerIngredients() {
       return new IntersectionObserver(
         (entries) =>
           entries.forEach((entry) => {
-            if (entry.isIntersecting) setActiveTab(entry.target.dataset.tab);
+            if (entry.isIntersecting) {
+              const tabValue = entry.target.dataset.tab;
+              if (tabValue === activeTab) return;
+              setActiveTab(tabValue);
+            }
           }),
         {
           root: categoriesRootRef.current,
