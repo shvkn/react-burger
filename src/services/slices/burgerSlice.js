@@ -1,4 +1,5 @@
 import { createSlice, nanoid } from '@reduxjs/toolkit';
+import { makeOrder } from './orderSlice';
 
 const initialState = {
   bun: null,
@@ -34,6 +35,8 @@ const moveIngredient = (state, { payload: { hoverIndex, dragIndex } }) => {
   state.ingredients.splice(hoverIndex, 0, dragElement);
 };
 
+const reset = (state) => (state = { ...initialState });
+
 const burgerSlice = createSlice({
   name: 'burger',
   initialState,
@@ -42,6 +45,10 @@ const burgerSlice = createSlice({
     addIngredient,
     removeIngredient,
     moveIngredient,
+    reset,
+  },
+  extraReducers: (builder) => {
+    builder.addCase(makeOrder.fulfilled, reset);
   },
 });
 
