@@ -4,7 +4,7 @@ import { processFulfilled, processPending, processRejected } from '../../utils/u
 
 const initialState = {
   number: null,
-  loadingState: 'idle',
+  isLoading: false,
   error: null,
 };
 

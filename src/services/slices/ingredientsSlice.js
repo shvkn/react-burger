@@ -5,7 +5,7 @@ import { processFulfilled, processPending, processRejected } from '../../utils/u
 export const ingredientsAdapter = createEntityAdapter({
   selectId: ({ _id }) => _id,
 });
-const initialState = ingredientsAdapter.getInitialState({ loadingState: 'idle', error: null });
+const initialState = ingredientsAdapter.getInitialState({ isLoading: false, error: null });
 
 export const fetchIngredients = createAsyncThunk('ingredients/fetchIngredients', async () =>
   getIngredientsRequest()

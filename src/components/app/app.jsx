@@ -23,16 +23,16 @@ function App() {
     <div className={styles.app}>
       <AppHeader />
       <main className={`${styles.main}`}>
-        {(ingredients.loadingState === 'loading' || ingredients.error) && (
+        {(ingredients.isLoading || ingredients.error) && (
           <p className={`text text_type_main-large text_color_inactive ${styles.message}`}>
-            {ingredients.loadingState === 'loading'
+            {ingredients.isLoading
               ? 'Загрузка данных'
               : ingredients.error
               ? 'Ошибка загрузки данных'
               : ''}
           </p>
         )}
-        {ingredients.loadingState === 'idle' && !ingredients.error && (
+        {!ingredients.isLoading && !ingredients.error && (
           <>
             <DndProvider backend={HTML5Backend}>
               <BurgerIngredients />
