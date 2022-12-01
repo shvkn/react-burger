@@ -5,15 +5,18 @@ import { ingredientPropTypes } from '../../utils/prop-types';
 import PropTypes from 'prop-types';
 import { useDrag } from 'react-dnd';
 import { ItemTypes } from '../../utils/constants';
+import { useSelector } from 'react-redux';
+import { selectIngredientCountById } from '../../utils/selectors';
 
-export function BurgerIngredient({ ingredient, handleClick, count }) {
+function BurgerIngredient({ ingredient, handleClick }) {
   const id = ingredient._id;
+  const count = useSelector(selectIngredientCountById(id));
   const [, dragRef] = useDrag({
     type: ItemTypes.BURGER_INGREDIENT,
     item: { id },
   });
   return (
-    <article className={styles.ingredient} onClick={handleClick} ref={dragRef}>
+    <article className={styles.ingredient} onClick={() => handleClick(ingredient)} ref={dragRef}>
       {count > 0 && <Counter count={count} size='default' />}
       <img
         className={`ml-4 mr-4 mb-2 ${styles.ingredientImage}`}
@@ -31,6 +34,7 @@ export function BurgerIngredient({ ingredient, handleClick, count }) {
 
 BurgerIngredient.propTypes = {
   ingredient: ingredientPropTypes.isRequired,
-  count: PropTypes.number.isRequired,
   handleClick: PropTypes.func.isRequired,
 };
+
+export default React.memo(BurgerIngredient);

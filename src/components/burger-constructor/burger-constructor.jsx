@@ -8,79 +8,102 @@ import {
 import styles from './burger-constructor.module.css';
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
-import {
-  addBurgerIngredient,
-  moveBurgerIngredient,
-  removeBurgerIngredientByIndex,
-} from '../../services/actions/burger';
-import { makeOrder } from '../../services/actions/order';
+import { makeOrder } from '../../services/slices/orderSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useDrop } from 'react-dnd';
 import SortableElement from '../sortable-element/sortable-element';
-import { ItemTypes } from '../../utils/constants';
+import { IngredientTypes, ItemTypes } from '../../utils/constants';
+
+import { actions as burgerActions } from '../../services/slices/burgerSlice';
+import {
+  selectBurgerBun,
+  selectBurgerIngredients,
+  selectIngredientById,
+  selectIngredientsEntities,
+  selectIsBurgerBunEmpty,
+  selectIsBurgerIngredientsEmpty,
+  selectOrderNumber,
+  selectOrderSlice,
+  selectTotalPrice,
+} from '../../utils/selectors';
 
 function BurgerConstructor() {
-  const { burger, order } = useSelector((store) => store);
-  const { ingredientsItems } = useSelector((store) => store.ingredients);
-
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
 
-  const hasBurgerBun = useMemo(() => !!burger.bun, [burger.bun]);
-  const hasBurgerIngredients = useMemo(() => !!burger.ingredients.length, [burger.ingredients]);
+  const order = useSelector(selectOrderSlice);
+  const orderNumber = useSelector(selectOrderNumber);
+  const ingredientsEntities = useSelector(selectIngredientsEntities);
+  const burgerIngredients = useSelector(selectBurgerIngredients);
+  const totalPrice = useSelector(selectTotalPrice);
 
-  const handleOnDrop = (item) => {
-    const ingredient = ingredientsItems.find(({ _id }) => _id === item.id);
-    dispatch(addBurgerIngredient(ingredient));
+  const burgerBunId = useSelector(selectBurgerBun);
+  const burgerBun = useSelector(selectIngredientById(burgerBunId));
+
+  const isBunEmpty = useSelector(selectIsBurgerBunEmpty);
+  const isIngredientsEmpty = useSelector(selectIsBurgerIngredientsEmpty);
+
+  const isOrderValid = useMemo(
+    () => !isBunEmpty && !isIngredientsEmpty,
+    [isBunEmpty, isIngredientsEmpty]
+  );
+
+  const burgerBunName = burgerBun?.name;
+  const burgerBunPrice = burgerBun?.price;
+  const burgerBunImage = burgerBun?.image;
+
+  const handleOnDrop = (id) => {
+    const { type } = ingredientsEntities[id];
+    if (type === IngredientTypes.BUN) {
+      dispatch(burgerActions.setBun(id));
+    } else {
+      dispatch(burgerActions.addIngredient(id));
+    }
   };
 
   const [, dropTarget] = useDrop({
     accept: ItemTypes.BURGER_INGREDIENT,
-    drop: (item) => {
-      handleOnDrop(item);
+    drop: ({ id }) => {
+      handleOnDrop(id);
     },
   });
 
   const handleOpenModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
-  const handleRemove = (index) => dispatch(removeBurgerIngredientByIndex(index));
+  const handleRemove = (index) => dispatch(burgerActions.removeIngredient(index));
 
   const handleMakeOrder = () => {
+    const burgerIngredientsIds = burgerIngredients.map(({ id }) => id);
     handleOpenModal();
-    dispatch(makeOrder([burger.bun, ...burger.ingredients, burger.bun]));
+    dispatch(makeOrder([burgerBunId, ...burgerIngredientsIds]));
   };
 
-  const isOrderValid = useMemo(
-    () => hasBurgerBun && hasBurgerIngredients,
-    [hasBurgerBun, hasBurgerIngredients]
-  );
-
   const handleMove = (hoverIndex, dragIndex) => {
-    dispatch(moveBurgerIngredient(hoverIndex, dragIndex));
+    dispatch(burgerActions.moveIngredient({ hoverIndex, dragIndex }));
   };
 
   return (
     <div className={`${styles.burgerConstructor}`} ref={dropTarget}>
       {showModal && (
         <Modal handleClose={handleCloseModal}>
-          {order.isRequested && (
+          {order.isLoading && (
             <p className='mt-8 mb-30 text text_type_main-default'>Оформляем ваш заказ</p>
           )}
-          {order.isFailed && (
+          {order.error && (
             <p className='mt-8 mb-30 text text_type_main-default'>
               Произошла ошибка и мы не смогли принять ваш заказ. Пожалуйста, повторите позже.
             </p>
           )}
-          {order.isSucceed && <OrderDetails number={order.number} />}
+          {!order.isLoading && !order.error && <OrderDetails number={orderNumber} />}
         </Modal>
       )}
       <div className={`ml-4 ${styles.container}`}>
-        {hasBurgerBun && (
+        {!isBunEmpty && (
           <div className={`ml-8 ${styles.bun}`}>
             <ConstructorElement
-              text={`${burger.bun.name} (верх)`}
-              thumbnail={burger.bun.image}
-              price={burger.bun.price}
+              text={`${burgerBunName} (верх)`}
+              thumbnail={burgerBunImage}
+              price={burgerBunPrice}
               type='top'
               isLocked
             />
@@ -89,17 +112,18 @@ function BurgerConstructor() {
         {!isOrderValid && (
           <div className={styles.message}>
             <p className={`mt-8 text text_type_main-medium text_color_inactive`}>
-              {!hasBurgerIngredients
-                ? !hasBurgerBun
+              {isIngredientsEmpty
+                ? isBunEmpty
                   ? 'Пожалуйста, перетащите булку и ингредиенты'
                   : 'Добавьте ингредиенты'
                 : 'Добавьте булку'}
             </p>
           </div>
         )}
-        {hasBurgerIngredients && (
+        {!isIngredientsEmpty && (
           <ul className={`${styles.ingredients} mt-10 scroll`}>
-            {burger.ingredients.map(({ image, name, price, uid }, index) => {
+            {burgerIngredients.map(({ id, uid }, index) => {
+              const { image, price, name } = ingredientsEntities[id];
               return (
                 <li key={uid} className={`mt-4 mb-4`}>
                   <SortableElement index={index} handleMove={handleMove}>
@@ -118,12 +142,12 @@ function BurgerConstructor() {
             })}
           </ul>
         )}
-        {hasBurgerBun && (
+        {!isBunEmpty && (
           <div className={`ml-8 ${styles.bun}`}>
             <ConstructorElement
-              text={`${burger.bun.name} (низ)`}
-              thumbnail={burger.bun.image}
-              price={burger.bun.price}
+              text={`${burgerBunName} (низ)`}
+              thumbnail={burgerBunImage}
+              price={burgerBunPrice}
               type='bottom'
               isLocked
             />
@@ -132,7 +156,7 @@ function BurgerConstructor() {
       </div>
       <div className={`pt-10 pb-10 pr-4 ${styles.panel}`}>
         <div className={`mr-10 ${styles.price}`}>
-          <p className='mr-2 text text_type_digits-medium'>{burger.totalPrice}</p>
+          <p className='mr-2 text text_type_digits-medium'>{totalPrice}</p>
           <CurrencyIcon type='primary' />
         </div>
         <Button
