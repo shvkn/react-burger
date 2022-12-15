@@ -7,7 +7,8 @@ import '@ya.praktikum/react-developer-burger-ui-components';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchIngredients } from '../../services/slices/ingredientsSlice';
-import ConstructorPage from '../../pages/constructor';
+import { ConstructorPage, LoginPage } from '../../pages';
+
 function App() {
   const dispatch = useDispatch();
 
@@ -19,13 +20,14 @@ function App() {
     <div className={styles.app}>
       <AppHeader />
       <main className={`${styles.main}`}>
+        {/*<div>*/}
         <Router>
           <Switch>
-            <Route path={'/'} exact={true}>
-              <ConstructorPage />
-            </Route>
+            <Route exact path={'/'} component={ConstructorPage} />
+            <Route exact path={'/login'} component={LoginPage} />
           </Switch>
         </Router>
+        {/*</div>*/}
       </main>
     </div>
   );
