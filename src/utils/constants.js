@@ -8,3 +8,9 @@ export const IngredientTypes = {
   SAUCE: 'sauce',
   MAIN: 'main',
 };
+
+export const Routes = {
+  BASE: '/',
+  LOGIN: '/login',
+  REGISTER: '/register',
+};
