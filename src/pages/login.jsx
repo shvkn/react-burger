@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Button,
   PasswordInput,
@@ -46,7 +46,9 @@ function LoginPage() {
         <li>
           <p className={'text text_type_main-default text_color_inactive'}>
             Забыли пароль?{' '}
-            <Link className={`${styles.link} colors-interface-accent`}>Восстановить пароль</Link>
+            <Link to={Routes.FORGOT_PASSWORD} className={`${styles.link} colors-interface-accent`}>
+              Восстановить пароль
+            </Link>
           </p>
         </li>
       </ul>

@@ -13,4 +13,5 @@ export const Routes = {
   BASE: '/',
   LOGIN: '/login',
   REGISTER: '/register',
+  FORGOT_PASSWORD: '/forgot-password',
 };
