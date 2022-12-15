@@ -23,12 +23,14 @@ function LoginPage() {
           name={'email'}
           value={form.email}
           onChange={onChange}
+          placeholder={'E-mail'}
         />
         <PasswordInput
           extraClass={'mt-6 mb-6'}
           name={'password'}
           value={form.password}
           onChange={onChange}
+          placeholder={'Пароль'}
         />
         <Button htmlType={'submit'} type={'primary'} size={'large'}>
           Войти

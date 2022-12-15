@@ -3,13 +3,14 @@ import styles from './page.module.css';
 import {
   Button,
   EmailInput,
+  Input,
   PasswordInput,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Link } from 'react-router-dom';
 import { Routes } from '../utils/constants';
 
-function ForgotPasswordPage(props) {
-  const [form, setValue] = useState({ email: '' });
+function ResetPasswordPage() {
+  const [form, setValue] = useState({ password: '', code: '' });
   const onChange = (e) => {
     setValue({ ...form, [e.target.name]: e.target.value });
   };
@@ -18,15 +19,22 @@ function ForgotPasswordPage(props) {
     <div className={styles.container}>
       <form className={`mb-20`}>
         <h1 className={'text text_type_main-medium'}>Восстановление пароля</h1>
-        <EmailInput
+        <PasswordInput
           extraClass={'mt-6 mb-6'}
-          name={'email'}
-          value={form.email}
+          name={'password'}
+          value={form.password}
           onChange={onChange}
-          placeholder={'E-mail'}
+          placeholder={'Введите новый пароль'}
+        />
+        <Input
+          extraClass={'mt-6 mb-6'}
+          name={'code'}
+          value={form.code}
+          onChange={onChange}
+          placeholder={'Введите код из письма'}
         />
         <Button htmlType={'submit'} type={'primary'} size={'large'}>
-          Восстановить
+          Сохранить
         </Button>
       </form>
       <p className={'text text_type_main-default text_color_inactive'}>
@@ -38,4 +46,5 @@ function ForgotPasswordPage(props) {
     </div>
   );
 }
-export default ForgotPasswordPage;
+
+export default ResetPasswordPage;

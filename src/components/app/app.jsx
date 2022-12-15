@@ -7,7 +7,13 @@ import '@ya.praktikum/react-developer-burger-ui-components';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchIngredients } from '../../services/slices/ingredientsSlice';
-import { ConstructorPage, LoginPage, RegistrationPage, ForgotPasswordPage } from '../../pages';
+import {
+  ConstructorPage,
+  LoginPage,
+  RegistrationPage,
+  ForgotPasswordPage,
+  ResetPasswordPage,
+} from '../../pages';
 
 function App() {
   const dispatch = useDispatch();
@@ -27,6 +33,7 @@ function App() {
             <Route exact path={'/login'} component={LoginPage} />
             <Route exact path={'/register'} component={RegistrationPage} />
             <Route exact path={'/forgot-password'} component={ForgotPasswordPage} />
+            <Route exact path={'/reset-password'} component={ResetPasswordPage} />
           </Switch>
         </Router>
         {/*</div>*/}
