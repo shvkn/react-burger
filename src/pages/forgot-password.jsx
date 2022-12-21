@@ -5,15 +5,24 @@ import {
   EmailInput,
   PasswordInput,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { Routes } from '../utils/constants';
+import { getResetCodeRequest } from '../utils/burger-api';
 
 function ForgotPasswordPage(props) {
   const [form, setValue] = useState({ email: '' });
+  const history = useHistory();
   const onChange = (e) => {
     setValue({ ...form, [e.target.name]: e.target.value });
   };
-
+  const getResetCode = (e) => {
+    e.preventDefault();
+    getResetCodeRequest(form).then(({ success }) => {
+      if (success) {
+        history.replace({ pathname: Routes.RESET_PASSWORD });
+      }
+    });
+  };
   return (
     <div className={styles.container}>
       <form className={`mb-20`}>
@@ -25,7 +34,7 @@ function ForgotPasswordPage(props) {
           onChange={onChange}
           placeholder={'E-mail'}
         />
-        <Button htmlType={'submit'} type={'primary'} size={'large'}>
+        <Button htmlType={'submit'} type={'primary'} size={'large'} onClick={getResetCode}>
           Восстановить
         </Button>
       </form>

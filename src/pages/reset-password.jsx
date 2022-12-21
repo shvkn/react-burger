@@ -1,20 +1,24 @@
 import React, { useState } from 'react';
 import styles from './page.module.css';
-import {
-  Button,
-  EmailInput,
-  Input,
-  PasswordInput,
-} from '@ya.praktikum/react-developer-burger-ui-components';
-import { Link } from 'react-router-dom';
+import { Button, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
+import { Link, useHistory } from 'react-router-dom';
 import { Routes } from '../utils/constants';
+import { resetPasswordRequest } from '../utils/burger-api';
 
 function ResetPasswordPage() {
-  const [form, setValue] = useState({ password: '', code: '' });
+  const [form, setValue] = useState({ password: '', token: '' });
+  const history = useHistory();
   const onChange = (e) => {
     setValue({ ...form, [e.target.name]: e.target.value });
   };
-
+  const resetPassword = (e) => {
+    e.preventDefault();
+    resetPasswordRequest(form).then(({ success }) => {
+      if (success) {
+        history.replace({ pathname: Routes.BASE });
+      }
+    });
+  };
   return (
     <div className={styles.container}>
       <form className={`mb-20`}>
@@ -28,12 +32,12 @@ function ResetPasswordPage() {
         />
         <Input
           extraClass={'mt-6 mb-6'}
-          name={'code'}
-          value={form.code}
+          name={'token'}
+          value={form.token}
           onChange={onChange}
           placeholder={'Введите код из письма'}
         />
-        <Button htmlType={'submit'} type={'primary'} size={'large'}>
+        <Button htmlType={'submit'} type={'primary'} size={'large'} onClick={resetPassword}>
           Сохранить
         </Button>
       </form>
