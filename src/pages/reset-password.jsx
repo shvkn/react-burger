@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from './page.module.css';
 import { Button, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Link, useHistory } from 'react-router-dom';
-import { Routes } from '../utils/constants';
+import { RouterPaths } from '../utils/constants';
 import { resetPasswordRequest } from '../utils/burger-api';
 
 function ResetPasswordPage() {
@@ -15,7 +15,7 @@ function ResetPasswordPage() {
     e.preventDefault();
     resetPasswordRequest(form).then(({ success }) => {
       if (success) {
-        history.replace({ pathname: Routes.BASE });
+        history.replace({ pathname: RouterPaths.BASE });
       }
     });
   };
@@ -43,7 +43,7 @@ function ResetPasswordPage() {
       </form>
       <p className={'text text_type_main-default text_color_inactive'}>
         Вспомнили пароль?{' '}
-        <Link to={Routes.LOGIN} className={`${styles.link} colors-interface-accent`}>
+        <Link to={RouterPaths.LOGIN} className={`${styles.link} colors-interface-accent`}>
           Войти
         </Link>
       </p>

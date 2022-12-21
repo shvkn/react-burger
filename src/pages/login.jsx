@@ -6,7 +6,7 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './page.module.css';
 import { Link } from 'react-router-dom';
-import { Routes } from '../utils/constants';
+import { RouterPaths } from '../utils/constants';
 
 function LoginPage() {
   const [form, setValue] = useState({ email: '', password: '' });
@@ -40,7 +40,7 @@ function LoginPage() {
         <li className={'mb-4'}>
           <p className={'text text_type_main-default text_color_inactive'}>
             Вы новый пользователь?{' '}
-            <Link to={Routes.REGISTER} className={`${styles.link} colors-interface-accent`}>
+            <Link to={RouterPaths.REGISTER} className={`${styles.link} colors-interface-accent`}>
               Зарегистрироваться
             </Link>
           </p>
@@ -48,7 +48,10 @@ function LoginPage() {
         <li>
           <p className={'text text_type_main-default text_color_inactive'}>
             Забыли пароль?{' '}
-            <Link to={Routes.FORGOT_PASSWORD} className={`${styles.link} colors-interface-accent`}>
+            <Link
+              to={RouterPaths.FORGOT_PASSWORD}
+              className={`${styles.link} colors-interface-accent`}
+            >
               Восстановить пароль
             </Link>
           </p>

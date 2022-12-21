@@ -7,7 +7,7 @@ import {
   PasswordInput,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Link } from 'react-router-dom';
-import { Routes } from '../utils/constants';
+import { RouterPaths } from '../utils/constants';
 
 function RegistrationPage() {
   const [form, setValue] = useState({ name: '', email: '', password: '' });
@@ -46,7 +46,7 @@ function RegistrationPage() {
       </form>
       <p className={'text text_type_main-default text_color_inactive'}>
         Уже зарегистрированны?{' '}
-        <Link to={Routes.LOGIN} className={`${styles.link} colors-interface-accent`}>
+        <Link to={RouterPaths.LOGIN} className={`${styles.link} colors-interface-accent`}>
           Войти
         </Link>
       </p>

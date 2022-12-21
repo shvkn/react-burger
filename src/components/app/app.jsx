@@ -5,7 +5,7 @@ import styles from './app.module.css';
 import AppHeader from '../app-header/app-header';
 import '@ya.praktikum/react-developer-burger-ui-components';
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { fetchIngredients } from '../../services/slices/ingredientsSlice';
 import {
   ConstructorPage,
@@ -13,7 +13,9 @@ import {
   RegistrationPage,
   ForgotPasswordPage,
   ResetPasswordPage,
+  ProfilePage,
 } from '../../pages';
+import { RouterPaths } from '../../utils/constants';
 
 function App() {
   const dispatch = useDispatch();
@@ -24,20 +26,23 @@ function App() {
 
   return (
     <div className={styles.app}>
-      <AppHeader />
-      <main className={`${styles.main}`}>
-        {/*<div>*/}
-        <Router>
+      <Router>
+        <AppHeader />
+        <main className={`${styles.main}`}>
+          {/*<div>*/}
           <Switch>
-            <Route exact path={'/'} component={ConstructorPage} />
-            <Route exact path={'/login'} component={LoginPage} />
-            <Route exact path={'/register'} component={RegistrationPage} />
-            <Route exact path={'/forgot-password'} component={ForgotPasswordPage} />
-            <Route exact path={'/reset-password'} component={ResetPasswordPage} />
+            <Route exact path={RouterPaths.BASE} component={ConstructorPage} />
+            <Route exact path={RouterPaths.LOGIN} component={LoginPage} />
+            <Route exact path={RouterPaths.REGISTER} component={RegistrationPage} />
+            <Route exact path={RouterPaths.FORGOT_PASSWORD} component={ForgotPasswordPage} />
+            <Route exact path={RouterPaths.RESET_PASSWORD} component={ResetPasswordPage} />
+            <Route path={RouterPaths.PROFILE}>
+              <ProfilePage />
+            </Route>
           </Switch>
-        </Router>
-        {/*</div>*/}
-      </main>
+          {/*</div>*/}
+        </main>
+      </Router>
     </div>
   );
 }

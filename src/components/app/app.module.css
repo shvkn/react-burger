@@ -11,6 +11,7 @@
   align-items: stretch;
   margin: 0 auto;
   overflow: hidden;
+  width: 1240px;
 }
 
 .message {

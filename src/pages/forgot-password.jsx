@@ -1,12 +1,8 @@
 import React, { useState } from 'react';
 import styles from './page.module.css';
-import {
-  Button,
-  EmailInput,
-  PasswordInput,
-} from '@ya.praktikum/react-developer-burger-ui-components';
+import { Button, EmailInput } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Link, useHistory } from 'react-router-dom';
-import { Routes } from '../utils/constants';
+import { RouterPaths } from '../utils/constants';
 import { getResetCodeRequest } from '../utils/burger-api';
 
 function ForgotPasswordPage(props) {
@@ -19,7 +15,7 @@ function ForgotPasswordPage(props) {
     e.preventDefault();
     getResetCodeRequest(form).then(({ success }) => {
       if (success) {
-        history.replace({ pathname: Routes.RESET_PASSWORD });
+        history.replace({ pathname: RouterPaths.RESET_PASSWORD });
       }
     });
   };
@@ -40,7 +36,7 @@ function ForgotPasswordPage(props) {
       </form>
       <p className={'text text_type_main-default text_color_inactive'}>
         Вспомнили пароль?{' '}
-        <Link to={Routes.LOGIN} className={`${styles.link} colors-interface-accent`}>
+        <Link to={RouterPaths.LOGIN} className={`${styles.link} colors-interface-accent`}>
           Войти
         </Link>
       </p>

@@ -9,10 +9,13 @@ export const IngredientTypes = {
   MAIN: 'main',
 };
 
-export const Routes = {
+export const RouterPaths = {
   BASE: '/',
   LOGIN: '/login',
   REGISTER: '/register',
   FORGOT_PASSWORD: '/forgot-password',
   RESET_PASSWORD: '/reset-password',
+  PROFILE: '/profile',
+  ORDERS_HISTORY: '/profile/orders',
+  LOGOUT: '/profile/logout',
 };
