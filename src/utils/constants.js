@@ -19,3 +19,8 @@ export const RouterPaths = {
   ORDERS_HISTORY: '/profile/orders',
   LOGOUT: '/profile/logout',
 };
+
+export const Tokens = {
+  ACCESS_TOKEN: 'accessToken',
+  REFRESH_TOKEN: 'refreshToken',
+};

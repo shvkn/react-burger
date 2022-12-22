@@ -8,7 +8,7 @@ import styles from './page.module.css';
 import { Link } from 'react-router-dom';
 import { RouterPaths } from '../utils/constants';
 import { useDispatch } from 'react-redux';
-import { loginUser } from '../services/slices/authSlice';
+import { login } from '../services/slices/authSlice';
 
 function LoginPage() {
   const [form, setValue] = useState({ email: '', password: '' });
@@ -18,7 +18,7 @@ function LoginPage() {
   const dispatch = useDispatch();
   const login = (e) => {
     e.preventDefault();
-    dispatch(loginUser(form));
+    dispatch(login(form));
   };
   return (
     <div className={styles.container}>

@@ -24,3 +24,26 @@ export const loginRequest = (userdata) => {
 export const logoutRequest = (token) => {
   return postRequest(`${NORMA_API}/auth/logout`, token);
 };
+
+export const refreshTokenRequest = (refreshToken) => {
+  return postRequest(`${NORMA_API}/auth/token`, { token: refreshToken });
+};
+
+export const getUserRequest = (accessToken) => {
+  return fetch(`${NORMA_API}/auth/user`, {
+    headers: {
+      Authorization: accessToken,
+    },
+  }).then((response) => response.json());
+};
+
+export const patchUserRequest = (userdata, accessToken) => {
+  return fetch(`${NORMA_API}/auth/user`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: accessToken,
+    },
+    body: JSON.stringify(userdata),
+  }).then((response) => response.json());
+};

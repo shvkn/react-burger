@@ -1,19 +1,50 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './profile.module.css';
 import { Route } from 'react-router-dom';
 import {
+  Button,
   EmailInput,
   Input,
   PasswordInput,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import Tab from '../components/tab/tab';
 import { RouterPaths } from '../utils/constants';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUser, patchUser } from '../services/slices/authSlice';
 
 function ProfilePage() {
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const onChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
+  const fillForm = () => {
+    if (user) {
+      setForm({ name: user.name, email: user.email, password: '' });
+    }
+  };
+
+  const resetChanges = (e) => {
+    e.preventDefault();
+    fillForm();
+  };
+
+  const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getUser());
+  }, []);
+
+  useEffect(() => {
+    fillForm();
+  }, [user]);
+
+  const patchUserData = (e) => {
+    e.preventDefault();
+    dispatch(patchUser(form));
+  };
+  const isFormChanged = user?.name !== form.name || user?.email !== form.email;
+
   return (
     <div className={styles.container}>
       <div className={styles.sidebar}>
@@ -62,6 +93,20 @@ function ProfilePage() {
             icon={'EditIcon'}
             extraClass={'mt-6'}
           />
+          <div className={`mt-10 ${styles.buttons}`}>
+            <Button htmlType={'button'} disabled={!isFormChanged} onClick={patchUserData}>
+              Сохранить
+            </Button>
+
+            <Button
+              htmlType={'button'}
+              disabled={!isFormChanged}
+              onClick={resetChanges}
+              extraClass={'ml-4'}
+            >
+              Отменить
+            </Button>
+          </div>
         </Route>
         <Route exact path={RouterPaths.ORDERS_HISTORY}>
           В этом разделе вы можете просмотреть свою историю заказов
