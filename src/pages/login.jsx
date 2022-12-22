@@ -7,13 +7,19 @@ import {
 import styles from './page.module.css';
 import { Link } from 'react-router-dom';
 import { RouterPaths } from '../utils/constants';
+import { useDispatch } from 'react-redux';
+import { loginUser } from '../services/slices/authSlice';
 
 function LoginPage() {
   const [form, setValue] = useState({ email: '', password: '' });
   const onChange = (e) => {
     setValue({ ...form, [e.target.name]: e.target.value });
   };
-
+  const dispatch = useDispatch();
+  const login = (e) => {
+    e.preventDefault();
+    dispatch(loginUser(form));
+  };
   return (
     <div className={styles.container}>
       <form className={`mb-20`}>
@@ -32,7 +38,7 @@ function LoginPage() {
           onChange={onChange}
           placeholder={'Пароль'}
         />
-        <Button htmlType={'submit'} type={'primary'} size={'large'}>
+        <Button htmlType={'submit'} type={'primary'} size={'large'} onClick={login}>
           Войти
         </Button>
       </form>

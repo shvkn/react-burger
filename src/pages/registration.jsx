@@ -8,13 +8,19 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Link } from 'react-router-dom';
 import { RouterPaths } from '../utils/constants';
+import { registerUser } from '../services/slices/authSlice';
+import { useDispatch } from 'react-redux';
 
 function RegistrationPage() {
   const [form, setValue] = useState({ name: '', email: '', password: '' });
+  const dispatch = useDispatch();
   const onChange = (e) => {
     setValue({ ...form, [e.target.name]: e.target.value });
   };
-
+  const register = (e) => {
+    e.preventDefault();
+    dispatch(registerUser(form));
+  };
   return (
     <div className={styles.container}>
       <form className={`mb-20`}>
@@ -40,7 +46,7 @@ function RegistrationPage() {
           onChange={onChange}
           placeholder={'Пароль'}
         />
-        <Button htmlType={'submit'} type={'primary'} size={'large'}>
+        <Button htmlType={'submit'} type={'primary'} size={'large'} onClick={register}>
           Зарегистрироваться
         </Button>
       </form>
