@@ -11,9 +11,15 @@ import Tab from '../components/tab/tab';
 import { RouterPaths } from '../utils/constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUser, patchUser } from '../services/slices/authSlice';
+import { selectIsUserAuthorized, selectUser } from '../utils/selectors';
 
 function ProfilePage() {
   const [form, setForm] = useState({ name: '', email: '', password: '' });
+  const isAuthorized = useSelector(selectIsUserAuthorized);
+  const user = useSelector(selectUser);
+
+  const isFormChanged = user?.name !== form.name || user?.email !== form.email;
+
   const onChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -28,7 +34,6 @@ function ProfilePage() {
     fillForm();
   };
 
-  const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -43,7 +48,6 @@ function ProfilePage() {
     e.preventDefault();
     dispatch(patchUser(form));
   };
-  const isFormChanged = user?.name !== form.name || user?.email !== form.email;
 
   return (
     <div className={styles.container}>

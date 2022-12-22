@@ -1,13 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './page.module.css';
 import { Button, EmailInput } from '@ya.praktikum/react-developer-burger-ui-components';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, Redirect, useHistory } from 'react-router-dom';
 import { RouterPaths } from '../utils/constants';
 import { getResetCodeRequest } from '../utils/burger-api';
+import { getUser } from '../services/slices/authSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectIsUserAuthorized } from '../utils/selectors';
 
 function ForgotPasswordPage(props) {
   const [form, setValue] = useState({ email: '' });
   const history = useHistory();
+  const dispatch = useDispatch();
+  const isAuthorized = useSelector(selectIsUserAuthorized);
+  console.log(isAuthorized);
+  useEffect(() => {
+    dispatch(getUser());
+  }, [dispatch]);
+
   const onChange = (e) => {
     setValue({ ...form, [e.target.name]: e.target.value });
   };
@@ -15,10 +25,18 @@ function ForgotPasswordPage(props) {
     e.preventDefault();
     getResetCodeRequest(form).then(({ success }) => {
       if (success) {
-        history.replace({ pathname: RouterPaths.RESET_PASSWORD });
+        history.replace({
+          pathname: RouterPaths.RESET_PASSWORD,
+          state: { from: history.location },
+        });
       }
     });
   };
+
+  if (isAuthorized) {
+    return <Redirect to={RouterPaths.BASE} />;
+  }
+
   return (
     <div className={styles.container}>
       <form className={`mb-20`}>

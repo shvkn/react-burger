@@ -34,3 +34,11 @@ export const selectIsBurgerIngredientsEmpty = createSelector(
   selectBurgerIngredients,
   (ingredients) => ingredients.length === 0
 );
+
+export const selectUser = (state) => state.auth.user;
+export const selectAuth = (state) => state.auth;
+export const selectIsUserAuthorized = createSelector(
+  selectAuth,
+  // (auth) => auth.user !== null
+  (auth) => auth.user && !auth.isLoading && !auth.error
+);

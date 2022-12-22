@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
 import styles from './page.module.css';
 import { Button, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, Redirect, useHistory } from 'react-router-dom';
 import { RouterPaths } from '../utils/constants';
 import { resetPasswordRequest } from '../utils/burger-api';
+import { useSelector } from 'react-redux';
+import { selectIsUserAuthorized } from '../utils/selectors';
 
 function ResetPasswordPage() {
   const [form, setValue] = useState({ password: '', token: '' });
   const history = useHistory();
+  const isAuthorized = useSelector(selectIsUserAuthorized);
+
   const onChange = (e) => {
     setValue({ ...form, [e.target.name]: e.target.value });
   };
@@ -15,10 +19,15 @@ function ResetPasswordPage() {
     e.preventDefault();
     resetPasswordRequest(form).then(({ success }) => {
       if (success) {
-        history.replace({ pathname: RouterPaths.BASE });
+        history.replace({ pathname: RouterPaths.LOGIN });
       }
     });
   };
+
+  if (isAuthorized || history.location.state?.from?.pathname !== RouterPaths.FORGOT_PASSWORD) {
+    return <Redirect to={RouterPaths.BASE} />;
+  }
+
   return (
     <div className={styles.container}>
       <form className={`mb-20`}>

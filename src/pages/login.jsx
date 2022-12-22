@@ -1,26 +1,43 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   PasswordInput,
   EmailInput,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './page.module.css';
-import { Link } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import { RouterPaths } from '../utils/constants';
-import { useDispatch } from 'react-redux';
-import { login } from '../services/slices/authSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUser, login } from '../services/slices/authSlice';
+import { selectIsUserAuthorized } from '../utils/selectors';
 
 function LoginPage() {
   const [form, setValue] = useState({ email: '', password: '' });
+  const dispatch = useDispatch();
+  const location = useLocation();
+
+  const isAuthorized = useSelector(selectIsUserAuthorized);
+
+  useEffect(() => {
+    dispatch(getUser());
+  }, [dispatch]);
   const onChange = (e) => {
     setValue({ ...form, [e.target.name]: e.target.value });
   };
-  const dispatch = useDispatch();
-  const login = (e) => {
+  const loginHandle = (e) => {
     e.preventDefault();
     dispatch(login(form));
   };
-  return (
+
+  const history = useHistory();
+  if (isAuthorized) {
+    if (location?.state?.from) {
+      history.replace(location.state.from);
+    }
+    history.goBack();
+  }
+
+  return isAuthorized ? null : (
     <div className={styles.container}>
       <form className={`mb-20`}>
         <h1 className={'text text_type_main-medium'}>Вход</h1>
@@ -38,7 +55,7 @@ function LoginPage() {
           onChange={onChange}
           placeholder={'Пароль'}
         />
-        <Button htmlType={'submit'} type={'primary'} size={'large'} onClick={login}>
+        <Button htmlType={'submit'} type={'primary'} size={'large'} onClick={loginHandle}>
           Войти
         </Button>
       </form>

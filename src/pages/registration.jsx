@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './page.module.css';
 import {
   Button,
@@ -6,14 +6,21 @@ import {
   Input,
   PasswordInput,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import { Link } from 'react-router-dom';
+import { Link, Redirect, useHistory, useLocation } from 'react-router-dom';
 import { RouterPaths } from '../utils/constants';
-import { registerUser } from '../services/slices/authSlice';
-import { useDispatch } from 'react-redux';
+import { getUser, registerUser } from '../services/slices/authSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 function RegistrationPage() {
   const [form, setValue] = useState({ name: '', email: '', password: '' });
   const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
+  const location = useLocation();
+
+  useEffect(() => {
+    dispatch(getUser());
+  }, []);
+
   const onChange = (e) => {
     setValue({ ...form, [e.target.name]: e.target.value });
   };
@@ -21,6 +28,10 @@ function RegistrationPage() {
     e.preventDefault();
     dispatch(registerUser(form));
   };
+  const history = useHistory();
+  if (user) {
+    history.goBack();
+  }
   return (
     <div className={styles.container}>
       <form className={`mb-20`}>
