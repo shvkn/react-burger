@@ -20,3 +20,7 @@ export const registerUserRequest = (userdata) => {
 export const loginRequest = (userdata) => {
   return postRequest(`${NORMA_API}/auth/login`, userdata);
 };
+
+export const logoutRequest = (token) => {
+  return postRequest(`${NORMA_API}/auth/logout`, token);
+};

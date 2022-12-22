@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { loginRequest, registerUserRequest } from '../../utils/auth-api';
+import { loginRequest, logoutRequest, registerUserRequest } from '../../utils/auth-api';
 import { setCookie } from '../../utils/utils';
 
 const initialState = { user: null };
@@ -14,6 +14,14 @@ export const registerUser = createAsyncThunk('auth/register', async (userdata) =
 export const loginUser = createAsyncThunk('auth/login', async (userdata) => {
   try {
     return loginRequest(userdata);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+export const logout = createAsyncThunk('auth/logout', async (token) => {
+  try {
+    return logoutRequest(token);
   } catch (e) {
     console.log(e);
   }
@@ -50,7 +58,13 @@ const authSlice = createSlice({
             alert(message);
           }
         }
-      );
+      )
+      .addCase(logout.fulfilled, (state, { payload: { message, success } }) => {
+        if (success) {
+          state = initialState;
+        }
+        alert(message);
+      });
   },
 });
 
