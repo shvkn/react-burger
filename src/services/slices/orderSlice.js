@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { postOrderRequest } from '../../utils/burger-api';
-import { processFulfilled, processPending, processRejected } from '../../utils/utils';
 
 const initialState = {
   number: null,
@@ -17,11 +16,18 @@ const orderSlice = createSlice({
   initialState,
   extraReducers: (builder) => {
     builder
-      .addCase(makeOrder.pending, processPending)
-      .addCase(makeOrder.rejected, processRejected)
+      .addCase(makeOrder.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(makeOrder.rejected, (state, { error }) => {
+        state.isLoading = false;
+        state.error = error;
+      })
       .addCase(makeOrder.fulfilled, (state, { payload: { order } }) => {
-        processFulfilled(state);
         state.number = order.number;
+        state.isLoading = false;
+        state.error = null;
       });
   },
 });

@@ -2,17 +2,19 @@ import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
+import { RouterPaths } from '../../utils/constants';
+import { selectIsUserAuthorized } from '../../utils/selectors';
 
 function ProtectedRoute({ children, ...rest }) {
-  const { user } = useSelector((state) => state.auth);
+  const isAuthorized = useSelector(selectIsUserAuthorized);
   return (
     <Route
       {...rest}
       render={({ location }) => {
-        return user ? (
+        return isAuthorized ? (
           children
         ) : (
-          <Redirect to={{ pathname: '/login', state: { from: location } }} />
+          <Redirect to={{ pathname: RouterPaths.LOGIN, state: { from: location } }} />
         );
       }}
     />

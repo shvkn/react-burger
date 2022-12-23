@@ -1,110 +1,8 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import {
-  getUserRequest,
-  loginRequest,
-  logoutRequest,
-  patchUserRequest,
-  refreshTokenRequest,
-  registerUserRequest,
-} from '../../utils/auth-api';
-import {
-  getCookie,
-  processFulfilled,
-  processPending,
-  processRejected,
-  setCookie,
-} from '../../utils/utils';
-import { Tokens } from '../../utils/constants';
+import { createSlice } from '@reduxjs/toolkit';
+import { processError, setCredentials } from '../../utils/utils';
+import { getUser, login, logout, registerUser } from '../actions/auth';
 
 const initialState = { user: null, isLoading: false, error: null };
-export const registerUser = createAsyncThunk('auth/register', async (userdata) => {
-  try {
-    return registerUserRequest(userdata);
-  } catch (e) {
-    console.log(e);
-  }
-});
-
-export const login = createAsyncThunk('auth/login', async (userdata) => {
-  try {
-    return loginRequest(userdata);
-  } catch (e) {
-    console.log(e);
-  }
-});
-
-export const logout = createAsyncThunk('auth/logout', async (token) => {
-  try {
-    return logoutRequest(token);
-  } catch (e) {
-    console.log(e);
-  }
-});
-
-export const getUser = createAsyncThunk('auth/user', async () => {
-  try {
-    const accessToken = getCookie(Tokens.ACCESS_TOKEN);
-    const refreshToken = getCookie(Tokens.REFRESH_TOKEN);
-    if (!refreshToken) {
-      return;
-    }
-    return getUserRequest(accessToken).then(({ success, user }) => {
-      if (success) {
-        return user;
-      }
-      return refreshTokenRequest(refreshToken).then(
-        ({ success, accessToken: newAccessToken, refreshToken: newRefreshToken }) => {
-          if (success) {
-            setCredentials(newAccessToken, newRefreshToken);
-            return getUserRequest(newAccessToken).then(({ success, user }) => {
-              if (success) {
-                return user;
-              }
-            });
-          }
-        }
-      );
-    });
-  } catch (e) {
-    console.log(e);
-    throw e;
-  }
-});
-
-export const patchUser = createAsyncThunk('auth/user', async (userdata) => {
-  try {
-    const accessToken = getCookie(Tokens.ACCESS_TOKEN);
-    const refreshToken = getCookie(Tokens.REFRESH_TOKEN);
-    if (!refreshToken) {
-      return;
-    }
-    return patchUserRequest(userdata, accessToken).then(({ success, user }) => {
-      if (success) {
-        return user;
-      }
-      return refreshTokenRequest(refreshToken).then(
-        ({ success, accessToken: newAccessToken, refreshToken: newRefreshToken }) => {
-          if (success) {
-            setCredentials(newAccessToken, newRefreshToken);
-            return patchUserRequest(userdata, newAccessToken).then(({ success, user }) => {
-              if (success) {
-                return user;
-              }
-            });
-          }
-        }
-      );
-    });
-  } catch (e) {
-    console.log(e);
-    throw e;
-  }
-});
-
-const setCredentials = (accessToken, refreshToken) => {
-  setCookie(Tokens.ACCESS_TOKEN, accessToken, { expires: 20 * 60 });
-  setCookie(Tokens.REFRESH_TOKEN, refreshToken);
-};
 
 const authSlice = createSlice({
   name: 'auth',
@@ -112,48 +10,81 @@ const authSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(registerUser.pending, processPending)
-      .addCase(registerUser.rejected, processRejected)
+      .addCase(registerUser.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(registerUser.rejected, (state, { error }) => {
+        state.isLoading = false;
+        state.error = error;
+      })
       .addCase(
         registerUser.fulfilled,
-        (state, { payload: { success, user, accessToken, refreshToken, message } }) => {
+        (state, { payload: { success, message, user, accessToken, refreshToken } }) => {
           if (success) {
             state.user = user;
             setCredentials(accessToken, refreshToken);
-            processFulfilled(state);
           } else {
-            alert(message);
+            processError(message);
           }
+          state.isLoading = false;
+          state.error = null;
         }
       )
-      .addCase(login.pending, processPending)
-      .addCase(login.rejected, processRejected)
+      .addCase(login.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(login.rejected, (state, { error }) => {
+        state.isLoading = false;
+        state.error = error;
+      })
       .addCase(
         login.fulfilled,
-        (state, { payload: { success, user, accessToken, refreshToken, message } }) => {
+        (state, { payload: { success, message, user, accessToken, refreshToken } }) => {
           if (success) {
             state.user = user;
             setCredentials(accessToken, refreshToken);
-            processFulfilled(state);
           } else {
-            alert(message);
+            processError(message);
           }
+          state.isLoading = false;
+          state.error = null;
         }
       )
-      .addCase(logout.pending, processPending)
-      .addCase(logout.rejected, processRejected)
+      .addCase(logout.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(logout.rejected, (state, { error }) => {
+        state.isLoading = false;
+        state.error = error;
+      })
       .addCase(logout.fulfilled, (state, { payload: { message, success } }) => {
         if (success) {
           state = initialState;
-          processFulfilled(state);
+        } else {
+          processError(message);
         }
-        alert(message);
+        state.isLoading = false;
+        state.error = null;
       })
-      .addCase(getUser.pending, processPending)
-      .addCase(getUser.rejected, processRejected)
-      .addCase(getUser.fulfilled, (state, { payload }) => {
-        state.user = payload;
-        processFulfilled(state);
+      .addCase(getUser.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(getUser.rejected, (state, { error }) => {
+        state.isLoading = false;
+        state.error = error;
+      })
+      .addCase(getUser.fulfilled, (state, { payload: { user, success, message } }) => {
+        if (success) {
+          state.user = user;
+        } else {
+          processError(message);
+        }
+        state.isLoading = false;
+        state.error = null;
       });
   },
 });

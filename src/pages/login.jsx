@@ -5,39 +5,31 @@ import {
   EmailInput,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './page.module.css';
-import { Link, useHistory, useLocation } from 'react-router-dom';
+import { Link, Redirect, useLocation } from 'react-router-dom';
 import { RouterPaths } from '../utils/constants';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUser, login } from '../services/slices/authSlice';
 import { selectIsUserAuthorized } from '../utils/selectors';
+import { login } from '../services/actions/auth';
 
 function LoginPage() {
   const [form, setValue] = useState({ email: '', password: '' });
   const dispatch = useDispatch();
   const location = useLocation();
-
   const isAuthorized = useSelector(selectIsUserAuthorized);
 
-  useEffect(() => {
-    dispatch(getUser());
-  }, [dispatch]);
   const onChange = (e) => {
     setValue({ ...form, [e.target.name]: e.target.value });
   };
+
   const loginHandle = (e) => {
     e.preventDefault();
     dispatch(login(form));
   };
 
-  const history = useHistory();
   if (isAuthorized) {
-    if (location?.state?.from) {
-      history.replace(location.state.from);
-    }
-    history.goBack();
+    return <Redirect to={location.state?.from || RouterPaths.BASE} />;
   }
-
-  return isAuthorized ? null : (
+  return (
     <div className={styles.container}>
       <form className={`mb-20`}>
         <h1 className={'text text_type_main-medium'}>Вход</h1>

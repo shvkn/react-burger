@@ -1,15 +1,5 @@
-export const processPending = (state) => {
-  state.isLoading = true;
-  state.error = null;
-};
-export const processRejected = (state, { payload: error }) => {
-  state.isLoading = false;
-  state.error = error;
-};
-export const processFulfilled = (state) => {
-  state.isLoading = false;
-  state.error = null;
-};
+import { Tokens } from './constants';
+import { refreshTokenRequest } from './auth-api';
 
 export function setCookie(name, value, props) {
   props = props || {};
@@ -40,3 +30,49 @@ export function getCookie(name) {
   );
   return matches ? decodeURIComponent(matches[1]) : undefined;
 }
+
+export const processError = (message) => {
+  alert(message);
+};
+
+export const getRefreshToken = () => {
+  return getCookie(Tokens.REFRESH_TOKEN);
+};
+
+export const getAccessToken = () => {
+  return getCookie(Tokens.ACCESS_TOKEN);
+};
+
+export const setCredentials = (accessToken, refreshToken) => {
+  setCookie(Tokens.ACCESS_TOKEN, accessToken, { expires: 20 * 60 });
+  setCookie(Tokens.REFRESH_TOKEN, refreshToken);
+};
+
+export const getOrRefreshAccessToken = async (forceRefresh = false) => {
+  const accessToken = getAccessToken();
+  if (!accessToken || forceRefresh) {
+    await refreshTokens();
+    return getAccessToken();
+  }
+  return accessToken;
+};
+
+export const refreshTokens = async () => {
+  try {
+    const refreshToken = getRefreshToken();
+    const {
+      success,
+      message,
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken,
+    } = await refreshTokenRequest(refreshToken);
+    if (success) {
+      setCredentials(newAccessToken, newRefreshToken);
+    } else {
+      console.log(message);
+    }
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
+};

@@ -8,8 +8,8 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Link, Redirect, useHistory, useLocation } from 'react-router-dom';
 import { RouterPaths } from '../utils/constants';
-import { getUser, registerUser } from '../services/slices/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { getUser, registerUser } from '../services/actions/auth';
 
 function RegistrationPage() {
   const [form, setValue] = useState({ name: '', email: '', password: '' });

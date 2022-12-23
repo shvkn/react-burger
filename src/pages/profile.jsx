@@ -10,8 +10,8 @@ import {
 import Tab from '../components/tab/tab';
 import { RouterPaths } from '../utils/constants';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUser, patchUser } from '../services/slices/authSlice';
 import { selectIsUserAuthorized, selectUser } from '../utils/selectors';
+import { getUser, patchUser } from '../services/actions/auth';
 
 function ProfilePage() {
   const [form, setForm] = useState({ name: '', email: '', password: '' });

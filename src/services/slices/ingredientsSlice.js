@@ -1,6 +1,5 @@
 import { createAsyncThunk, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { getIngredientsRequest } from '../../utils/burger-api';
-import { processFulfilled, processPending, processRejected } from '../../utils/utils';
 
 export const ingredientsAdapter = createEntityAdapter({
   selectId: ({ _id }) => _id,
@@ -16,10 +15,17 @@ const ingredientsSlice = createSlice({
   initialState,
   extraReducers: (builder) => {
     builder
-      .addCase(fetchIngredients.pending, processPending)
-      .addCase(fetchIngredients.rejected, processRejected)
+      .addCase(fetchIngredients.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchIngredients.rejected, (state, { error }) => {
+        state.isLoading = false;
+        state.error = error;
+      })
       .addCase(fetchIngredients.fulfilled, (state, { payload: { data } }) => {
-        processFulfilled(state);
+        state.isLoading = false;
+        state.error = null;
         ingredientsAdapter.setAll(state, data);
       });
   },
