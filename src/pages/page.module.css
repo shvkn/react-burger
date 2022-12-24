@@ -1,19 +1,16 @@
 .links {
-  margin: 0;
   padding: 0;
+  margin: 0;
   list-style: none;
 }
 
 .link {
   text-decoration: none;
-  color: var(--colors-interface-accent);
 }
 
 .container {
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin-left: auto;
+  margin-top: 180px;
   margin-right: auto;
+  margin-left: auto;
+  text-align: center;
 }

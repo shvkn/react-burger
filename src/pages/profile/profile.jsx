@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import styles from './profile.module.css';
-import { Route } from 'react-router-dom';
+import { NavLink, Route } from 'react-router-dom';
 import {
   Button,
   EmailInput,
   Input,
   PasswordInput,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import Tab from '../components/tab/tab';
-import { RouterPaths } from '../utils/constants';
+import { RouterPaths } from '../../utils/constants';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectUser } from '../utils/selectors';
-import { patchUser } from '../services/actions/auth';
+import { selectUser } from '../../utils/selectors';
+import { logout, patchUser } from '../../services/actions/auth';
 
 function ProfilePage() {
   const [form, setForm] = useState({ name: '', email: '', password: '' });
@@ -43,14 +42,42 @@ function ProfilePage() {
     <div className={styles.container}>
       <div className={styles.sidebar}>
         <ul className={styles.links}>
-          <li>
-            <Tab title={'Профиль'} exact to={RouterPaths.PROFILE} />
+          <li className={'pt-4 pb-4'}>
+            <NavLink
+              to={RouterPaths.PROFILE}
+              className={(isActive) => {
+                return `${styles.link} text text_type_main-medium ${
+                  isActive ? 'text_color_primary' : 'text_color_inactive'
+                }`;
+              }}
+            >
+              Профиль
+            </NavLink>
           </li>
-          <li>
-            <Tab title={'Заказы'} exact to={RouterPaths.ORDERS_HISTORY} />
+          <li className={'pt-4 pb-4'}>
+            <NavLink
+              to={RouterPaths.ORDERS_HISTORY}
+              className={(isActive) => {
+                return `${styles.link} text text_type_main-medium ${
+                  isActive ? 'text_color_primary' : 'text_color_inactive'
+                }`;
+              }}
+            >
+              Заказы
+            </NavLink>
           </li>
-          <li>
-            <Tab title={'Выход'} exact to={RouterPaths.LOGOUT} />
+          <li className={'pt-4 pb-4'}>
+            <NavLink
+              to={RouterPaths.LOGOUT}
+              className={(isActive) => {
+                return `${styles.link} text text_type_main-medium ${
+                  isActive ? 'text_color_primary' : 'text_color_inactive'
+                }`;
+              }}
+              onClick={() => dispatch(logout())}
+            >
+              Выход
+            </NavLink>
           </li>
         </ul>
         <p className={`mt-20 text text_type_main-default text_color_inactive`}>

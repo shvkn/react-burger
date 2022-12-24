@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Button,
   PasswordInput,
   EmailInput,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import styles from './page.module.css';
+import styles from '../page.module.css';
 import { Link, Redirect, useLocation } from 'react-router-dom';
-import { RouterPaths } from '../utils/constants';
+import { RouterPaths } from '../../utils/constants';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectIsUserAuthorized } from '../utils/selectors';
-import { login } from '../services/actions/auth';
+import { selectIsUserAuthorized } from '../../utils/selectors';
+import { login } from '../../services/actions/auth';
 
 function LoginPage() {
   const [form, setValue] = useState({ email: '', password: '' });
@@ -30,7 +30,7 @@ function LoginPage() {
     return <Redirect to={location.state?.from ?? RouterPaths.BASE} />;
   }
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container}`}>
       <form className={`mb-20`}>
         <h1 className={'text text_type_main-medium'}>Вход</h1>
         <EmailInput
@@ -55,7 +55,7 @@ function LoginPage() {
         <li className={'mb-4'}>
           <p className={'text text_type_main-default text_color_inactive'}>
             Вы новый пользователь?{' '}
-            <Link to={RouterPaths.REGISTER} className={`${styles.link} colors-interface-accent`}>
+            <Link to={RouterPaths.REGISTER} className={`${styles.link} text_color_accent`}>
               Зарегистрироваться
             </Link>
           </p>
@@ -63,10 +63,7 @@ function LoginPage() {
         <li>
           <p className={'text text_type_main-default text_color_inactive'}>
             Забыли пароль?{' '}
-            <Link
-              to={RouterPaths.FORGOT_PASSWORD}
-              className={`${styles.link} colors-interface-accent`}
-            >
+            <Link to={RouterPaths.FORGOT_PASSWORD} className={`${styles.link} text_color_accent`}>
               Восстановить пароль
             </Link>
           </p>

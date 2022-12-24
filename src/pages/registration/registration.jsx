@@ -1,25 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import styles from './page.module.css';
+import React, { useState } from 'react';
+import styles from '../page.module.css';
 import {
   Button,
   EmailInput,
   Input,
   PasswordInput,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import { Link, Redirect, useHistory, useLocation } from 'react-router-dom';
-import { RouterPaths } from '../utils/constants';
+import { Link, useHistory } from 'react-router-dom';
+import { RouterPaths } from '../../utils/constants';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUser, registerUser } from '../services/actions/auth';
+import { registerUser } from '../../services/actions/auth';
 
 function RegistrationPage() {
   const [form, setValue] = useState({ name: '', email: '', password: '' });
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
-  const location = useLocation();
-
-  useEffect(() => {
-    dispatch(getUser());
-  }, []);
 
   const onChange = (e) => {
     setValue({ ...form, [e.target.name]: e.target.value });
@@ -33,7 +28,7 @@ function RegistrationPage() {
     history.goBack();
   }
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container}`}>
       <form className={`mb-20`}>
         <h1 className={'text text_type_main-medium'}>Регистрация</h1>
         <Input
@@ -63,7 +58,7 @@ function RegistrationPage() {
       </form>
       <p className={'text text_type_main-default text_color_inactive'}>
         Уже зарегистрированны?{' '}
-        <Link to={RouterPaths.LOGIN} className={`${styles.link} colors-interface-accent`}>
+        <Link to={RouterPaths.LOGIN} className={`${styles.link} text_color_accent`}>
           Войти
         </Link>
       </p>

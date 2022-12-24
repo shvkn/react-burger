@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import styles from './page.module.css';
+import styles from '../page.module.css';
 import { Button, EmailInput } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Link, Redirect, useHistory } from 'react-router-dom';
-import { RouterPaths } from '../utils/constants';
-import { getResetCodeRequest } from '../utils/burger-api';
+import { RouterPaths } from '../../utils/constants';
+import { getResetCodeRequest } from '../../utils/burger-api';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectIsUserAuthorized } from '../utils/selectors';
-import { getUser } from '../services/actions/auth';
+import { selectIsUserAuthorized } from '../../utils/selectors';
+import { getUser } from '../../services/actions/auth';
 
 function ForgotPasswordPage(props) {
   const [form, setValue] = useState({ email: '' });
@@ -52,7 +52,7 @@ function ForgotPasswordPage(props) {
       </form>
       <p className={'text text_type_main-default text_color_inactive'}>
         Вспомнили пароль?{' '}
-        <Link to={RouterPaths.LOGIN} className={`${styles.link} colors-interface-accent`}>
+        <Link to={RouterPaths.LOGIN} className={`${styles.link} text_color_accent`}>
           Войти
         </Link>
       </p>
