@@ -4,7 +4,7 @@ import { getUser, login, logout, patchUser, registerUser } from '../actions/auth
 
 const initialState = { user: null, isLoading: false, error: null };
 
-const authSlice = createSlice({
+const auth = createSlice({
   name: 'auth',
   initialState,
   reducers: {},
@@ -106,5 +106,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { actions } = authSlice;
-export default authSlice.reducer;
+export const { actions } = auth;
+export default auth.reducer;

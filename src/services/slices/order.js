@@ -1,6 +1,5 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { postOrderRequest } from '../../utils/burger-api';
-import { getOrRefreshAccessToken } from '../../utils/utils';
+import { createSlice } from '@reduxjs/toolkit';
+import { makeOrder } from '../actions/order';
 
 const initialState = {
   number: null,
@@ -8,12 +7,7 @@ const initialState = {
   error: null,
 };
 
-export const makeOrder = createAsyncThunk('order/makeOrder', async (ingredientsIds) => {
-  const token = await getOrRefreshAccessToken();
-  return postOrderRequest(ingredientsIds, token);
-});
-
-const orderSlice = createSlice({
+const order = createSlice({
   name: 'order',
   initialState,
   extraReducers: (builder) => {
@@ -34,4 +28,4 @@ const orderSlice = createSlice({
   },
 });
 
-export default orderSlice.reducer;
+export default order.reducer;

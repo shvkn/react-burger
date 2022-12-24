@@ -26,8 +26,8 @@ import ProtectedRoute from '../protected-route/protected-route';
 import IngredientDetails from '../ingredient-details/ingredient-details';
 import Modal from '../modal/modal';
 import { useDispatch } from 'react-redux';
-import { fetchIngredients } from '../../services/slices/ingredientsSlice';
 import { getUser, logout } from '../../services/actions/auth';
+import { fetchIngredients } from '../../services/actions/ingredients';
 
 function App() {
   const location = useLocation();

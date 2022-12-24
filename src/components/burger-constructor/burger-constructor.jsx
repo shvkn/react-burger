@@ -8,13 +8,12 @@ import {
 import styles from './burger-constructor.module.css';
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
-import { makeOrder } from '../../services/slices/orderSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useDrop } from 'react-dnd';
 import SortableElement from '../sortable-element/sortable-element';
 import { IngredientTypes, ItemTypes, RouterPaths } from '../../utils/constants';
 
-import { actions as burgerActions } from '../../services/slices/burgerSlice';
+import { actions as burgerActions } from '../../services/slices/burger';
 import {
   selectBurgerBun,
   selectBurgerIngredients,
@@ -28,6 +27,7 @@ import {
   selectTotalPrice,
 } from '../../utils/selectors';
 import { useHistory, useLocation } from 'react-router-dom';
+import { makeOrder } from '../../services/actions/order';
 
 function BurgerConstructor() {
   const [showModal, setShowModal] = useState(false);
