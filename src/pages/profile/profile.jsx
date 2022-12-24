@@ -44,6 +44,7 @@ function ProfilePage() {
         <ul className={styles.links}>
           <li className={'pt-4 pb-4'}>
             <NavLink
+              exact
               to={RouterPaths.PROFILE}
               className={(isActive) => {
                 return `${styles.link} text text_type_main-medium ${
@@ -56,6 +57,7 @@ function ProfilePage() {
           </li>
           <li className={'pt-4 pb-4'}>
             <NavLink
+              exact
               to={RouterPaths.ORDERS_HISTORY}
               className={(isActive) => {
                 return `${styles.link} text text_type_main-medium ${
@@ -68,6 +70,7 @@ function ProfilePage() {
           </li>
           <li className={'pt-4 pb-4'}>
             <NavLink
+              exact
               to={RouterPaths.LOGOUT}
               className={(isActive) => {
                 return `${styles.link} text text_type_main-medium ${

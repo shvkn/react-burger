@@ -1,12 +1,5 @@
 import React, { useEffect } from 'react';
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-  useHistory,
-  useLocation,
-  withRouter,
-} from 'react-router-dom';
+import { Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import '../../style/common.css';
 import styles from './app.module.css';
 import AppHeader from '../app-header/app-header';
@@ -26,7 +19,7 @@ import ProtectedRoute from '../protected-route/protected-route';
 import IngredientDetails from '../ingredient-details/ingredient-details';
 import Modal from '../modal/modal';
 import { useDispatch } from 'react-redux';
-import { getUser, logout } from '../../services/actions/auth';
+import { getUser } from '../../services/actions/auth';
 import { fetchIngredients } from '../../services/actions/ingredients';
 
 function App() {
@@ -34,10 +27,11 @@ function App() {
   const background = location.state?.background;
   const dispatch = useDispatch();
   const history = useHistory();
+
   useEffect(() => {
     dispatch(fetchIngredients());
     dispatch(getUser());
-  }, []);
+  }, [dispatch]);
 
   const handleClose = (e) => {
     history.goBack();
