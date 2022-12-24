@@ -21,8 +21,8 @@ export const loginRequest = (userdata) => {
   return postRequest(`${NORMA_API}/auth/login`, userdata);
 };
 
-export const logoutRequest = (token) => {
-  return postRequest(`${NORMA_API}/auth/logout`, token);
+export const logoutRequest = (refreshToken) => {
+  return postRequest(`${NORMA_API}/auth/logout`, { token: refreshToken });
 };
 
 export const refreshTokenRequest = (refreshToken) => {

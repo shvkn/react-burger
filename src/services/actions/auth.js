@@ -6,7 +6,7 @@ import {
   patchUserRequest,
   registerUserRequest,
 } from '../../utils/auth-api';
-import { getOrRefreshAccessToken } from '../../utils/utils';
+import { getOrRefreshAccessToken, getRefreshToken } from '../../utils/utils';
 
 export const login = createAsyncThunk('auth/login', async (userdata) => {
   try {
@@ -26,9 +26,10 @@ export const registerUser = createAsyncThunk('auth/register', async (userdata) =
   }
 });
 
-export const logout = createAsyncThunk('auth/logout', async (token) => {
+export const logout = createAsyncThunk('auth/logout', async () => {
   try {
-    return logoutRequest(token);
+    const refreshToken = getRefreshToken();
+    return logoutRequest(refreshToken);
   } catch (e) {
     console.log(e);
     throw e;

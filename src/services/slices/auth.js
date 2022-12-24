@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { setCredentials } from '../../utils/utils';
+import { eraseCookie, setCredentials } from '../../utils/utils';
 import { getUser, login, logout, patchUser, registerUser } from '../actions/auth';
+import { Tokens } from '../../utils/constants';
 
 const initialState = { user: null, isLoading: false, error: null };
 
@@ -62,7 +63,10 @@ const auth = createSlice({
       })
       .addCase(logout.fulfilled, (state, { payload: { message, success } }) => {
         if (success) {
-          state = initialState;
+          state.user = null;
+          console.log('success!');
+          eraseCookie(Tokens.ACCESS_TOKEN);
+          eraseCookie(Tokens.REFRESH_TOKEN);
         } else {
           console.log(message);
         }

@@ -31,6 +31,11 @@ export function getCookie(name) {
   return matches ? decodeURIComponent(matches[1]) : undefined;
 }
 
+export function eraseCookie(name) {
+  const d = new Date(null);
+  setCookie(name, '', { expires: d.toUTCString() });
+}
+
 export const getRefreshToken = () => {
   return getCookie(Tokens.REFRESH_TOKEN);
 };
