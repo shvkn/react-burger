@@ -1,5 +1,12 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Route, Switch, useLocation, withRouter } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  useHistory,
+  useLocation,
+  withRouter,
+} from 'react-router-dom';
 import '../../style/common.css';
 import styles from './app.module.css';
 import AppHeader from '../app-header/app-header';
@@ -20,15 +27,21 @@ import IngredientDetails from '../ingredient-details/ingredient-details';
 import Modal from '../modal/modal';
 import { useDispatch } from 'react-redux';
 import { fetchIngredients } from '../../services/slices/ingredientsSlice';
+import { getUser } from '../../services/actions/auth';
 
 function App() {
   const location = useLocation();
   const background = location.state?.background;
   const dispatch = useDispatch();
-
+  const history = useHistory();
   useEffect(() => {
     dispatch(fetchIngredients());
+    dispatch(getUser());
   }, []);
+
+  const handleClose = (e) => {
+    history.goBack();
+  };
 
   return (
     <div className={styles.app}>
@@ -65,7 +78,7 @@ function App() {
         </Switch>
         {background && (
           <Route path={RouterPaths.INGREDIENT_BY_ID}>
-            <Modal title='Детали ингредиента'>
+            <Modal handleClose={handleClose} title='Детали ингредиента'>
               <IngredientDetails />
             </Modal>
           </Route>

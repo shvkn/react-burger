@@ -27,7 +27,7 @@ function LoginPage() {
   };
 
   if (isAuthorized) {
-    return <Redirect to={location.state?.from || RouterPaths.BASE} />;
+    return <Redirect to={location.state?.from ?? RouterPaths.BASE} />;
   }
   return (
     <div className={styles.container}>

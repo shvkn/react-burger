@@ -13,11 +13,11 @@ export const getIngredientsRequest = () => {
   return request(`${NORMA_API}/ingredients`);
 };
 
-export const postOrderRequest = (ingredients) => {
+export const postOrderRequest = (ingredients, token) => {
   const options = {
     method: 'POST',
     headers: {
-      authorization: 'a9c10068-1239-4b61-97d8-9278a4fcdf82',
+      authorization: token,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ ingredients }),

@@ -38,6 +38,9 @@ export const logout = createAsyncThunk('auth/logout', async (token) => {
 export const getUser = createAsyncThunk('auth/get-user', async () => {
   try {
     const accessToken = await getOrRefreshAccessToken();
+    if (!accessToken) {
+      return { success: false, message: 'Token missed' };
+    }
     const response = await getUserRequest(accessToken);
     if (response.success) {
       return response;
@@ -53,6 +56,9 @@ export const getUser = createAsyncThunk('auth/get-user', async () => {
 export const patchUser = createAsyncThunk('auth/patch-user', async (userdata) => {
   try {
     const accessToken = await getOrRefreshAccessToken();
+    if (!accessToken) {
+      return { success: false, message: 'Token missed' };
+    }
     const response = await patchUserRequest(userdata, accessToken);
     if (response.success) {
       return response;

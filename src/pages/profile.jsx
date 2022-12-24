@@ -37,10 +37,6 @@ function ProfilePage() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getUser());
-  }, []);
-
-  useEffect(() => {
     fillForm();
   }, [user]);
 

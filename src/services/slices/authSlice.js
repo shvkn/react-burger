@@ -81,7 +81,8 @@ const authSlice = createSlice({
         if (success) {
           state.user = user;
         } else {
-          processError(message);
+          console.log('message', message);
+          // processError(message);
         }
         state.isLoading = false;
         state.error = null;

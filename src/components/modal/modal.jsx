@@ -1,31 +1,20 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import ModalOverlay from '../modal-overlay/modal-overlay';
 import styles from './modal.module.css';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useHistory } from 'react-router-dom';
 
 const MODAL_ROOT = document.getElementById('react-modals');
 
-function Modal({ children, title = '' }) {
-  const history = useHistory();
-
-  const back = useCallback(() => {
-    history.goBack();
-  }, [history]);
-
-  const handleClose = () => {
-    back();
-  };
-
+function Modal({ children, handleClose, title = '' }) {
   useEffect(() => {
     const handleCloseByEsc = (e) => {
-      if (e.key === 'Escape') back();
+      if (e.key === 'Escape') handleClose();
     };
     document.addEventListener('keydown', handleCloseByEsc);
     return () => document.removeEventListener('keydown', handleCloseByEsc);
-  }, [back]);
+  }, [handleClose]);
 
   return ReactDOM.createPortal(
     <>
@@ -47,6 +36,7 @@ function Modal({ children, title = '' }) {
 Modal.propTypes = {
   children: PropTypes.node.isRequired,
   title: PropTypes.string,
+  handleClose: PropTypes.func.isRequired,
 };
 
 export default Modal;
