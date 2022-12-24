@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { processError, setCredentials } from '../../utils/utils';
-import { getUser, login, logout, registerUser } from '../actions/auth';
+import { setCredentials } from '../../utils/utils';
+import { getUser, login, logout, patchUser, registerUser } from '../actions/auth';
 
 const initialState = { user: null, isLoading: false, error: null };
 
@@ -25,7 +25,7 @@ const authSlice = createSlice({
             state.user = user;
             setCredentials(accessToken, refreshToken);
           } else {
-            processError(message);
+            console.log(message);
           }
           state.isLoading = false;
           state.error = null;
@@ -46,7 +46,7 @@ const authSlice = createSlice({
             state.user = user;
             setCredentials(accessToken, refreshToken);
           } else {
-            processError(message);
+            console.log(message);
           }
           state.isLoading = false;
           state.error = null;
@@ -64,7 +64,7 @@ const authSlice = createSlice({
         if (success) {
           state = initialState;
         } else {
-          processError(message);
+          console.log(message);
         }
         state.isLoading = false;
         state.error = null;
@@ -82,7 +82,23 @@ const authSlice = createSlice({
           state.user = user;
         } else {
           console.log('message', message);
-          // processError(message);
+        }
+        state.isLoading = false;
+        state.error = null;
+      })
+      .addCase(patchUser.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(patchUser.rejected, (state, { error }) => {
+        state.isLoading = false;
+        state.error = error;
+      })
+      .addCase(patchUser.fulfilled, (state, { payload: { user, success, message } }) => {
+        if (success) {
+          state.user = user;
+        } else {
+          console.log('message', message);
         }
         state.isLoading = false;
         state.error = null;

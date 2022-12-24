@@ -31,10 +31,6 @@ export function getCookie(name) {
   return matches ? decodeURIComponent(matches[1]) : undefined;
 }
 
-export const processError = (message) => {
-  alert(message);
-};
-
 export const getRefreshToken = () => {
   return getCookie(Tokens.REFRESH_TOKEN);
 };

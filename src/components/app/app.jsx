@@ -27,7 +27,7 @@ import IngredientDetails from '../ingredient-details/ingredient-details';
 import Modal from '../modal/modal';
 import { useDispatch } from 'react-redux';
 import { fetchIngredients } from '../../services/slices/ingredientsSlice';
-import { getUser } from '../../services/actions/auth';
+import { getUser, logout } from '../../services/actions/auth';
 
 function App() {
   const location = useLocation();

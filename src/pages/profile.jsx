@@ -10,35 +10,29 @@ import {
 import Tab from '../components/tab/tab';
 import { RouterPaths } from '../utils/constants';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectIsUserAuthorized, selectUser } from '../utils/selectors';
-import { getUser, patchUser } from '../services/actions/auth';
+import { selectUser } from '../utils/selectors';
+import { patchUser } from '../services/actions/auth';
 
 function ProfilePage() {
   const [form, setForm] = useState({ name: '', email: '', password: '' });
-  const isAuthorized = useSelector(selectIsUserAuthorized);
   const user = useSelector(selectUser);
 
   const isFormChanged = user?.name !== form.name || user?.email !== form.email;
 
+  useEffect(() => {
+    setForm({ name: user.name, email: user.email, password: '' });
+  }, [user]);
+
   const onChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
-  };
-  const fillForm = () => {
-    if (user) {
-      setForm({ name: user.name, email: user.email, password: '' });
-    }
   };
 
   const resetChanges = (e) => {
     e.preventDefault();
-    fillForm();
+    setForm({ name: user.name, email: user.email, password: '' });
   };
 
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    fillForm();
-  }, [user]);
 
   const patchUserData = (e) => {
     e.preventDefault();
