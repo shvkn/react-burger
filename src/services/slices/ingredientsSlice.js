@@ -6,9 +6,9 @@ export const ingredientsAdapter = createEntityAdapter({
 });
 const initialState = ingredientsAdapter.getInitialState({ isLoading: false, error: null });
 
-export const fetchIngredients = createAsyncThunk('ingredients/fetchIngredients', async () =>
-  getIngredientsRequest()
-);
+export const fetchIngredients = createAsyncThunk('ingredients/fetchIngredients', async () => {
+  return getIngredientsRequest();
+});
 
 const ingredientsSlice = createSlice({
   name: 'ingredients',

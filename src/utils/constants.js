@@ -18,6 +18,7 @@ export const RouterPaths = {
   PROFILE: '/profile',
   ORDERS_HISTORY: '/profile/orders',
   LOGOUT: '/profile/logout',
+  INGREDIENT_BY_ID: '/ingredient/:id',
 };
 
 export const Tokens = {
