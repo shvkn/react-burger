@@ -8,24 +8,32 @@ import {
   ProfileIcon,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './app-header.module.css';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { RouterPaths } from '../../utils/constants';
 
 function AppHeader() {
+  const { pathname } = useLocation(); //
   return (
     <header className={`p-4 ${styles.header}`}>
       <div className={`${styles.container}`}>
         <nav className={styles.nav}>
           <ul className={styles.items}>
-            <li className={styles.item}>
-              <Link to={'/'} className={`pt-4 pl-5 pb-4 pr-5 ${styles.link}`}>
-                <BurgerIcon type='primary' />
-                <p className='ml-2 text text_type_main-default'>Конструктор</p>
+            <li>
+              <Link to={RouterPaths.BASE} className={`pt-4 pl-5 pb-4 pr-5 ${styles.link}`}>
+                <BurgerIcon type={pathname === RouterPaths.BASE ? 'primary' : 'secondary'} />
+                <p
+                  className={`ml-2 text text_type_main-default ${
+                    pathname === RouterPaths.BASE ? 'text_color_primary' : 'text_color_inactive'
+                  }`}
+                >
+                  Конструктор
+                </p>
               </Link>
             </li>
-            <li className={`ml-2 ${styles.item}`}>
+            <li>
               <Link to={'/'} className={`pt-4 pl-5 pb-4 pr-5 ${styles.link}`}>
-                <ListIcon type='secondary' />
-                <p className='ml-2 text text_type_main-default text_color_inactive'>
+                <ListIcon type={'secondary'} />
+                <p className={`ml-2 text text_type_main-default text_color_inactive`}>
                   Лента заказов
                 </p>
               </Link>
@@ -34,9 +42,15 @@ function AppHeader() {
         </nav>
         <Logo />
         <nav className={`${styles.nav} ${styles.end}`}>
-          <Link to={'/profile'} className={`pt-4 pl-5 pb-4 pr-5 ${styles.link}`}>
-            <ProfileIcon type='secondary' />
-            <p className='ml-2 text text_type_main-default text_color_inactive'>Личный кабинет</p>
+          <Link to={RouterPaths.PROFILE} className={`pt-4 pl-5 pb-4 pr-5 ${styles.link}`}>
+            <ProfileIcon type={pathname === RouterPaths.PROFILE ? 'primary' : 'secondary'} />
+            <p
+              className={`ml-2 text text_type_main-default ${
+                pathname === RouterPaths.PROFILE ? 'text_color_primary' : 'text_color_inactive'
+              }`}
+            >
+              Личный кабинет
+            </p>
           </Link>
         </nav>
       </div>
