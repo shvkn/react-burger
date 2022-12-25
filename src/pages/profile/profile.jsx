@@ -128,20 +128,15 @@ function ProfilePage() {
               icon={'EditIcon'}
               extraClass={'mt-6'}
             />
-            <div className={`mt-10 ${styles.buttons}`}>
-              <Button htmlType={'submit'} disabled={!isFormChanged}>
-                Сохранить
-              </Button>
+            {isFormChanged && (
+              <div className={`mt-10 ${styles.buttons}`}>
+                <Button htmlType={'submit'}>Сохранить</Button>
 
-              <Button
-                htmlType={'reset'}
-                disabled={!isFormChanged}
-                onClick={resetChanges}
-                extraClass={'ml-4'}
-              >
-                Отменить
-              </Button>
-            </div>
+                <Button htmlType={'reset'} onClick={resetChanges} extraClass={'ml-4'}>
+                  Отменить
+                </Button>
+              </div>
+            )}
           </form>
         </Route>
         <Route exact path={`${path}/orders`}>
