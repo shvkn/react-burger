@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import styles from './profile.module.css';
-import { NavLink, Route } from 'react-router-dom';
+import { NavLink, Route, useLocation } from 'react-router-dom';
 import {
   Button,
   EmailInput,
   Input,
   PasswordInput,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import { RouterPaths } from '../../utils/constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUser } from '../../utils/selectors';
 import { logout, patchUser } from '../../services/actions/auth';
@@ -15,7 +14,7 @@ import { logout, patchUser } from '../../services/actions/auth';
 function ProfilePage() {
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const user = useSelector(selectUser);
-
+  const { url } = useLocation();
   const isFormChanged = user?.name !== form.name || user?.email !== form.email;
 
   useEffect(() => {
@@ -45,7 +44,7 @@ function ProfilePage() {
           <li className={'pt-4 pb-4'}>
             <NavLink
               exact
-              to={RouterPaths.PROFILE}
+              to='/profile'
               className={(isActive) => {
                 return `${styles.link} text text_type_main-medium ${
                   isActive ? 'text_color_primary' : 'text_color_inactive'
@@ -58,7 +57,7 @@ function ProfilePage() {
           <li className={'pt-4 pb-4'}>
             <NavLink
               exact
-              to={RouterPaths.ORDERS_HISTORY}
+              to={`${url}/orders`}
               className={(isActive) => {
                 return `${styles.link} text text_type_main-medium ${
                   isActive ? 'text_color_primary' : 'text_color_inactive'
@@ -71,7 +70,7 @@ function ProfilePage() {
           <li className={'pt-4 pb-4'}>
             <NavLink
               exact
-              to={RouterPaths.LOGOUT}
+              to={`${url}/logout`}
               className={(isActive) => {
                 return `${styles.link} text text_type_main-medium ${
                   isActive ? 'text_color_primary' : 'text_color_inactive'
@@ -84,16 +83,16 @@ function ProfilePage() {
           </li>
         </ul>
         <p className={`mt-20 text text_type_main-default text_color_inactive`}>
-          <Route exact path={RouterPaths.PROFILE}>
+          <Route exact path={`/profile`}>
             В этом разделе вы можете изменить свои персональные данные
           </Route>
-          <Route exact path={RouterPaths.ORDERS_HISTORY}>
+          <Route exact path={`${url}/orders`}>
             В этом разделе вы можете просмотреть свою историю заказов
           </Route>
         </p>
       </div>
       <div className={`ml-15`}>
-        <Route exact path={RouterPaths.PROFILE}>
+        <Route exact path='/profile'>
           <Input
             value={form.name}
             name={'name'}
@@ -132,7 +131,7 @@ function ProfilePage() {
             </Button>
           </div>
         </Route>
-        <Route exact path={RouterPaths.ORDERS_HISTORY}>
+        <Route exact path={`${url}/orders`}>
           В этом разделе вы можете просмотреть свою историю заказов
         </Route>
       </div>

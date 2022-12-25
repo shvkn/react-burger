@@ -1,5 +1,3 @@
-// TODO Временно отключено из-за якорной ссылки
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
 import {
   BurgerIcon,
@@ -9,7 +7,6 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './app-header.module.css';
 import { Link, useLocation } from 'react-router-dom';
-import { RouterPaths } from '../../utils/constants';
 
 function AppHeader() {
   const { pathname } = useLocation(); //
@@ -19,11 +16,11 @@ function AppHeader() {
         <nav className={styles.nav}>
           <ul className={styles.items}>
             <li>
-              <Link to={RouterPaths.BASE} className={`pt-4 pl-5 pb-4 pr-5 ${styles.link}`}>
-                <BurgerIcon type={pathname === RouterPaths.BASE ? 'primary' : 'secondary'} />
+              <Link to='/' className={`pt-4 pl-5 pb-4 pr-5 ${styles.link}`}>
+                <BurgerIcon type={pathname === '/' ? 'primary' : 'secondary'} />
                 <p
                   className={`ml-2 text text_type_main-default ${
-                    pathname === RouterPaths.BASE ? 'text_color_primary' : 'text_color_inactive'
+                    pathname === '/' ? 'text_color_primary' : 'text_color_inactive'
                   }`}
                 >
                   Конструктор
@@ -42,11 +39,11 @@ function AppHeader() {
         </nav>
         <Logo />
         <nav className={`${styles.nav} ${styles.end}`}>
-          <Link to={RouterPaths.PROFILE} className={`pt-4 pl-5 pb-4 pr-5 ${styles.link}`}>
-            <ProfileIcon type={pathname === RouterPaths.PROFILE ? 'primary' : 'secondary'} />
+          <Link to='/profile' className={`pt-4 pl-5 pb-4 pr-5 ${styles.link}`}>
+            <ProfileIcon type={pathname === '/profile' ? 'primary' : 'secondary'} />
             <p
               className={`ml-2 text text_type_main-default ${
-                pathname === RouterPaths.PROFILE ? 'text_color_primary' : 'text_color_inactive'
+                pathname === '/profile' ? 'text_color_primary' : 'text_color_inactive'
               }`}
             >
               Личный кабинет

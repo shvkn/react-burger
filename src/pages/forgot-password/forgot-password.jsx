@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import styles from '../page.module.css';
 import { Button, EmailInput } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Link, Redirect, useHistory } from 'react-router-dom';
-import { RouterPaths } from '../../utils/constants';
 import { getResetCodeRequest } from '../../utils/burger-api';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectIsUserAuthorized } from '../../utils/selectors';
@@ -26,7 +25,7 @@ function ForgotPasswordPage(props) {
     getResetCodeRequest(form).then(({ success }) => {
       if (success) {
         history.replace({
-          pathname: RouterPaths.RESET_PASSWORD,
+          pathname: '/reset-password',
           state: { from: history.location },
         });
       }
@@ -34,7 +33,7 @@ function ForgotPasswordPage(props) {
   };
 
   return isAuthorized ? (
-    <Redirect to={RouterPaths.BASE} />
+    <Redirect to='/' />
   ) : (
     <div className={styles.container}>
       <form className={`mb-20`}>
@@ -52,7 +51,7 @@ function ForgotPasswordPage(props) {
       </form>
       <p className={'text text_type_main-default text_color_inactive'}>
         Вспомнили пароль?{' '}
-        <Link to={RouterPaths.LOGIN} className={`${styles.link} text_color_accent`}>
+        <Link to='/login' className={`${styles.link} text_color_accent`}>
           Войти
         </Link>
       </p>

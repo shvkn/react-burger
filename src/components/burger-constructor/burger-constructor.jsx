@@ -11,7 +11,7 @@ import OrderDetails from '../order-details/order-details';
 import { useDispatch, useSelector } from 'react-redux';
 import { useDrop } from 'react-dnd';
 import SortableElement from '../sortable-element/sortable-element';
-import { IngredientTypes, ItemTypes, RouterPaths } from '../../utils/constants';
+import { IngredientTypes, ItemTypes } from '../../utils/constants';
 
 import { actions as burgerActions } from '../../services/slices/burger';
 import {
@@ -26,7 +26,7 @@ import {
   selectOrderSlice,
   selectTotalPrice,
 } from '../../utils/selectors';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { makeOrder } from '../../services/actions/order';
 
 function BurgerConstructor() {
@@ -80,7 +80,7 @@ function BurgerConstructor() {
   const handleMakeOrder = () => {
     if (!isAuthorized) {
       history.push({
-        pathname: RouterPaths.LOGIN,
+        pathname: '/login',
         state: { from: history.location },
       });
     } else {

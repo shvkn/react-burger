@@ -14,7 +14,6 @@ import {
   ProfilePage,
   IngredientPage,
 } from '../../pages';
-import { RouterPaths } from '../../utils/constants';
 import ProtectedRoute from '../protected-route/protected-route';
 import IngredientDetails from '../ingredient-details/ingredient-details';
 import Modal from '../modal/modal';
@@ -42,36 +41,36 @@ function App() {
       <AppHeader />
       <main className={`${styles.main}`}>
         <Switch location={background ?? location}>
-          <Route exact path={RouterPaths.BASE}>
+          <Route exact path='/'>
             <ConstructorPage />
           </Route>
 
-          <Route path={RouterPaths.LOGIN}>
+          <Route path='/login'>
             <LoginPage />
           </Route>
 
-          <Route path={RouterPaths.REGISTER}>
+          <Route path='register'>
             <RegistrationPage />
           </Route>
 
-          <Route path={RouterPaths.FORGOT_PASSWORD}>
+          <Route path='/forgot-password'>
             <ForgotPasswordPage />
           </Route>
 
-          <Route path={RouterPaths.RESET_PASSWORD}>
+          <Route path='reset-password'>
             <ResetPasswordPage />
           </Route>
 
-          <ProtectedRoute path={RouterPaths.PROFILE}>
+          <ProtectedRoute path='/profile'>
             <ProfilePage />
           </ProtectedRoute>
 
-          <Route path={RouterPaths.INGREDIENT_BY_ID}>
+          <Route path='/ingredient/:id'>
             <IngredientPage />
           </Route>
         </Switch>
         {background && (
-          <Route path={RouterPaths.INGREDIENT_BY_ID}>
+          <Route path='/ingredient/:id'>
             <Modal handleClose={handleClose} title='Детали ингредиента'>
               <IngredientDetails />
             </Modal>

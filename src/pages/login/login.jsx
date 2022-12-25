@@ -6,7 +6,6 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from '../page.module.css';
 import { Link, Redirect, useLocation } from 'react-router-dom';
-import { RouterPaths } from '../../utils/constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectIsUserAuthorized } from '../../utils/selectors';
 import { login } from '../../services/actions/auth';
@@ -27,7 +26,7 @@ function LoginPage() {
   };
 
   if (isAuthorized) {
-    return <Redirect to={location.state?.from ?? RouterPaths.BASE} />;
+    return <Redirect to={location.state?.from ?? '/'} />;
   }
   return (
     <div className={`${styles.container}`}>
@@ -55,7 +54,7 @@ function LoginPage() {
         <li className={'mb-4'}>
           <p className={'text text_type_main-default text_color_inactive'}>
             Вы новый пользователь?{' '}
-            <Link to={RouterPaths.REGISTER} className={`${styles.link} text_color_accent`}>
+            <Link to='/register' className={`${styles.link} text_color_accent`}>
               Зарегистрироваться
             </Link>
           </p>
@@ -63,7 +62,7 @@ function LoginPage() {
         <li>
           <p className={'text text_type_main-default text_color_inactive'}>
             Забыли пароль?{' '}
-            <Link to={RouterPaths.FORGOT_PASSWORD} className={`${styles.link} text_color_accent`}>
+            <Link to='/forgot-password' className={`${styles.link} text_color_accent`}>
               Восстановить пароль
             </Link>
           </p>

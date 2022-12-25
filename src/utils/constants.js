@@ -9,18 +9,6 @@ export const IngredientTypes = {
   MAIN: 'main',
 };
 
-export const RouterPaths = {
-  BASE: '/',
-  LOGIN: '/login',
-  REGISTER: '/register',
-  FORGOT_PASSWORD: '/forgot-password',
-  RESET_PASSWORD: '/reset-password',
-  PROFILE: '/profile',
-  ORDERS_HISTORY: '/profile/orders',
-  LOGOUT: '/profile/logout',
-  INGREDIENT_BY_ID: '/ingredient/:id',
-};
-
 export const Tokens = {
   ACCESS_TOKEN: 'accessToken',
   REFRESH_TOKEN: 'refreshToken',

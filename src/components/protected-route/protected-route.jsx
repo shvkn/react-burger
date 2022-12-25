@@ -2,7 +2,6 @@ import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import { RouterPaths } from '../../utils/constants';
 import { selectIsUserAuthorized } from '../../utils/selectors';
 
 function ProtectedRoute({ children, ...rest }) {
@@ -14,7 +13,7 @@ function ProtectedRoute({ children, ...rest }) {
         return isAuthorized ? (
           children
         ) : (
-          <Redirect to={{ pathname: RouterPaths.LOGIN, state: { from: location } }} />
+          <Redirect to={{ pathname: '/login', state: { from: location } }} />
         );
       }}
     />

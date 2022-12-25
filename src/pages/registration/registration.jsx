@@ -7,7 +7,6 @@ import {
   PasswordInput,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Link, useHistory } from 'react-router-dom';
-import { RouterPaths } from '../../utils/constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerUser } from '../../services/actions/auth';
 
@@ -58,7 +57,7 @@ function RegistrationPage() {
       </form>
       <p className={'text text_type_main-default text_color_inactive'}>
         Уже зарегистрированны?{' '}
-        <Link to={RouterPaths.LOGIN} className={`${styles.link} text_color_accent`}>
+        <Link to='/login' className={`${styles.link} text_color_accent`}>
           Войти
         </Link>
       </p>
