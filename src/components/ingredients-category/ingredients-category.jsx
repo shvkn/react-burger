@@ -6,10 +6,9 @@ import BurgerIngredient from '../burger-ingredient/burger-ingredient';
 IngredientsCategory.propTypes = {
   items: PropTypes.array.isRequired,
   title: PropTypes.string.isRequired,
-  onIngredientClick: PropTypes.func.isRequired,
 };
 
-function IngredientsCategory({ items, title, onIngredientClick }) {
+function IngredientsCategory({ items, title }) {
   return (
     <>
       <h2 className='text text_type_main-medium'>{title}</h2>
@@ -17,7 +16,7 @@ function IngredientsCategory({ items, title, onIngredientClick }) {
         <ul className={`${styles.ingredients}`}>
           {items.map((item) => (
             <li key={item._id}>
-              <BurgerIngredient ingredient={item} handleClick={onIngredientClick} />
+              <BurgerIngredient ingredient={item} />
             </li>
           ))}
         </ul>

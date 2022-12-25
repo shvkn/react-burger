@@ -1,46 +1,62 @@
 import React, { useEffect } from 'react';
+import { Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import '../../style/common.css';
 import styles from './app.module.css';
 import AppHeader from '../app-header/app-header';
-import BurgerIngredients from '../burger-ingredients/burger-ingredients';
-import BurgerConstructor from '../burger-constructor/burger-constructor';
 import '@ya.praktikum/react-developer-burger-ui-components';
 
-import { useDispatch, useSelector } from 'react-redux';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import { fetchIngredients } from '../../services/slices/ingredientsSlice';
-import { selectIngredientsSlice } from '../../utils/selectors';
+import {
+  ConstructorPage,
+  LoginPage,
+  RegistrationPage,
+  ForgotPasswordPage,
+  ResetPasswordPage,
+  ProfilePage,
+  IngredientPage,
+  NotFoundedPage,
+} from '../../pages';
+import ProtectedRoute from '../protected-route/protected-route';
+import IngredientDetails from '../ingredient-details/ingredient-details';
+import Modal from '../modal/modal';
+import { useDispatch } from 'react-redux';
+import { getUser } from '../../services/actions/auth';
+import { fetchIngredients } from '../../services/actions/ingredients';
+
 function App() {
-  const ingredients = useSelector(selectIngredientsSlice);
+  const location = useLocation();
+  const background = location.state?.background;
   const dispatch = useDispatch();
+  const history = useHistory();
 
   useEffect(() => {
     dispatch(fetchIngredients());
+    dispatch(getUser());
   }, [dispatch]);
+
+  const handleClose = (e) => {
+    history.goBack();
+  };
 
   return (
     <div className={styles.app}>
       <AppHeader />
       <main className={`${styles.main}`}>
-        {(ingredients.isLoading || ingredients.error) && (
-          <p className={`text text_type_main-large text_color_inactive ${styles.message}`}>
-            {ingredients.isLoading
-              ? 'Загрузка данных'
-              : ingredients.error
-              ? 'Ошибка загрузки данных'
-              : ''}
-          </p>
-        )}
-        {!ingredients.isLoading && !ingredients.error && (
-          <>
-            <DndProvider backend={HTML5Backend}>
-              <BurgerIngredients />
-              <div className='ml-10 pt-25'>
-                <BurgerConstructor />
-              </div>
-            </DndProvider>
-          </>
+        <Switch location={background ?? location}>
+          <Route exact path='/' component={ConstructorPage} />
+          <ProtectedRoute nonAuthOnly path='/login' component={LoginPage} />
+          <ProtectedRoute nonAuthOnly path='/register' component={RegistrationPage} />
+          <ProtectedRoute nonAuthOnly path='/forgot-password' component={ForgotPasswordPage} />
+          <ProtectedRoute nonAuthOnly path='/reset-password' components={ResetPasswordPage} />
+          <ProtectedRoute path='/profile' component={ProfilePage} />
+          <Route path='/ingredient/:id' component={IngredientPage} />
+          <Route path='*' component={NotFoundedPage} />
+        </Switch>
+        {background && (
+          <Route path='/ingredient/:id'>
+            <Modal handleClose={handleClose} title='Детали ингредиента'>
+              <IngredientDetails />
+            </Modal>
+          </Route>
         )}
       </main>
     </div>

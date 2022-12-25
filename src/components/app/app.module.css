@@ -11,8 +11,5 @@
   align-items: stretch;
   margin: 0 auto;
   overflow: hidden;
-}
-
-.message {
-  align-self: center;
+  width: 1240px;
 }

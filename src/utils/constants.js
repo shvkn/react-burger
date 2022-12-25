@@ -8,3 +8,8 @@ export const IngredientTypes = {
   SAUCE: 'sauce',
   MAIN: 'main',
 };
+
+export const Tokens = {
+  ACCESS_TOKEN: 'accessToken',
+  REFRESH_TOKEN: 'refreshToken',
+};

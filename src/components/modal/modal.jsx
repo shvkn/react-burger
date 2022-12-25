@@ -16,7 +16,7 @@ function Modal({ children, handleClose, title = '' }) {
     return () => document.removeEventListener('keydown', handleCloseByEsc);
   }, [handleClose]);
 
-  const modal = (
+  return ReactDOM.createPortal(
     <>
       <div className={`${styles.modal}`}>
         <div className={`ml-10 mt-10 mr-10 ${styles.panel}`}>
@@ -27,17 +27,16 @@ function Modal({ children, handleClose, title = '' }) {
         </div>
         <div className={`${styles.content}`}>{children}</div>
       </div>
-      <ModalOverlay handleClick={handleClose} />
-    </>
+      <ModalOverlay onClick={handleClose} />
+    </>,
+    MODAL_ROOT
   );
-
-  return ReactDOM.createPortal(modal, MODAL_ROOT);
 }
 
 Modal.propTypes = {
   children: PropTypes.node.isRequired,
-  handleClose: PropTypes.func.isRequired,
   title: PropTypes.string,
+  handleClose: PropTypes.func.isRequired,
 };
 
 export default Modal;
