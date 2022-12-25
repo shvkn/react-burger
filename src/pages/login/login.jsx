@@ -5,16 +5,13 @@ import {
   EmailInput,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from '../page.module.css';
-import { Link, Redirect, useLocation } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectIsUserAuthorized } from '../../utils/selectors';
+import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { login } from '../../services/actions/auth';
 
 function LoginPage() {
   const [form, setValue] = useState({ email: '', password: '' });
   const dispatch = useDispatch();
-  const location = useLocation();
-  const isAuthorized = useSelector(selectIsUserAuthorized);
   const formRef = useRef();
   const onChange = (e) => {
     setValue({ ...form, [e.target.name]: e.target.value });
@@ -34,9 +31,6 @@ function LoginPage() {
     return () => formRefValue?.removeEventListener('submit', handleLogin);
   }, [handleLogin]);
 
-  if (isAuthorized) {
-    return <Redirect to={location.state?.from ?? '/'} />;
-  }
   return (
     <div className={`${styles.container}`}>
       <form className={`mb-20`} ref={formRef}>

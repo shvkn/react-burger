@@ -6,16 +6,14 @@ import {
   Input,
   PasswordInput,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import { Link, Redirect } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { registerUser } from '../../services/actions/auth';
-import { selectIsUserAuthorized } from '../../utils/selectors';
 
 function RegistrationPage() {
   const [form, setValue] = useState({ name: '', email: '', password: '' });
   const dispatch = useDispatch();
   const formRef = useRef();
-  const isAuthorized = useSelector(selectIsUserAuthorized);
 
   const onChange = (e) => {
     setValue({ ...form, [e.target.name]: e.target.value });
@@ -35,9 +33,7 @@ function RegistrationPage() {
     return () => formRefValue?.removeEventListener('submit', register);
   }, [register]);
 
-  return isAuthorized ? (
-    <Redirect to='/' />
-  ) : (
+  return (
     <div className={`${styles.container}`}>
       <form className={`mb-20`} ref={formRef}>
         <h1 className={'text text_type_main-medium'}>Регистрация</h1>

@@ -42,37 +42,14 @@ function App() {
       <AppHeader />
       <main className={`${styles.main}`}>
         <Switch location={background ?? location}>
-          <Route exact path='/'>
-            <ConstructorPage />
-          </Route>
-
-          <Route path='/login'>
-            <LoginPage />
-          </Route>
-
-          <Route path='/register'>
-            <RegistrationPage />
-          </Route>
-
-          <Route path='/forgot-password'>
-            <ForgotPasswordPage />
-          </Route>
-
-          <Route path='/reset-password'>
-            <ResetPasswordPage />
-          </Route>
-
-          <ProtectedRoute path='/profile'>
-            <ProfilePage />
-          </ProtectedRoute>
-
-          <Route path='/ingredient/:id'>
-            <IngredientPage />
-          </Route>
-
-          <Route path={'*'}>
-            <NotFoundedPage />
-          </Route>
+          <Route exact path='/' component={ConstructorPage} />
+          <ProtectedRoute nonAuthOnly path='/login' component={LoginPage} />
+          <ProtectedRoute nonAuthOnly path='/register' component={RegistrationPage} />
+          <ProtectedRoute nonAuthOnly path='/forgot-password' component={ForgotPasswordPage} />
+          <ProtectedRoute nonAuthOnly path='/reset-password' components={ResetPasswordPage} />
+          <ProtectedRoute path='/profile' component={ProfilePage} />
+          <Route path='/ingredient/:id' component={IngredientPage} />
+          <Route path='*' component={NotFoundedPage} />
         </Switch>
         {background && (
           <Route path='/ingredient/:id'>

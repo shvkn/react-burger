@@ -1,15 +1,12 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styles from '../page.module.css';
 import { Button, EmailInput } from '@ya.praktikum/react-developer-burger-ui-components';
-import { Link, Redirect, useHistory } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { selectIsUserAuthorized } from '../../utils/selectors';
+import { Link, useHistory } from 'react-router-dom';
 import { getResetCodeRequest } from '../../utils/auth-api';
 
 function ForgotPasswordPage() {
   const [form, setValue] = useState({ email: '' });
   const history = useHistory();
-  const isAuthorized = useSelector(selectIsUserAuthorized);
   const formRef = useRef();
 
   const getResetCode = useCallback(
@@ -37,9 +34,7 @@ function ForgotPasswordPage() {
     setValue({ ...form, [e.target.name]: e.target.value });
   };
 
-  return isAuthorized ? (
-    <Redirect to='/' />
-  ) : (
+  return (
     <div className={styles.container}>
       <form className={`mb-20`} ref={formRef}>
         <h1 className={'text text_type_main-medium'}>Восстановление пароля</h1>
@@ -63,4 +58,5 @@ function ForgotPasswordPage() {
     </div>
   );
 }
+
 export default ForgotPasswordPage;

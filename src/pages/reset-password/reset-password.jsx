@@ -2,14 +2,11 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styles from '../page.module.css';
 import { Button, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Link, Redirect, useHistory } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { selectIsUserAuthorized } from '../../utils/selectors';
 import { resetPasswordRequest } from '../../utils/auth-api';
 
 function ResetPasswordPage() {
   const [form, setValue] = useState({ password: '', token: '' });
   const history = useHistory();
-  const isAuthorized = useSelector(selectIsUserAuthorized);
   const formRef = useRef();
 
   const onChange = (e) => {
@@ -38,7 +35,7 @@ function ResetPasswordPage() {
     return () => formRefValue?.removeEventListener('submit', resetPassword);
   }, [resetPassword]);
 
-  if (isAuthorized || history.location.state?.from?.pathname !== '/forgot-password') {
+  if (history.location.state?.from?.pathname !== '/forgot-password') {
     return <Redirect to='/' />;
   }
 
