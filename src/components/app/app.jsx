@@ -49,7 +49,7 @@ function App() {
             <LoginPage />
           </Route>
 
-          <Route path='register'>
+          <Route path='/register'>
             <RegistrationPage />
           </Route>
 
@@ -57,7 +57,7 @@ function App() {
             <ForgotPasswordPage />
           </Route>
 
-          <Route path='reset-password'>
+          <Route path='/reset-password'>
             <ResetPasswordPage />
           </Route>
 

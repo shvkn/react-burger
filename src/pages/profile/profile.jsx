@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styles from './profile.module.css';
-import { NavLink, Route, useLocation } from 'react-router-dom';
+import { NavLink, Route, Switch, useRouteMatch } from 'react-router-dom';
 import {
   Button,
   EmailInput,
@@ -14,12 +14,28 @@ import { logout, patchUser } from '../../services/actions/auth';
 function ProfilePage() {
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const user = useSelector(selectUser);
-  const { url } = useLocation();
+  const { url, path } = useRouteMatch();
   const isFormChanged = user?.name !== form.name || user?.email !== form.email;
+  const dispatch = useDispatch();
+  const formRef = useRef();
 
   useEffect(() => {
     setForm({ name: user.name, email: user.email, password: '' });
   }, [user]);
+
+  const updateUser = useCallback(
+    (e) => {
+      e.preventDefault();
+      dispatch(patchUser(form));
+    },
+    [dispatch, form]
+  );
+
+  useEffect(() => {
+    const formRefValue = formRef.current;
+    formRefValue?.addEventListener('submit', updateUser);
+    return () => formRefValue?.removeEventListener('submit', updateUser);
+  }, [updateUser]);
 
   const onChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -28,13 +44,6 @@ function ProfilePage() {
   const resetChanges = (e) => {
     e.preventDefault();
     setForm({ name: user.name, email: user.email, password: '' });
-  };
-
-  const dispatch = useDispatch();
-
-  const patchUserData = (e) => {
-    e.preventDefault();
-    dispatch(patchUser(form));
   };
 
   return (
@@ -83,55 +92,59 @@ function ProfilePage() {
           </li>
         </ul>
         <p className={`mt-20 text text_type_main-default text_color_inactive`}>
-          <Route exact path={`/profile`}>
-            В этом разделе вы можете изменить свои персональные данные
-          </Route>
-          <Route exact path={`${url}/orders`}>
-            В этом разделе вы можете просмотреть свою историю заказов
-          </Route>
+          <Switch>
+            <Route exact path={path}>
+              В этом разделе вы можете изменить свои персональные данные
+            </Route>
+            <Route path={`${path}/orders`}>
+              В этом разделе вы можете просмотреть свою историю заказов
+            </Route>
+          </Switch>
         </p>
       </div>
       <div className={`ml-15`}>
-        <Route exact path='/profile'>
-          <Input
-            value={form.name}
-            name={'name'}
-            placeholder={'Имя'}
-            onChange={onChange}
-            icon={'EditIcon'}
-          />
-          <EmailInput
-            value={form.email}
-            name={'email'}
-            placeholder={'E-mail'}
-            onChange={onChange}
-            icon={'EditIcon'}
-            extraClass={'mt-6'}
-          />
-          <PasswordInput
-            value={form.password}
-            name={'password'}
-            placeholder={'Пароль'}
-            onChange={onChange}
-            icon={'EditIcon'}
-            extraClass={'mt-6'}
-          />
-          <div className={`mt-10 ${styles.buttons}`}>
-            <Button htmlType={'button'} disabled={!isFormChanged} onClick={patchUserData}>
-              Сохранить
-            </Button>
+        <Route exact path={path}>
+          <form ref={formRef}>
+            <Input
+              value={form.name}
+              name={'name'}
+              placeholder={'Имя'}
+              onChange={onChange}
+              icon={'EditIcon'}
+            />
+            <EmailInput
+              value={form.email}
+              name={'email'}
+              placeholder={'E-mail'}
+              onChange={onChange}
+              icon={'EditIcon'}
+              extraClass={'mt-6'}
+            />
+            <PasswordInput
+              value={form.password}
+              name={'password'}
+              placeholder={'Пароль'}
+              onChange={onChange}
+              icon={'EditIcon'}
+              extraClass={'mt-6'}
+            />
+            <div className={`mt-10 ${styles.buttons}`}>
+              <Button htmlType={'submit'} disabled={!isFormChanged}>
+                Сохранить
+              </Button>
 
-            <Button
-              htmlType={'button'}
-              disabled={!isFormChanged}
-              onClick={resetChanges}
-              extraClass={'ml-4'}
-            >
-              Отменить
-            </Button>
-          </div>
+              <Button
+                htmlType={'reset'}
+                disabled={!isFormChanged}
+                onClick={resetChanges}
+                extraClass={'ml-4'}
+              >
+                Отменить
+              </Button>
+            </div>
+          </form>
         </Route>
-        <Route exact path={`${url}/orders`}>
+        <Route exact path={`${path}/orders`}>
           В этом разделе вы можете просмотреть свою историю заказов
         </Route>
       </div>

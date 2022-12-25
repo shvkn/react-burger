@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styles from '../page.module.css';
 import {
   Button,
@@ -6,29 +6,40 @@ import {
   Input,
   PasswordInput,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerUser } from '../../services/actions/auth';
+import { selectIsUserAuthorized } from '../../utils/selectors';
 
 function RegistrationPage() {
   const [form, setValue] = useState({ name: '', email: '', password: '' });
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
+  const formRef = useRef();
+  const isAuthorized = useSelector(selectIsUserAuthorized);
 
   const onChange = (e) => {
     setValue({ ...form, [e.target.name]: e.target.value });
   };
-  const register = (e) => {
-    e.preventDefault();
-    dispatch(registerUser(form));
-  };
-  const history = useHistory();
-  if (user) {
-    history.goBack();
-  }
-  return (
+
+  const register = useCallback(
+    (e) => {
+      e.preventDefault();
+      dispatch(registerUser(form));
+    },
+    [form, dispatch]
+  );
+
+  useEffect(() => {
+    const formRefValue = formRef.current;
+    formRefValue?.addEventListener('submit', register);
+    return () => formRefValue?.removeEventListener('submit', register);
+  }, [register]);
+
+  return isAuthorized ? (
+    <Redirect to='/' />
+  ) : (
     <div className={`${styles.container}`}>
-      <form className={`mb-20`}>
+      <form className={`mb-20`} ref={formRef}>
         <h1 className={'text text_type_main-medium'}>Регистрация</h1>
         <Input
           extraClass={'mt-6 mb-6'}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Button,
   PasswordInput,
@@ -15,22 +15,31 @@ function LoginPage() {
   const dispatch = useDispatch();
   const location = useLocation();
   const isAuthorized = useSelector(selectIsUserAuthorized);
-
+  const formRef = useRef();
   const onChange = (e) => {
     setValue({ ...form, [e.target.name]: e.target.value });
   };
 
-  const loginHandle = (e) => {
-    e.preventDefault();
-    dispatch(login(form));
-  };
+  const handleLogin = useCallback(
+    (e) => {
+      e.preventDefault();
+      dispatch(login(form));
+    },
+    [form, dispatch]
+  );
+
+  useEffect(() => {
+    const formRefValue = formRef.current;
+    formRefValue?.addEventListener('submit', handleLogin);
+    return () => formRefValue?.removeEventListener('submit', handleLogin);
+  }, [handleLogin]);
 
   if (isAuthorized) {
     return <Redirect to={location.state?.from ?? '/'} />;
   }
   return (
     <div className={`${styles.container}`}>
-      <form className={`mb-20`}>
+      <form className={`mb-20`} ref={formRef}>
         <h1 className={'text text_type_main-medium'}>Вход</h1>
         <EmailInput
           extraClass={'mt-6 mb-6'}
@@ -46,7 +55,7 @@ function LoginPage() {
           onChange={onChange}
           placeholder={'Пароль'}
         />
-        <Button htmlType={'submit'} type={'primary'} size={'large'} onClick={loginHandle}>
+        <Button htmlType={'submit'} type={'primary'} size={'large'} onClick={handleLogin}>
           Войти
         </Button>
       </form>

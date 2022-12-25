@@ -20,7 +20,7 @@ function BurgerIngredient({ ingredient }) {
   return (
     <Link
       to={{
-        pathname: `/ingredients/${id}`,
+        pathname: `/ingredient/${id}`,
         state: { background: location },
       }}
       className={styles.ingredient}

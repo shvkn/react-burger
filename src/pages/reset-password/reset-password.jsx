@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styles from '../page.module.css';
 import { Button, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Link, Redirect, useHistory } from 'react-router-dom';
@@ -10,18 +10,29 @@ function ResetPasswordPage() {
   const [form, setValue] = useState({ password: '', token: '' });
   const history = useHistory();
   const isAuthorized = useSelector(selectIsUserAuthorized);
+  const formRef = useRef();
 
   const onChange = (e) => {
     setValue({ ...form, [e.target.name]: e.target.value });
   };
-  const resetPassword = (e) => {
-    e.preventDefault();
-    resetPasswordRequest(form).then(({ success }) => {
-      if (success) {
-        history.replace({ pathname: '/login' });
-      }
-    });
-  };
+
+  const resetPassword = useCallback(
+    (e) => {
+      e.preventDefault();
+      resetPasswordRequest(form).then(({ success }) => {
+        if (success) {
+          history.replace({ pathname: '/login' });
+        }
+      });
+    },
+    [form, history]
+  );
+
+  useEffect(() => {
+    const formRefValue = formRef.current;
+    formRefValue?.addEventListener('submit', resetPassword);
+    return () => formRefValue?.removeEventListener('submit', resetPassword);
+  }, [resetPassword]);
 
   if (isAuthorized || history.location.state?.from?.pathname !== '/forgot-password') {
     return <Redirect to='/' />;
@@ -29,7 +40,7 @@ function ResetPasswordPage() {
 
   return (
     <div className={`mt-30 ${styles.container}`}>
-      <form className={`mb-20`}>
+      <form className={`mb-20`} ref={formRef}>
         <h1 className={'text text_type_main-medium'}>Восстановление пароля</h1>
         <PasswordInput
           extraClass={'mt-6 mb-6'}

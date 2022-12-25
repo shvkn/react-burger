@@ -61,6 +61,9 @@ export const getOrRefreshAccessToken = async (forceRefresh = false) => {
 export const refreshTokens = async () => {
   try {
     const refreshToken = getRefreshToken();
+    if (!refreshToken) {
+      return;
+    }
     const {
       success,
       message,

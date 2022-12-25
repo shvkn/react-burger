@@ -1,42 +1,47 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styles from '../page.module.css';
 import { Button, EmailInput } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Link, Redirect, useHistory } from 'react-router-dom';
 import { getResetCodeRequest } from '../../utils/burger-api';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { selectIsUserAuthorized } from '../../utils/selectors';
-import { getUser } from '../../services/actions/auth';
 
 function ForgotPasswordPage(props) {
   const [form, setValue] = useState({ email: '' });
   const history = useHistory();
-  const dispatch = useDispatch();
   const isAuthorized = useSelector(selectIsUserAuthorized);
+  const formRef = useRef();
+
+  const getResetCode = useCallback(
+    (e) => {
+      e.preventDefault();
+      getResetCodeRequest(form).then(({ success }) => {
+        if (success) {
+          history.replace({
+            pathname: '/reset-password',
+            state: { from: history.location },
+          });
+        }
+      });
+    },
+    [form, history]
+  );
 
   useEffect(() => {
-    dispatch(getUser());
-  }, [dispatch]);
+    const formRefValue = formRef.current;
+    formRefValue?.addEventListener('submit', getResetCode);
+    return () => formRefValue?.removeEventListener('submit', getResetCode);
+  }, [getResetCode]);
 
   const onChange = (e) => {
     setValue({ ...form, [e.target.name]: e.target.value });
-  };
-  const getResetCode = (e) => {
-    e.preventDefault();
-    getResetCodeRequest(form).then(({ success }) => {
-      if (success) {
-        history.replace({
-          pathname: '/reset-password',
-          state: { from: history.location },
-        });
-      }
-    });
   };
 
   return isAuthorized ? (
     <Redirect to='/' />
   ) : (
     <div className={styles.container}>
-      <form className={`mb-20`}>
+      <form className={`mb-20`} ref={formRef}>
         <h1 className={'text text_type_main-medium'}>Восстановление пароля</h1>
         <EmailInput
           extraClass={'mt-6 mb-6'}
@@ -45,7 +50,7 @@ function ForgotPasswordPage(props) {
           onChange={onChange}
           placeholder={'E-mail'}
         />
-        <Button htmlType={'submit'} type={'primary'} size={'large'} onClick={getResetCode}>
+        <Button htmlType={'submit'} type={'primary'} size={'large'}>
           Восстановить
         </Button>
       </form>
