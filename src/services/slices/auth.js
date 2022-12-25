@@ -48,6 +48,9 @@ const auth = createSlice({
             setCredentials(accessToken, refreshToken);
           } else {
             console.log(message);
+            if (message.trim().toLowerCase() === 'email or password are incorrect') {
+              alert('Неверный логин или пароль');
+            }
           }
           state.isLoading = false;
           state.error = null;

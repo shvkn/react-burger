@@ -1,4 +1,5 @@
 import { NORMA_API } from './constants';
+
 const postRequest = (url, data) => {
   return fetch(url, {
     method: 'POST',
@@ -46,4 +47,12 @@ export const patchUserRequest = (userdata, accessToken) => {
     },
     body: JSON.stringify(userdata),
   }).then((response) => response.json());
+};
+
+export const getResetCodeRequest = (form) => {
+  return postRequest(`${NORMA_API}/password-reset`, form);
+};
+
+export const resetPasswordRequest = (form) => {
+  return postRequest(`${NORMA_API}/password-reset/reset`, form);
 };
