@@ -13,6 +13,7 @@ import {
   ResetPasswordPage,
   ProfilePage,
   IngredientPage,
+  NotFoundedPage,
 } from '../../pages';
 import ProtectedRoute from '../protected-route/protected-route';
 import IngredientDetails from '../ingredient-details/ingredient-details';
@@ -67,6 +68,10 @@ function App() {
 
           <Route path='/ingredient/:id'>
             <IngredientPage />
+          </Route>
+
+          <Route path={'*'}>
+            <NotFoundedPage />
           </Route>
         </Switch>
         {background && (

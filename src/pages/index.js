@@ -5,6 +5,7 @@ import ForgotPasswordPage from './forgot-password/forgot-password';
 import ResetPasswordPage from './reset-password/reset-password';
 import ProfilePage from './profile/profile';
 import IngredientPage from './ingredient/ingredient';
+import NotFoundedPage from './not-founded/not-founded';
 export {
   ConstructorPage,
   LoginPage,
@@ -13,4 +14,5 @@ export {
   ResetPasswordPage,
   ProfilePage,
   IngredientPage,
+  NotFoundedPage,
 };
