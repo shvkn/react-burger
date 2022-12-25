@@ -40,10 +40,10 @@ function AppHeader() {
         <Logo />
         <nav className={`${styles.nav} ${styles.end}`}>
           <Link to='/profile' className={`pt-4 pl-5 pb-4 pr-5 ${styles.link}`}>
-            <ProfileIcon type={pathname === '/profile' ? 'primary' : 'secondary'} />
+            <ProfileIcon type={pathname.includes('/profile') ? 'primary' : 'secondary'} />
             <p
               className={`ml-2 text text_type_main-default ${
-                pathname === '/profile' ? 'text_color_primary' : 'text_color_inactive'
+                pathname.includes('/profile') ? 'text_color_primary' : 'text_color_inactive'
               }`}
             >
               Личный кабинет
