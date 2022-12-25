@@ -67,7 +67,7 @@ function RegistrationPage() {
         </Button>
       </form>
       <p className={'text text_type_main-default text_color_inactive'}>
-        Уже зарегистрированны?{' '}
+        Уже зарегистрированы?{' '}
         <Link to='/login' className={`${styles.link} text_color_accent`}>
           Войти
         </Link>

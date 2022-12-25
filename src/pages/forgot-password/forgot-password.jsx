@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { selectIsUserAuthorized } from '../../utils/selectors';
 import { getResetCodeRequest } from '../../utils/auth-api';
 
-function ForgotPasswordPage(props) {
+function ForgotPasswordPage() {
   const [form, setValue] = useState({ email: '' });
   const history = useHistory();
   const isAuthorized = useSelector(selectIsUserAuthorized);
